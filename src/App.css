@@ -72,6 +72,47 @@ body {
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* CSS PARA ETIQUETA FLUTUANTE */
+.custom_input_container {
+  position: relative;
+  width: 100%;
+}
+
+.custom_input_field {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: white;
+  outline: none;
+  font-size: 1rem;
+  padding: 10px 0;
+}
+
+.custom_input_label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+}
+
+/* A MÁGICA: Move a label quando o input está focado ou preenchido */
+.custom_input_field:focus + .custom_input_label,
+.custom_input_field:not(:placeholder-shown) + .custom_input_label {
+  top: -8px;
+  font-size: 0.8rem;
+  color: #66a3ff;
+}
+
+.error-message {
+  color: #ff8a8a;
+  font-size: 0.8rem;
+  position: absolute;
+  bottom: -20px;
+}
+
 /* Checkbox + link */
 .recall-forget {
   display: flex;
