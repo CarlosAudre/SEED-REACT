@@ -77,6 +77,14 @@ function Register() {
           error={errors.senha}
           placeholder="Senha"
         />
+          <Input
+          label="Telefone"
+          name="telefone"
+          register={register}
+          options={{ required: "Telefone é obrigatório"}}
+          error={errors.telefone}
+          placeholder="telefone"
+        />
         <Select
           label="Perfil"
           name="perfil"
