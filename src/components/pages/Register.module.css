@@ -1,13 +1,18 @@
+
 .login_container {
-  width: 340px;
+  width: 340px;           /* menor pra caber melhor */
   max-width: 95%;
-  padding: 18px 18px;
+  padding: 18px 18px;     /* padding reduzido */
   background: rgba(255, 255, 255, 0.10);
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(6px);
   text-align: center;
   color: white;
+
+  /* REMOVIDO max-height e overflow para tirar o scroll interno */
+  /* max-height: 86vh; */
+  /* overflow-y: auto; */
 }
 
 .title {
@@ -21,16 +26,16 @@
 .login_form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 15px;    
 }
 
-/* grupo input + ícone */
+/* grupo input + ícone: ainda compacto */
 .input_group {
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 10px;
-  padding: 6px 10px;
+  padding: 6px 10px;   /* reduzido */
   border: 1px solid rgba(255, 255, 255, 0.12);
   transition: all 0.14s ease;
 }
@@ -46,30 +51,25 @@
   flex-shrink: 0;
 }
 
-
-.recall_forget {
+/* select */
+.select_container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.85);
-  gap: 8px;
-}
-
-.recall_forget label {
-  display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 6px;
-  cursor: pointer;
-  color: rgba(255,255,255,0.9);
+  width: 100%;
 }
 
-.recall_forget a {
-  color: #66a3ff;
-  text-decoration: none;
+.select_field {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.06);
+  color: white;
+  font-size: 0.9rem;
+  outline: none;
 }
 
-/* botão submit */
+/* botão submit compacto */
 .submit_button {
   background: linear-gradient(90deg, #007bff, #005fcc);
   color: white;
@@ -86,14 +86,12 @@
   background: linear-gradient(90deg, #3399ff, #007bff);
 }
 
-/* register link (baixo) */
+/* link de registro/entrar: simples e inline */
 .register_link {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
   font-size: 0.88rem;
   color: rgba(255,255,255,0.9);
   margin-top: 6px;
+  background: transparent;
 }
 
 .register_link a {
@@ -101,7 +99,7 @@
   text-decoration: none;
 }
 
-
+/* feedback message compacto */
 .feedback_message {
   margin-top: 8px;
   color: #fff;
@@ -110,3 +108,4 @@
   background: transparent;
   font-size: 0.9rem;
 }
+

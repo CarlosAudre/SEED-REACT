@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
-
-
 import { FaTasks } from "react-icons/fa";
+import styles from './SolicitacaoDeAcesso.module.css';
 
 function SolicitacaoDeAcesso() {
   const { control, setValue, handleSubmit, watch } = useForm({
@@ -11,8 +10,7 @@ function SolicitacaoDeAcesso() {
   });
 
   const usuarios = watch('usuarios');
-
-  const token = localStorage.getItem('token'); // pega o JWT
+  const token = localStorage.getItem('token');
 
   const makeConfig = () => {
     const cfg = {};
@@ -22,12 +20,9 @@ function SolicitacaoDeAcesso() {
     return cfg;
   };
 
-  // Buscar usuários pendentes
-  const fetchUsuarios = () => {
+  const buscarUsuarios = () => {
     axios.get('http://localhost:8081/adm/usuarios-pendentes', makeConfig())
       .then(response => {
-        console.log("RESPOSTA usuarios-pendentes:", response.data);
-        // continua normal pra não quebrar
         const users = (response.data || []).map(u => ({
           ...u,
           aprovado: false,
@@ -39,12 +34,10 @@ function SolicitacaoDeAcesso() {
   };
 
   useEffect(() => {
-    fetchUsuarios();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    buscarUsuarios();
   }, []);
 
-  // Submissão do formulário
-  const onSubmit = async (data) => {
+  const aoEnviar = async (data) => {
     for (let u of data.usuarios) {
       try {
         if (u.aprovado) {
@@ -56,28 +49,26 @@ function SolicitacaoDeAcesso() {
         console.error(`Erro ao processar usuário ${u.id}:`, err);
       }
     }
-
     alert('Ações aplicadas!');
-    fetchUsuarios(); // atualiza a lista em tempo real
+    buscarUsuarios();
   };
 
-  // Função para marcar apenas um checkbox por usuário
-  const handleCheckboxChange = (index, field) => {
-    const newUsuarios = [...usuarios];
-    newUsuarios[index].aprovado = field === 'aprovado';
-    newUsuarios[index].reprovar = field === 'reprovar';
-    setValue('usuarios', newUsuarios);
+  const alterarCheckbox = (index, campo) => {
+    const novosUsuarios = [...usuarios];
+    novosUsuarios[index].aprovado = campo === 'aprovado';
+    novosUsuarios[index].reprovar = campo === 'reprovar';
+    setValue('usuarios', novosUsuarios);
   };
 
   return (
-    
-    <div className="login_container access-request-container">
-      <h3><FaTasks className="icon" /> Solicitações de Acesso</h3>
-      
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <div className={styles.containerSolicitacao}>
+      <h3 className={styles.titulo}>
+        <FaTasks className={styles.icone} /> Solicitações de Acesso
+      </h3>
+
+      <form onSubmit={handleSubmit(aoEnviar)}>
         {usuarios.length > 0 ? (
-          
-          <table className="access-table">
+          <table className={styles.tabela}>
             <thead>
               <tr>
                 <th>Nome</th>
@@ -91,7 +82,6 @@ function SolicitacaoDeAcesso() {
             </thead>
             <tbody>
               {usuarios.map((u, index) => (
-                
                 <tr key={u.id}>
                   <td>{u.nome}</td>
                   <td>{u.email}</td>
@@ -105,10 +95,9 @@ function SolicitacaoDeAcesso() {
                       render={({ field }) => (
                         <input
                           type="checkbox"
-                          
-                          className="custom-checkbox"
+                          className={styles.checkboxPersonalizado}
                           checked={!!field.value}
-                          onChange={() => handleCheckboxChange(index, 'aprovado')}
+                          onChange={() => alterarCheckbox(index, 'aprovado')}
                         />
                       )}
                     />
@@ -120,10 +109,9 @@ function SolicitacaoDeAcesso() {
                       render={({ field }) => (
                         <input
                           type="checkbox"
-                          
-                          className="custom-checkbox"
+                          className={styles.checkboxPersonalizado}
                           checked={!!field.value}
-                          onChange={() => handleCheckboxChange(index, 'reprovar')}
+                          onChange={() => alterarCheckbox(index, 'reprovar')}
                         />
                       )}
                     />
@@ -133,14 +121,11 @@ function SolicitacaoDeAcesso() {
             </tbody>
           </table>
         ) : (
-          
-          <p className="no-requests-message">Não há solicitações pendentes</p>
+          <p className={styles.mensagemVazia}>Não há solicitações pendentes</p>
         )}
-        
-       
+
         {usuarios.length > 0 && (
-          <div className="submit-container">
-            
+          <div className={styles.containerBotao}>
             <button type="submit">Aplicar Ações</button>
           </div>
         )}

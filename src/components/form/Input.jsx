@@ -1,26 +1,60 @@
+import React from "react";
+import styles from "./Input.module.css";
 
+function Input({
+  label,
+  name,
+  register,
+  type = "text",
+  options = {},
+  error,
+  placeholder = "",
+  mask, // 👈 nova prop opcional
+}) {
+  const formatCPF = (value) => {
+    return value
+      .replace(/\D/g, "") // remove tudo que não for número
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+      .slice(0, 14); // limita o tamanho
+  };
 
-function Input({ label, name, register, type = "text", options = {}, error }) {
+  const formatTelefone = (value) => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{5})(\d{4})$/, "$1-$2")
+      .slice(0, 15);
+  };
+
+  const handleInput = (e) => {
+    let value = e.target.value;
+
+    if (mask === "cpf") value = formatCPF(value);
+    else if (mask === "telefone") value = formatTelefone(value);
+
+    e.target.value = value; // aplica a máscara no campo
+  };
+
   return (
-    // 1. O container agora serve para posicionamento. As classes do Tailwind (flex, etc.) foram removidas.
-    <div className="custom_input_container">
+    <div style={{ width: "100%" }}>
+      <div className={styles.custom_input_container}>
+        <input
+          id={name}
+          type={type}
+          {...register(name, options)}
+          placeholder=" "
+          className={styles.custom_input_field}
+          onInput={mask ? handleInput : undefined} // 👈 aplica máscara
+        />
 
-      {/* 2. O <input> agora vem ANTES da <label> para o CSS funcionar. */}
-      <input
-        id={name}
-        type={type} /* 3. Pequena correção: era type="type", agora usa a prop corretamente. */
-        {...register(name, options)}
-        placeholder=" " /* 4. O placeholder com um espaço em branco é ESSENCIAL para o efeito. */
-        className="custom_input_field"
-      />
+        <label htmlFor={name} className={styles.custom_input_label}>
+          {label}
+        </label>
+      </div>
 
-      {/* 5. A label vem depois e será posicionada sobre o input com CSS. */}
-      <label htmlFor={name} className="custom_input_label">
-        {label}
-      </label>
-
-      {/* Bônus: Exibe a mensagem de erro de validação, se houver. */}
-      {error && <span className="error-message">{error.message}</span>}
+      {error && <span className={styles.error_message}>{error.message}</span>}
     </div>
   );
 }

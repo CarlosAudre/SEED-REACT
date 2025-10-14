@@ -1,11 +1,11 @@
-function Submit({label}){
-    return(
-        <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        > {label}
-        </button>
-    )
+import React from "react";
+
+function Submit({ label, className }) {
+  return (
+    <button type="submit" className={className ? className : "submit-button"}>
+      {label}
+    </button>
+  );
 }
 
-export default Submit
+export default Submit;

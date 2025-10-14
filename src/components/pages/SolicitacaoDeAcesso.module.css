@@ -1,0 +1,140 @@
+.containerSolicitacao {
+  max-width: 1200px;
+  padding: 30px 40px;
+  overflow-x: auto; 
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  color: white;
+}
+
+/* Título */
+.titulo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #fff;
+}
+
+/* Ícone */
+.icone {
+  color: #66a3ff;
+}
+
+/* Tabela */
+.tabela {
+  width: 100%;
+  border-collapse: separate;;
+  table-layout: fixed;
+  text-align: center;
+}
+
+.tabela th,
+.tabela td {
+  padding: 12px;
+  text-align: center; /* Garante alinhamento central em cada célula */
+  vertical-align: middle; /* Centraliza verticalmente */
+}
+
+.tabela th {
+  color: #b8c6db;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tabela td {
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabela td:nth-child(6),
+.tabela td:nth-child(7) {
+  text-align: center;
+}
+
+.tabela tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Mensagem quando não há solicitações */
+.mensagemVazia {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Botão */
+.containerBotao {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.containerBotao button {
+  background: linear-gradient(90deg, #007bff, #005fcc);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.containerBotao button:hover {
+  background: linear-gradient(90deg, #3399ff, #007bff);
+}
+
+/* Checkbox */
+.checkboxPersonalizado {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.checkboxPersonalizado:checked {
+  background-color: #66a3ff;
+  border-color: #88baff;
+}
+
+.checkboxPersonalizado:checked::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.checkboxPersonalizado {
+  appearance: none;            /* remove o estilo padrão */
+  width: 20px;
+  height: 20px;
+  border: 2px solid #fff;      /* borda branca */
+  border-radius: 5px;          /* cantos arredondados */
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+

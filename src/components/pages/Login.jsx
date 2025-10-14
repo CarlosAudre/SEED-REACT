@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Submit from "../form/Submit";
-import Input from "../form/Input";
 import { FaUser, FaLock } from "react-icons/fa";
+import Input from "../form/Input";
+import Submit from "../form/Submit";
+import styles from "./Login.module.css";
+
 
 function Login() {
   const {
@@ -37,14 +39,13 @@ function Login() {
     }
   };
 
-  return (
-    <div className="login_container">
-      <h3>Login</h3>
+    return (
+    <div className={styles.login_container}>
+      <h3 className={styles.title}>Login</h3>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="login_form">
-        {/* Campo de email */}
-        <div className="input_group">
-          <FaUser className="icon" />
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.login_form}>
+        <div className={styles.input_group}>
+          <FaUser className={styles.icon} />
           <Input
             label="Email"
             name="email"
@@ -55,9 +56,8 @@ function Login() {
           />
         </div>
 
-        {/* Campo de senha */}
-        <div className="input_group">
-          <FaLock className="icon" />
+        <div className={styles.input_group}>
+          <FaLock className={styles.icon} />
           <Input
             label="Senha"
             name="senha"
@@ -68,8 +68,7 @@ function Login() {
           />
         </div>
 
-        {/* Opções e botões */}
-        <div className="recall-forget">
+        <div className={styles.recall_forget}>
           <label>
             <input type="checkbox" />
             Lembre de mim
@@ -77,9 +76,9 @@ function Login() {
           <a href="#">Esqueceu a senha?</a>
         </div>
 
-        <Submit label="Entrar" />
+        <Submit label="Entrar" className={styles.submit_button} />
 
-        <div className="register-link">
+        <div className={styles.register_link}>
           <p>Não possui uma conta?</p>
           <a href="http://localhost:5173/register">Registrar</a>
         </div>
