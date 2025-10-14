@@ -1,13 +1,154 @@
-* {
+/* Fundo */
+body {
   margin: 0;
-  padding: 0;
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(135deg, #002b5b, #004b8d, #0074d9);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-html, body, #root {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+/* Container principal */
+.login_container {
+  width: 380px;
+  padding: 40px 35px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  color: white;
 }
 
+/* Título */
+.login_container h3 {
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+  color: #fff;
+}
 
+/* Formulário */
+.login_form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Grupo input + ícone */
+.input_group {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.input_group:hover {
+  border-color: #66a3ff;
+}
+
+/* Ícones */
+.icon {
+  color: #66a3ff;
+  font-size: 1.1rem;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+/* Input interno (do seu componente Input.jsx) */
+.input_group input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  font-size: 1rem;
+}
+
+.input_group input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Checkbox + link */
+.recall-forget {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.recall-forget a {
+  color: #66a3ff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.recall-forget a:hover {
+  color: #fff;
+}
+
+/* Botão */
+button[type="submit"],
+.submit-button {
+  background: linear-gradient(90deg, #007bff, #005fcc);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button[type="submit"]:hover,
+.submit-button:hover {
+  background: linear-gradient(90deg, #3399ff, #007bff);
+}
+
+/* Link de registro */
+.register-link {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.register-link a {
+  color: #66a3ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link a:hover {
+  color: #fff;
+}
+
+.input_group select {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  font-size: 1rem;
+  -webkit-appearance: none; /* Remove a aparência padrão no Chrome/Safari */
+  -moz-appearance: none;    /* Remove a aparência padrão no Firefox */
+  appearance: none;         /* Remove a aparência padrão em outros navegadores */
+}
+
+/* Estiliza as opções dentro do select para terem um fundo escuro */
+.input_group select option {
+  background: #004b8d; 
+  color: white;
+}
+
+.feedback-message {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.2); /* Fundo sutil */
+}
