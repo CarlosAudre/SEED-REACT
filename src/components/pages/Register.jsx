@@ -138,7 +138,7 @@ function Register() {
               { value: "DIRETOR", label: "Diretor" },
             ]}
             error={errors.perfil}
-            moduleStyles={styles} /* opcional: passar styles do page se quiser */
+           // moduleStyles={styles} /* opcional: passar styles do page se quiser */
           />
         </div>
 

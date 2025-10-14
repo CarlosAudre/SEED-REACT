@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import { FaTasks } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Mensagem ao enviar aplicar
 import styles from './SolicitacaoDeAcesso.module.css';
 
 function SolicitacaoDeAcesso() {
@@ -47,9 +49,10 @@ function SolicitacaoDeAcesso() {
         }
       } catch (err) {
         console.error(`Erro ao processar usuário ${u.id}:`, err);
+        toast.error(`Erro ao processar ${u.nome}`, { autoClose: 4000 });
       }
     }
-    alert('Ações aplicadas!');
+    toast.success('Ações aplicadas com sucesso!', { autoClose: 3000 });
     buscarUsuarios();
   };
 
@@ -130,6 +133,15 @@ function SolicitacaoDeAcesso() {
           </div>
         )}
       </form>
+
+      {/* Toasts */}
+      <ToastContainer
+        position="top-right"
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
     </div>
   );
 }

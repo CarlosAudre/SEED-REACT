@@ -51,6 +51,8 @@
 .tabela td {
   color: #fff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .tabela td:nth-child(6),

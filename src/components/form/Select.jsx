@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./Select.module.css";
 
 function Select({
   label,
@@ -9,24 +10,24 @@ function Select({
   error,
   hideLabel = false,
   className = "",
-  moduleStyles = null,
   icon = null,
 }) {
-  const selectClass = moduleStyles ? moduleStyles.select_field : "select_field";
-  const containerClass = moduleStyles ? moduleStyles.select_container : "select_container";
-  const inlineClass = moduleStyles ? moduleStyles.inline_group : "inline_group";
-
   return (
-    <div className={containerClass}>
-      <div className={inlineClass}>
-        {icon && <span className={moduleStyles ? moduleStyles.icon : "icon"}>{icon}</span>}
-        {!hideLabel && (
-          <label htmlFor={name} className={moduleStyles ? moduleStyles.select_label : "select_label"}>
-            {label}
-          </label>
-        )}
+    <div className={`${styles.select_container} ${className}`}>
+      {!hideLabel && (
+        <label htmlFor={name} className={styles.select_label}>
+          {label}
+        </label>
+      )}
 
-        <select id={name} {...register(name, options)} className={selectClass}>
+      <div className={styles.inline_group}>
+        {icon && <span className={styles.icon}>{icon}</span>}
+
+        <select
+          id={name}
+          {...register(name, options)}
+          className={styles.select_field}
+        >
           {optionsList.map((opt) => (
             <option key={opt.value} value={opt.value} disabled={opt.disabled}>
               {opt.label}
@@ -35,7 +36,7 @@ function Select({
         </select>
       </div>
 
-      {error && <span className={moduleStyles ? moduleStyles.error_text : "error_text"}>{error.message}</span>}
+      {error && <span className={styles.error_text}>{error.message}</span>}
     </div>
   );
 }
