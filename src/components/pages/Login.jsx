@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Submit from "../form/Submit";
 import Input from "../form/Input";
-
+import { FaUser, FaLock } from "react-icons/fa";
 
 function Login() {
   const {
@@ -14,13 +14,10 @@ function Login() {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    // data.email e data.senha já vêm do useForm
     try {
       const response = await fetch("http://localhost:8081/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
@@ -34,6 +31,7 @@ function Login() {
 
       alert("Login realizado com sucesso!");
       navigate("/");
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       alert("Erro de conexão com o servidor");
     }
@@ -41,28 +39,50 @@ function Login() {
 
   return (
     <div className="login_container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <h3>Login</h3>
 
-        <Input
-          label="Email"
-          name="email"
-          type="email"
-          register={register}
-          options={{ required: "O email é obrigatório" }}
-          error={errors.email}
-        />
+      <form onSubmit={handleSubmit(onSubmit)} className="login_form">
+        {/* Campo de email */}
+        <div className="input_group">
+          <FaUser className="icon" />
+          <Input
+            label="Email"
+            name="email"
+            type="email"
+            register={register}
+            options={{ required: "O email é obrigatório" }}
+            error={errors.email}
+          />
+        </div>
 
-        <Input
-          label="Senha"
-          name="senha"
-          type="password"
-          register={register}
-          options={{ required: "A senha é obrigatória" }}
-          error={errors.senha}
-        />
+        {/* Campo de senha */}
+        <div className="input_group">
+          <FaLock className="icon" />
+          <Input
+            label="Senha"
+            name="senha"
+            type="password"
+            register={register}
+            options={{ required: "A senha é obrigatória" }}
+            error={errors.senha}
+          />
+        </div>
+
+        {/* Opções e botões */}
+        <div className="recall-forget">
+          <label>
+            <input type="checkbox" />
+            Lembre de mim
+          </label>
+          <a href="#">Esqueceu a senha?</a>
+        </div>
 
         <Submit label="Entrar" />
+
+        <div className="register-link">
+          <p>Não possui uma conta?</p>
+          <a href="http://localhost:5174/auth/register">Registrar</a>
+        </div>
       </form>
     </div>
   );
