@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 
+
+import { FaTasks } from "react-icons/fa";
+
 function SolicitacaoDeAcesso() {
   const { control, setValue, handleSubmit, watch } = useForm({
     defaultValues: { usuarios: [] }
@@ -67,64 +70,82 @@ function SolicitacaoDeAcesso() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h1>Solicitações de Acesso</h1>
-      {usuarios.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Email</th>
-              <th>CPF</th>
-              <th>Cargo</th>
-              <th>Telefone</th>
-              <th>Aprovar</th>
-              <th>Reprovar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usuarios.map((u, index) => (
-              <tr key={u.id} className='px-4 py-2'>
-                <td>{u.nome}</td>
-                <td>{u.email}</td>
-                <td>{u.cpf}</td>
-                <td>{u.nomePerfil}</td>
-                <td>{u.telefone}</td>
-                <td>
-                  <Controller
-                    name={`usuarios.${index}.aprovado`}
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        type="checkbox"
-                        checked={!!field.value}
-                        onChange={() => handleCheckboxChange(index, 'aprovado')}
-                      />
-                    )}
-                  />
-                </td>
-                <td>
-                  <Controller
-                    name={`usuarios.${index}.reprovar`}
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        type="checkbox"
-                        checked={!!field.value}
-                        onChange={() => handleCheckboxChange(index, 'reprovar')}
-                      />
-                    )}
-                  />
-                </td>
+    
+    <div className="login_container access-request-container">
+      <h3><FaTasks className="icon" /> Solicitações de Acesso</h3>
+      
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {usuarios.length > 0 ? (
+          
+          <table className="access-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>CPF</th>
+                <th>Cargo</th>
+                <th>Telefone</th>
+                <th>Aprovar</th>
+                <th>Reprovar</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>Não há solicitações pendentes</p>
-      )}
-      <button type="submit">Aplicar</button>
-    </form>
+            </thead>
+            <tbody>
+              {usuarios.map((u, index) => (
+                
+                <tr key={u.id}>
+                  <td>{u.nome}</td>
+                  <td>{u.email}</td>
+                  <td>{u.cpf}</td>
+                  <td>{u.nomePerfil}</td>
+                  <td>{u.telefone}</td>
+                  <td>
+                    <Controller
+                      name={`usuarios.${index}.aprovado`}
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          type="checkbox"
+                          
+                          className="custom-checkbox"
+                          checked={!!field.value}
+                          onChange={() => handleCheckboxChange(index, 'aprovado')}
+                        />
+                      )}
+                    />
+                  </td>
+                  <td>
+                    <Controller
+                      name={`usuarios.${index}.reprovar`}
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          type="checkbox"
+                          
+                          className="custom-checkbox"
+                          checked={!!field.value}
+                          onChange={() => handleCheckboxChange(index, 'reprovar')}
+                        />
+                      )}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          
+          <p className="no-requests-message">Não há solicitações pendentes</p>
+        )}
+        
+       
+        {usuarios.length > 0 && (
+          <div className="submit-container">
+            
+            <button type="submit">Aplicar Ações</button>
+          </div>
+        )}
+      </form>
+    </div>
   );
 }
 

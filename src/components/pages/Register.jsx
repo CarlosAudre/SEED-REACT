@@ -119,7 +119,7 @@ function Register() {
             name="perfil"
             register={register}
             optionsList={[
-              { value: "", label: "Selecione um perfil",  }, // Adicionado placeholder
+              { value: "", label: "Selecione um perfil", disabled: true }, // Adicionado placeholder
               { value: "RESPONSAVEL_SETOR", label: "Responsável de Setor" },
               { value: "RH", label: "Recursos Humanos" },
               { value: "DIRETOR", label: "Diretor" },
