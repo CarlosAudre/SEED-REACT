@@ -1,0 +1,135 @@
+/* src/components/pages/DetalhesCombo.module.css */
+
+.container {
+  max-width: 1400px;
+  padding: 30px 40px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  color: white;
+}
+
+.linkVoltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b8c6db;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+}
+.linkVoltar:hover {
+  color: #fff;
+}
+
+.cabecalho {
+  text-align: center;
+  margin-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 20px;
+}
+.titulo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: 2.2rem;
+  margin: 0;
+}
+.icone { color: #66a3ff; }
+.descricao {
+  font-size: 1.1rem;
+  color: #b8c6db;
+  margin-top: 10px;
+}
+
+.conteudo {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+}
+
+.coluna {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.subtitulo {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #fff;
+}
+
+.tabelaItens {
+  width: 100%;
+  border-collapse: separate;
+}
+.tabelaItens th, .tabelaItens td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.tabelaItens th { color: #b8c6db; }
+
+.botaoRemover {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+.botaoRemover:hover { color: #ff3b3b; }
+
+.mensagemVazia {
+  text-align: center;
+  color: #b8c6db;
+  padding: 20px;
+}
+
+/* Formulário */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.formGroup { text-align: left; }
+.formGroup label { display: block; margin-bottom: 5px; color: #b8c6db; }
+.formGroup input, .formGroup select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #4a5568;
+  background-color: #2d3748;
+  color: white;
+  font-size: 1rem;
+}
+.formGroupCheck {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.formGroupCheck label { margin: 0; }
+.botaoAdicionar {
+  background: linear-gradient(90deg, #007bff, #005fcc);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.botaoAdicionar:hover {
+  background: linear-gradient(90deg, #3399ff, #007bff);
+}

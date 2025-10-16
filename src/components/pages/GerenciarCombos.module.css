@@ -1,0 +1,73 @@
+/* src/components/pages/GerenciarCombos.module.css */
+
+.container {
+  max-width: 1200px;
+  padding: 30px 40px;
+  overflow-x: auto; 
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  color: white;
+}
+.titulo {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin-bottom: 30px; font-size: 2rem;
+}
+.icone { color: #66a3ff; }
+.containerBotaoTopo { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+.botaoNovo {
+  background: linear-gradient(90deg, #007bff, #005fcc);
+  color: white; border: none; border-radius: 10px; padding: 10px 20px;
+  font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s;
+  display: flex; align-items: center; gap: 8px;
+}
+.botaoNovo:hover { background: linear-gradient(90deg, #3399ff, #007bff); }
+.tabela { width: 100%; border-collapse: separate; table-layout: fixed; }
+.tabela th, .tabela td { padding: 12px; text-align: left; vertical-align: middle; }
+.tabela th {
+  color: #b8c6db; font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.tabela td { border-bottom: 1px solid rgba(255, 255, 255, 0.1); word-wrap: break-word; }
+.tabela tbody tr:hover { background-color: rgba(255, 255, 255, 0.08); }
+.acoes { text-align: right; white-space: nowrap; }
+.colunaAcoes { text-align: right; width: 180px; }
+.botaoAcao {
+  background: none; border: none; color: #b8c6db; cursor: pointer;
+  font-size: 1.2rem; margin-left: 15px; transition: color 0.2s; padding: 5px;
+}
+.botaoAcao:hover { color: #66a3ff; }
+.botaoGerenciar {
+  background-color: #007bff; color: white; border: none; border-radius: 5px;
+  cursor: pointer; font-size: 1.2rem; padding: 5px 10px;
+  transition: background-color 0.2s;
+}
+.botaoGerenciar:hover { background-color: #005fcc; }
+.modalOverlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7); display: flex; align-items: center;
+  justify-content: center; z-index: 1000;
+}
+.modalContent {
+  width: 500px; padding: 20px; background: rgba(30, 41, 59, 0.8);
+  border-radius: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.modalTitulo { text-align: center; font-size: 1.5rem; margin-bottom: 20px; }
+.formGroup { margin-bottom: 15px; text-align: left; }
+.formGroup label { display: block; margin-bottom: 5px; color: #b8c6db; }
+.formGroup input, .formGroup select {
+  width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #4a5568;
+  background-color: #2d3748; color: white; font-size: 1rem;
+}
+.modalFooter {
+  display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;
+}
+.botaoCancelar, .botaoSalvar {
+  padding: 10px 20px; border-radius: 8px; border: none;
+  cursor: pointer; font-weight: 600;
+}
+.botaoCancelar { background-color: #4a5568; color: white; }
+.botaoSalvar { background-color: #007bff; color: white; }
