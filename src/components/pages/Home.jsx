@@ -3,9 +3,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Importa a função para decodificar
-import { FaUserCheck, FaBoxOpen, FaFolderOpen } from 'react-icons/fa';
 import styles from './Home.module.css'; // Vamos criar este CSS
-
+import { FaUserCheck, FaBoxOpen, FaFolderOpen, FaBuilding } from 'react-icons/fa';
 function Home() {
   const [userRole, setUserRole] = React.useState(null);
 
@@ -57,6 +56,13 @@ React.useEffect(() => {
           <h3 className={styles.cardTitle}>Gerenciar Kits</h3>
           <p className={styles.cardText}>Monte e organize os kits de solicitação para os professores.</p>
         </Link>
+
+          <Link to="/adm/estruturas" className={styles.card}>
+            <FaBuilding className={styles.cardIcon} />
+            <h3 className={styles.cardTitle}>Gerenciar Estruturas</h3>
+            <p className={styles.cardText}>Configure setores, salas e unidades da escola.</p>
+        </Link>
+        
       </div>
     </div>
   );
