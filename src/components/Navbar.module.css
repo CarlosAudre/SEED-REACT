@@ -1,0 +1,76 @@
+
+
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem; 
+  background-color: #27293d; 
+  height: 70px; 
+  box-sizing: border-box;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  cursor: pointer;
+  font-size: 1.5rem; 
+  padding: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.toggleButton:hover {
+  background-color: #3a3c4e;
+}
+
+
+.navbarRight {
+  margin-left: auto; 
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profileAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #5046e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.profileInfo span {
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.profileInfo small {
+  font-size: 0.75rem;
+  color: #8a8a8a;
+}

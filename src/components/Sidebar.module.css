@@ -1,0 +1,71 @@
+/* src/components/Sidebar.module.css */
+
+/* O container principal da sidebar */
+.sidebar {
+  /* Usamos 100% da altura do pai (que é o .layoutSidebar) */
+  height: 100%; 
+  padding: 1.5rem; /* Espaçamento interno */
+
+  /* truque de flex para o rodapé ficar embaixo */
+  display: flex;
+  flex-direction: column; 
+
+  /* Garante que o padding não "empurre" a largura */
+  box-sizing: border-box; 
+}
+
+.logo {
+  font-size: 1.5rem; /* 24px */
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 2rem; /* Espaço abaixo do logo */
+}
+
+.menuTitle {
+  font-size: 0.8rem; /* 12.8px */
+  text-transform: uppercase; /* "Menu Principal" em maiúsculas */
+  color: #8a8a8a; /* Cinza claro */
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.menuList {
+  list-style: none; /* Remove as "bolinhas" da lista */
+  padding: 0;
+  margin: 0;
+}
+
+/* Estilo de CADA item do menu (o link) */
+.menuItem {
+  display: flex;
+  align-items: center; /* Alinha ícone e texto */
+  gap: 1rem; /* Espaço entre ícone e texto */
+
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+
+  color: #c0c0c0; /* Cor do texto padrão do link */
+  font-weight: 500;
+
+  /* Animação suave na mudança de cor */
+  transition: all 0.2s ease-in-out; 
+}
+
+/* Efeito HOVER (quando o mouse passa por cima) */
+.menuItem:hover {
+  background-color: #27293d; /* Fundo que combina com o conteúdo */
+  color: #ffffff; /* Texto fica branco */
+}
+
+/* Estilo do link ATIVO (página atual) */
+.menuItem.active {
+  background-color: #5046e5; /* Cor roxa/azul de destaque */
+  color: #ffffff;
+}
+
+/* Rodapé da Sidebar */
+.footer {
+  margin-top: auto; /* <--- Isso empurra o rodapé para baixo! */
+  font-size: 0.8rem;
+  color: #8a8a8a;
+}
