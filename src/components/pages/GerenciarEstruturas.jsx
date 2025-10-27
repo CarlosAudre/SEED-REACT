@@ -1,4 +1,3 @@
-// src/components/pages/GerenciarEstruturas.js
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { FaPlus, FaEdit, FaTrash, FaBuilding, FaTasks } from 'react-icons/fa';
@@ -18,11 +17,13 @@ export default function GerenciarEstruturas() {
       tipo: 'SECRETARIA',
       municipio: { id: 1 },
       ativo: true,
-      cep: ''
-    }
+      cep: '',
+      estruturaPaiId: null,
+    },
   });
 
   const [estruturas, setEstruturas] = React.useState([]);
+  const [municipios, setMunicipios] = React.useState([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isSetorModalOpen, setIsSetorModalOpen] = React.useState(false);
   const [estruturaAtual, setEstruturaAtual] = React.useState(null);
@@ -30,6 +31,7 @@ export default function GerenciarEstruturas() {
   const token = localStorage.getItem('token');
   const makeConfig = () => ({ headers: { Authorization: `Bearer ${token}` } });
 
+  // Buscar estruturas
   const buscarEstruturas = async () => {
     try {
       const res = await axios.get(`${API_BASE}/adm/estruturas`, makeConfig());
@@ -40,7 +42,21 @@ export default function GerenciarEstruturas() {
     }
   };
 
-  useEffect(() => { buscarEstruturas(); }, []);
+  // Buscar municípios
+  const buscarMunicipios = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/adm/estruturas/municipios`, makeConfig());
+      setMunicipios(res.data || []);
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao buscar municípios.');
+    }
+  };
+
+  useEffect(() => {
+    buscarEstruturas();
+    buscarMunicipios();
+  }, []);
 
   const abrirModal = (estrutura = null) => {
     setEstruturaAtual(estrutura);
@@ -51,8 +67,17 @@ export default function GerenciarEstruturas() {
       setValue('municipio', estrutura.municipio || { id: 1 });
       setValue('ativo', estrutura.ativo ?? true);
       setValue('cep', estrutura.cep ?? '');
+      setValue('estruturaPaiId', estrutura.estruturaPaiId ?? null);
     } else {
-      reset();
+      reset({
+        id: null,
+        name: '',
+        tipo: 'SECRETARIA',
+        municipio: { id: 1 },
+        ativo: true,
+        cep: '',
+        estruturaPaiId: null,
+      });
     }
     setIsModalOpen(true);
   };
@@ -77,9 +102,10 @@ export default function GerenciarEstruturas() {
     const payload = {
       name: data.name,
       tipo: data.tipo,
-      municipio: data.municipio,
+      municipio: { id: Number(data.municipio.id || data.municipio) },
       ativo: data.ativo,
-      cep: data.cep
+      cep: data.cep,
+      estruturaPaiId: data.estruturaPaiId ? Number(data.estruturaPaiId) : null,
     };
 
     try {
@@ -110,8 +136,6 @@ export default function GerenciarEstruturas() {
     }
   };
 
-  const watchName = watch('name');
-
   return (
     <div className={styles.container}>
       <h3 className={styles.titulo}>
@@ -129,6 +153,8 @@ export default function GerenciarEstruturas() {
           <tr>
             <th>Nome</th>
             <th>Tipo</th>
+            <th>Município</th>
+            <th>Estrutura Pai</th>
             <th className={styles.colunaAcoes}>Ações</th>
           </tr>
         </thead>
@@ -137,8 +163,18 @@ export default function GerenciarEstruturas() {
             <tr key={e.id}>
               <td>{e.name}</td>
               <td>{e.tipo}</td>
+              <td>{e.municipio?.nome || '-'}</td>
+              <td>
+                {e.estruturaPaiId
+                  ? estruturas.find((x) => x.id === e.estruturaPaiId)?.name || '-'
+                  : '-'}
+              </td>
               <td className={styles.acoes}>
-                <button onClick={() => abrirModalSetores(e)} className={styles.botaoGerenciar} title="Gerenciar Setores">
+                <button
+                  onClick={() => abrirModalSetores(e)}
+                  className={styles.botaoGerenciar}
+                  title="Gerenciar Setores"
+                >
                   <FaTasks />
                 </button>
                 <button onClick={() => abrirModal(e)} className={styles.botaoAcao} title="Editar">
@@ -152,7 +188,7 @@ export default function GerenciarEstruturas() {
           ))}
           {estruturas.length === 0 && (
             <tr>
-              <td colSpan="3" style={{ textAlign: 'center', padding: '1rem' }}>
+              <td colSpan="5" style={{ textAlign: 'center', padding: '1rem' }}>
                 Nenhuma estrutura cadastrada.
               </td>
             </tr>
@@ -170,6 +206,7 @@ export default function GerenciarEstruturas() {
                 <label>Nome</label>
                 <input {...register('name', { required: true })} />
               </div>
+
               <div className={styles.formGroup}>
                 <label>Tipo</label>
                 <select {...register('tipo', { required: true })}>
@@ -178,14 +215,44 @@ export default function GerenciarEstruturas() {
                   <option value="ESCOLA">Escola</option>
                 </select>
               </div>
-              {/* Campos extras obrigatórios do DTO */}
+
+              <div className={styles.formGroup}>
+                <label>Município</label>
+                <select {...register('municipio.id', { required: true })}>
+                  {municipios.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.nome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label>Estrutura Pai (opcional)</label>
+                <select {...register('estruturaPaiId')}>
+                  <option value="">Nenhuma</option>
+                  {estruturas
+                    .filter((e) => !estruturaAtual || e.id !== estruturaAtual.id)
+                    .map((e) => (
+                      <option key={e.id} value={e.id}>
+                        {e.name} ({e.tipo})
+                      </option>
+                    ))}
+                </select>
+              </div>
+
               <div className={styles.formGroup}>
                 <label>CEP</label>
                 <input {...register('cep')} placeholder="Opcional" />
               </div>
+
               <div className={styles.modalFooter}>
-                <button type="button" onClick={fecharModal} className={styles.botaoCancelar}>Cancelar</button>
-                <button type="submit" className={styles.botaoSalvar}>{estruturaAtual ? 'Atualizar' : 'Criar'}</button>
+                <button type="button" onClick={fecharModal} className={styles.botaoCancelar}>
+                  Cancelar
+                </button>
+                <button type="submit" className={styles.botaoSalvar}>
+                  {estruturaAtual ? 'Atualizar' : 'Criar'}
+                </button>
               </div>
             </form>
           </div>
