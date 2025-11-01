@@ -1,87 +1,105 @@
 // src/components/pages/Home.js
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Importa a função para decodificar
-import styles from './Home.module.css'; // Vamos criar este CSS
-import { FaUserCheck, FaBoxOpen, FaFolderOpen, FaBuilding } from 'react-icons/fa';
+import React from "react";
+import { Link } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
+import styles from "./Home.module.css";
+import { FaUserCheck, FaBoxOpen, FaFolderOpen, FaBuilding, FaClipboardList } from "react-icons/fa";
+
 function Home() {
   const [userRole, setUserRole] = React.useState(null);
 
-  // CÓDIGO CORRIGIDO PARA O Home.js ✅
-React.useEffect(() => {
-    const token = localStorage.getItem('token');
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decodedToken = jwtDecode(token);
+        const decoded = jwtDecode(token);
 
-        // Agora lemos a claim "role" que acabamos de adicionar
-        const userRole = decodedToken.role; 
+        // aceita tanto string quanto array (só por segurança)
+        let role = decoded.role ?? decoded.roles ?? decoded.Roles ?? null;
 
-        if (userRole === 'ADM') {
-          setUserRole('ADM');
-        } else {
-          setUserRole('USER');
+        if (Array.isArray(role)) {
+          // caso o claim venha como array, pega prioridade ADM > RESPONSAVEL_SETOR > USER
+          if (role.includes("ADM")) role = "ADM";
+          else if (role.includes("RESPONSAVEL_SETOR")) role = "RESPONSAVEL_SETOR";
+          else role = role[0] || "USER";
         }
+
+        // normaliza pra tipos que a gente usa
+        if (role === "ADM") setUserRole("ADM");
+        else if (role === "RESPONSAVEL_SETOR") setUserRole("RESPONSAVEL_SETOR");
+        else setUserRole("USER");
       } catch (error) {
         console.error("Token inválido:", error);
-        setUserRole('GUEST');
+        setUserRole("GUEST");
       }
     } else {
-      setUserRole('GUEST');
+      setUserRole("GUEST");
     }
-}, []);
+  }, []);
 
-  // Renderiza o Painel do Administrador
   const renderAdminDashboard = () => (
     <div className={styles.container}>
       <h1 className={styles.title}>Painel do Administrador</h1>
       <p className={styles.subtitle}>Selecione uma das opções abaixo para gerenciar o sistema.</p>
-      
+
       <div className={styles.dashboardGrid}>
         <Link to="/solicitacoes-acesso" className={styles.card}>
           <FaUserCheck className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Aprovar Acessos</h3>
           <p className={styles.cardText}>Gerencie as solicitações de acesso de novos usuários.</p>
         </Link>
-        
+
         <Link to="/adm/itens" className={styles.card}>
           <FaBoxOpen className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Gerenciar Itens</h3>
           <p className={styles.cardText}>Crie, edite e remova os materiais disponíveis para solicitação.</p>
         </Link>
-        
+
         <Link to="/adm/combos" className={styles.card}>
           <FaFolderOpen className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Gerenciar Kits</h3>
           <p className={styles.cardText}>Monte e organize os kits de solicitação para os professores.</p>
         </Link>
 
-          <Link to="/adm/estruturas" className={styles.card}>
-            <FaBuilding className={styles.cardIcon} />
-            <h3 className={styles.cardTitle}>Gerenciar Estruturas</h3>
-            <p className={styles.cardText}>Configure setores, salas e unidades da escola.</p>
+        <Link to="/adm/estruturas" className={styles.card}>
+          <FaBuilding className={styles.cardIcon} />
+          <h3 className={styles.cardTitle}>Gerenciar Estruturas</h3>
+          <p className={styles.cardText}>Configure setores, salas e unidades da escola.</p>
         </Link>
-        
       </div>
     </div>
   );
 
-  // Renderiza a Home Padrão para outros usuários ou convidados
+  const renderResponsavelSetor = () => (
+    <div className={styles.container}>
+      <h1 className={styles.title}>Painel - Responsável de Setor</h1>
+      <p className={styles.subtitle}>Aqui você preenche os combos enviados para o seu setor.</p>
+
+      <div className={styles.dashboardGrid}>
+        <Link to="/responsavel-setor/preenchimento" className={styles.card}>
+          <FaClipboardList className={styles.cardIcon} />
+          <h3 className={styles.cardTitle}>Preencher Combos do Setor</h3>
+          <p className={styles.cardText}>Abra a página para preencher os itens dos combos alocados no seu setor.</p>
+        </Link>
+
+        {/* Se quiser, pode repetir cards úteis pro responsavel aqui */}
+      </div>
+    </div>
+  );
+
   const renderDefaultHome = () => (
     <div className={styles.container}>
       <h1 className={styles.title}>Bem-vindo(a) ao Portal da Escola</h1>
       <p className={styles.subtitle}>Aqui você poderá solicitar materiais e acompanhar seus pedidos.</p>
-      {/* Aqui você pode adicionar o conteúdo para o usuário comum no futuro */}
     </div>
   );
 
-  // Lógica de renderização
-  if (userRole === null) {
-    return <div className={styles.container}>Carregando...</div>; // Estado de carregamento
-  }
+  if (userRole === null) return <div className={styles.container}>Carregando...</div>;
 
-  return userRole === 'ADM' ? renderAdminDashboard() : renderDefaultHome();
+  if (userRole === "ADM") return renderAdminDashboard();
+  if (userRole === "RESPONSAVEL_SETOR") return renderResponsavelSetor();
+  return renderDefaultHome();
 }
 
 export default Home;

@@ -9,6 +9,7 @@ import GerenciarItens from './components/pages/GerenciarItens';
 import GerenciarCombos from './components/pages/GerenciarCombos'; 
 import DetalhesCombo from './components/pages/DetalhesCombo';
 import GerenciarEstruturas from './components/pages/GerenciarEstruturas'; // 🔹 NOVO
+import PreencherCombosSetor from './components/pages/PreencherCombosSetor';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/adm/combos" element={<GerenciarCombos />} />
                 <Route path="/adm/combos/:comboId" element={<DetalhesCombo />} />
                 <Route path="/adm/estruturas" element={<GerenciarEstruturas />} />
+                <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor/>}/> 
             </Routes>
         </Router>
     );

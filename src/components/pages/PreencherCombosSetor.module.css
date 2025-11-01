@@ -1,0 +1,91 @@
+.container {
+  max-width: 1200px;
+  height: 90vh;
+  padding: 30px 40px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  color: white;
+}
+
+.titulo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.listaSetores {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.itemSetor {
+  display: flex;
+  align-items: center;
+  background: rgba(30, 41, 59, 0.8);
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.3s, transform 0.2s;
+}
+
+.itemSetor:hover {
+  background: rgba(59, 130, 246, 0.25);
+  transform: translateY(-2px);
+}
+
+.itemSetor label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.itemSetor input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #66a3ff;
+  cursor: pointer;
+}
+
+.botaoEnviar {
+  margin-top: 25px;
+  padding: 12px 24px;
+  background: linear-gradient(90deg, #007bff, #005fcc);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.botaoEnviar:hover {
+  background: linear-gradient(90deg, #3399ff, #007bff);
+  transform: translateY(-2px);
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #b8c6db;
+  margin-top: 40px;
+}
