@@ -1,5 +1,6 @@
 .container {
   max-width: 1200px;
+  height: 90vh;
   padding: 30px 40px;
   overflow-x: auto;
   background: rgba(255, 255, 255, 0.12);
@@ -148,3 +149,43 @@
 
 .botaoCancelar { background-color: #4a5568; color: white; }
 .botaoSalvar { background-color: #007bff; color: white; }
+
+
+.checkboxContainer {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #4a5568;
+  border-radius: 8px;
+  background-color: #2d3748;
+  padding: 10px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: flex-start;          
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 0;           /* um pouco de padding vertical pra não ficar colado */
+  transition: background 0.2s;
+}
+
+.checkboxLabel:hover {
+  background-color: rgba(255, 255, 255, 0.05); /* hover leve */
+  border-radius: 6px;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;          
+}
+
+.checkboxLabel span {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-left: 10px;
+  position: relative;
+  top: -3px;
+}

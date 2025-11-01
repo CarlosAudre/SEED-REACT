@@ -1,4 +1,4 @@
-// src/components/pages/GerenciarCombos.js
+// src/components/pages/GerenciarCombos.jsx
 
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,6 +17,7 @@ function GerenciarCombos() {
   const [comboParaEnvio, setComboParaEnvio] = useState(null);
   const [estruturas, setEstruturas] = useState([]);
   const [setores, setSetores] = useState([]);
+  const [setoresSelecionados, setSetoresSelecionados] = useState([]);
 
   const { register, handleSubmit, reset, setValue } = useForm();
   const { register: registerEnvio, handleSubmit: handleSubmitEnvio, reset: resetEnvio, watch: watchEnvio } = useForm();
@@ -88,7 +89,8 @@ function GerenciarCombos() {
     resetEnvio();
     setComboParaEnvio(combo);
     setIsModalEnvioOpen(true);
-    setSetores([]); // limpa setores antigos
+    setSetores([]);
+    setSetoresSelecionados([]);
   };
 
   const fecharModalEnvio = () => {
@@ -96,6 +98,7 @@ function GerenciarCombos() {
     setIsModalEnvioOpen(false);
     setComboParaEnvio(null);
     setSetores([]);
+    setSetoresSelecionados([]);
   };
 
   // --- Criar ou atualizar combo ---
@@ -136,30 +139,53 @@ function GerenciarCombos() {
     navigate(`/adm/combos/${comboId}`);
   };
 
-  // --- Enviar combo para setor ---
-  const onSubmitEnvio = async (data) => {
-    const { estruturaId, setorId } = data;
+  const onSubmitEnvio = handleSubmitEnvio(async (formData) => {
     if (!comboParaEnvio) return;
+
+    const estruturaId = formData.estruturaId;
+    if (!estruturaId || setoresSelecionados.length === 0) {
+      toast.error('Selecione a estrutura e pelo menos um setor.');
+      return;
+    }
+
     try {
+      // Envia todos os setores de uma vez para a mesma estrutura
       await axios.post(
-        `http://localhost:8081/adm/combos/${comboParaEnvio.id}/setor/${setorId}?estruturaId=${estruturaId}`,
-        {},
-        makeConfig()
+        `http://localhost:8081/adm/combos/${comboParaEnvio.id}/estrutura/${estruturaId}`,
+        {
+          setoresId: setoresSelecionados,
+          dataInicio: formData.dataInicio,
+          dataFim: formData.dataFim
+        },
+        { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );
-      toast.success('Combo enviado para o setor com sucesso!');
-      fecharModalEnvio();
+
+      toast.success('Combo enviado para os setores selecionados!');
+      fecharModalEnvio(); // fecha modal e reseta estados
     } catch (error) {
       toast.error('Erro ao enviar o combo.');
       console.error(error);
     }
-  };
+  });
+
+
 
   // --- Atualizar setores ao mudar estrutura ---
   const estruturaSelecionada = watchEnvio('estruturaId');
   useEffect(() => {
     if (estruturaSelecionada) buscarSetores(estruturaSelecionada);
     else setSetores([]);
+    setSetoresSelecionados([]);
   }, [estruturaSelecionada]);
+
+  // --- Lidar com checkbox de setores ---
+  const toggleSetor = (setorId) => {
+    setSetoresSelecionados(prev =>
+      prev.includes(setorId)
+        ? prev.filter(id => id !== setorId)
+        : [...prev, setorId]
+    );
+  };
 
   return (
     <div className={styles.container}>
@@ -232,41 +258,73 @@ function GerenciarCombos() {
       {isModalEnvioOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
-            <h4 className={styles.modalTitulo}>Enviar Combo para Setor</h4>
+            <h4 className={styles.modalTitulo}>Enviar Combo para Setores</h4>
             <form onSubmit={handleSubmitEnvio(onSubmitEnvio)}>
+              {/* Estrutura */}
               <div className={styles.formGroup}>
-
                 <label>Estrutura</label>
                 <select {...registerEnvio('estruturaId', { required: true })}>
                   <option value="">Selecione</option>
-                  {console.log("Estruturas recebidas:", estruturas)}
                   {estruturas.map(e => (
                     <option key={e.id} value={e.id}>
-                       {e.name || e.nomeEstrutura || e.nome}
+                      {e.name || e.nomeEstrutura || e.nome}
                     </option>
                   ))}
                 </select>
+              </div>
 
-              </div>
+              {/* Setores */}
               <div className={styles.formGroup}>
-                <label>Setor</label>
-                <select {...registerEnvio('setorId', { required: true })}>
-                  <option value="">Selecione</option>
-                  {setores.map(s => (
-                    <option key={s.id} value={s.id}>
-                      {s.nome || s.nomeSetor}
-                    </option>
+                <label>Setores</label>
+                <div className={styles.checkboxContainer}>
+                  {setores.map((setor) => (
+                    <label key={setor.id} className={styles.checkboxLabel}>
+                      <input
+                        type="checkbox"
+                        value={setor.id}
+                        {...registerEnvio('setoresId')}
+                        onChange={() => toggleSetor(setor.id)}
+                        checked={setoresSelecionados.includes(setor.id)}
+                      />
+                      <span>{setor.nome || setor.nomeSetor}</span>
+                    </label>
                   ))}
-                </select>
+                </div>
               </div>
+
+              {/* Data de início */}
+              <div className={styles.formGroup}>
+                <label>Data de Início</label>
+                <input
+                  type="date"
+                  {...registerEnvio('dataInicio', { required: true })}
+                />
+              </div>
+
+              {/* Data de fim */}
+              <div className={styles.formGroup}>
+                <label>Data de Fim</label>
+                <input
+                  type="date"
+                  {...registerEnvio('dataFim', { required: true })}
+                />
+              </div>
+
               <div className={styles.modalFooter}>
-                <button type="button" onClick={fecharModalEnvio} className={styles.botaoCancelar}>Cancelar</button>
-                <button type="submit" className={styles.botaoSalvar}>Enviar</button>
+                <button type="button" onClick={fecharModalEnvio} className={styles.botaoCancelar}>
+                  Cancelar
+                </button>
+                <button type="submit" className={styles.botaoSalvar}>
+                  Enviar
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
+
+
+
 
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
