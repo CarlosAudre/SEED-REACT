@@ -4,52 +4,99 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import { FaPlus, FaTrash, FaClipboardList, FaArrowLeft } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaClipboardList, FaArrowLeft, FaPlusCircle } from 'react-icons/fa'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './DetalhesCombo.module.css';
 
 function DetalhesCombo() {
-  const { comboId } = useParams(); // Pega o ID da URL
-  const { register, handleSubmit, reset } = useForm();
+  // Hooks de estado e formulário
+  const { comboId } = useParams(); 
+  const { register, handleSubmit, reset } = useForm(); // Form principal (adicionar item existente)
+  const { register: registerItem, handleSubmit: handleSubmitItem, reset: resetItem } = useForm(); // Form do modal (criar novo item)
 
   const [combo, setCombo] = useState(null);
   const [itensDoCombo, setItensDoCombo] = useState([]);
   const [todosOsItens, setTodosOsItens] = useState([]);
+  const [classificacoes, setClassificacoes] = useState([]); 
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false); // Estado do modal de criação
 
   const token = localStorage.getItem('token');
   const makeConfig = () => ({ headers: { Authorization: `Bearer ${token}` } });
 
+  // Função para buscar todos os dados iniciais
   const buscarDados = useCallback(async () => {
     try {
-      const [resCombo, resItensCombo, resTodosItens] = await Promise.all([
+      const [resCombo, resItensCombo, resTodosItens, resClassificacoes] = await Promise.all([ 
         axios.get(`http://localhost:8081/adm/combos/${comboId}`, makeConfig()),
         axios.get(`http://localhost:8081/adm/combos/${comboId}/itens`, makeConfig()),
-        axios.get('http://localhost:8081/adm/itens', makeConfig())
+        axios.get('http://localhost:8081/adm/itens', makeConfig()),
+        axios.get('http://localhost:8081/adm/classificacoes', makeConfig()) 
       ]);
       setCombo(resCombo.data);
       setItensDoCombo(resItensCombo.data);
       setTodosOsItens(resTodosItens.data);
-    } catch (error) {
-      toast.error('Erro ao carregar os detalhes do kit.');
-      console.error(error);
+      setClassificacoes(resClassificacoes.data); 
+    } catch (error) { 
+        toast.error('Erro ao carregar dados do kit.');
+        console.error("Erro em buscarDados:", error);
     }
-  }, [comboId, token]);
+  }, [comboId, token]); 
 
   useEffect(() => {
     buscarDados();
   }, [buscarDados]);
+  
+  // --- Funções para o Modal de Criação Rápida de Item ---
+  const abrirItemModal = () => {
+    resetItem();
+    setIsItemModalOpen(true);
+  };
+  const fecharItemModal = () => {
+    setIsItemModalOpen(false);
+  };
 
-  const adicionarItem = async (data) => {
+  const criarNovoItem = async (data) => {
+    const dadosFormatados = {
+        nomeItem: data.nomeItem,
+        descricao: data.descricao,
+        classificacaoDTO: { id: parseInt(data.classificacaoId) },
+        tipo_dado: data.tipo_dado,
+        obrigatorio: data.obrigatorio || false, 
+        valor: data.valor ? parseInt(data.valor) : null, // Usa 'valor'
+        ativo: true
+    };
     try {
-      await axios.post(`http://localhost:8081/adm/combos/${comboId}/itens`, data, makeConfig());
+        await axios.post('http://localhost:8081/adm/itens', dadosFormatados, makeConfig());
+        toast.success('Novo item criado com sucesso!');
+        fecharItemModal();
+        // Atualiza a lista de itens disponíveis no dropdown
+        const resTodosItens = await axios.get('http://localhost:8081/adm/itens', makeConfig());
+        setTodosOsItens(resTodosItens.data); 
+    } catch (error) {
+        toast.error('Erro ao criar o novo item.');
+        console.error("Erro em criarNovoItem:", error);
+    }
+  };
+  // --- Fim das Funções do Modal ---
+
+  // --- Funções para Adicionar/Remover Item Existente ---
+  const adicionarItem = async (data) => {
+    const payload = {
+      itemId: data.itemId,
+      ordem: data.ordem,
+      obrigatorio: data.obrigatorio || false, 
+      valor: data.valor ? parseInt(data.valor) : null // Envia o 'valor'
+    };
+    try {
+      await axios.post(`http://localhost:8081/adm/combos/${comboId}/itens`, payload, makeConfig());
       toast.success('Item adicionado ao kit com sucesso!');
-      reset(); // Limpa o formulário
-      buscarDados(); // Atualiza a lista
+      reset(); 
+      buscarDados(); 
     } catch (error) {
       const msg = error.response?.data?.message || 'Erro ao adicionar o item.';
-      toast.error(msg);
-      console.error(error);
+      toast.error(msg); // Exibe erros de validação do back-end (ex: ordem repetida)
+      console.error("Erro em adicionarItem:", error);
     }
   };
 
@@ -58,15 +105,16 @@ function DetalhesCombo() {
       try {
         await axios.delete(`http://localhost:8081/adm/combos/itens/${comboItemId}`, makeConfig());
         toast.success('Item removido do kit com sucesso!');
-        buscarDados(); // Atualiza a lista
+        buscarDados(); 
       } catch (error) {
         toast.error('Erro ao remover o item.');
-        console.error(error);
+        console.error("Erro em removerItem:", error);
       }
     }
   };
+  // --- Fim das Funções Adicionar/Remover ---
 
-  if (!combo) return <p>Carregando...</p>;
+  if (!combo) return <div style={{color: 'white', textAlign: 'center', padding: '50px'}}>Carregando...</div>;
 
   return (
     <div className={styles.container}>
@@ -88,15 +136,17 @@ function DetalhesCombo() {
                   <th>Item</th>
                   <th>Ordem</th>
                   <th>Obrigatório</th>
-                  <th>Ação</th>
+                  <th>Valor</th>
+                  <th>Ação</th> 
                 </tr>
               </thead>
               <tbody>
-                {itensDoCombo.map(({ id, ordem, obrigatorio, item }) => (
+                {itensDoCombo.map(({ id, ordem, obrigatorio, valor, item }) => ( 
                   <tr key={id}>
                     <td>{item.nomeItem}</td>
                     <td>{ordem}</td>
                     <td>{obrigatorio ? 'Sim' : 'Não'}</td>
+                    <td>{valor !== null ? valor : '-'}</td> 
                     <td>
                       <button onClick={() => removerItem(id)} className={styles.botaoRemover} title="Remover Item">
                         <FaTrash />
@@ -111,9 +161,15 @@ function DetalhesCombo() {
           )}
         </div>
 
-        {/* Lado Direito: Formulário para Adicionar Novos Itens */}
+        
         <div className={styles.coluna}>
-          <h4 className={styles.subtitulo}>Adicionar Novo Item</h4>
+           <h4 className={styles.subtitulo}>
+             Adicionar Item Existente
+             
+             <button onClick={abrirItemModal} className={styles.botaoCriacaoRapida} title="Criar novo item rapidamente">
+                 <FaPlusCircle />
+             </button>
+           </h4>
           <form onSubmit={handleSubmit(adicionarItem)} className={styles.formulario}>
             <div className={styles.formGroup}>
               <label>Item</label>
@@ -126,16 +182,64 @@ function DetalhesCombo() {
             </div>
             <div className={styles.formGroup}>
               <label>Ordem</label>
-              <input type="text" {...register('ordem', { required: true })} placeholder="Ex: 1, 2, A, B..." />
+              <input 
+                type="text" 
+                {...register('ordem', { required: true })} 
+                placeholder="Ex: 1, 2, 3... (número único, >= 1)" 
+              />
             </div>
+            
+            <div className={styles.formGroup}>
+              <label>Valor (Opcional)</label>
+              <input 
+                type="number" 
+                min="0" 
+                {...register('valor', { valueAsNumber: true, min: 0 })} 
+                placeholder="Ex: 10, 50, 100" 
+              />
+            </div>
+
             <div className={styles.formGroupCheck}>
-              <input type="checkbox" {...register('obrigatorio')} id="obrigatorio" />
-              <label htmlFor="obrigatorio">É obrigatório?</label>
+              <input type="checkbox" {...register('obrigatorio')} id="obrigatorio-add" /> 
+              <label htmlFor="obrigatorio-add">É obrigatório?</label>
             </div>
             <button type="submit" className={styles.botaoAdicionar}><FaPlus /> Adicionar ao Kit</button>
           </form>
         </div>
       </div>
+
+      {isItemModalOpen && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}> 
+              <h4 className={styles.modalTitulo}>Criar Novo Item</h4>
+              <form onSubmit={handleSubmitItem(criarNovoItem)}>
+                <div className={styles.formGroup}>
+                  <label>Nome do Item</label>
+                  <input {...registerItem('nomeItem', { required: true })} />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>Descrição</label>
+                  <input {...registerItem('descricao', { required: true })} />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>Classificação</label>
+                  <select {...registerItem('classificacaoId', { required: true })}>
+                    <option value="">Selecione...</option>
+                    {classificacoes.map(c => (
+                      <option key={c.id} value={c.id}>{c.nomeClassificacao}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className={styles.modalFooter}>
+                  <button type="button" onClick={fecharItemModal} className={styles.botaoCancelar}>Cancelar</button>
+                  <button type="submit" className={styles.botaoSalvar}>Criar Item</button>
+                </div>
+              </form>
+            </div>
+          </div>
+      )}
+     
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
