@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
 import styles from "./Home.module.css";
-import { FaUserCheck, FaBoxOpen, FaFolderOpen, FaBuilding, FaClipboardList } from "react-icons/fa";
+import { FaUserCheck, FaBoxOpen, FaFolderOpen, FaBuilding, FaClipboardList, FaTags } from "react-icons/fa";
 
 function Home() {
   const [userRole, setUserRole] = React.useState(null);
@@ -42,31 +42,40 @@ function Home() {
     <div className={styles.container}>
       <h1 className={styles.title}>Painel do Administrador</h1>
       <p className={styles.subtitle}>Selecione uma das opções abaixo para gerenciar o sistema.</p>
-
+      
       <div className={styles.dashboardGrid}>
+        
         <Link to="/solicitacoes-acesso" className={styles.card}>
           <FaUserCheck className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Aprovar Acessos</h3>
           <p className={styles.cardText}>Gerencie as solicitações de acesso de novos usuários.</p>
         </Link>
+        
+        {/* --- NOVO CARD --- */}
+        <Link to="/adm/classificacoes" className={styles.card}>
+          <FaTags className={styles.cardIcon} />
+          <h3 className={styles.cardTitle}>Gerenciar Classificações</h3>
+          <p className={styles.cardText}>Defina as categorias para os itens (Ex: Eletrônicos).</p>
+        </Link>
 
         <Link to="/adm/itens" className={styles.card}>
           <FaBoxOpen className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Gerenciar Itens</h3>
-          <p className={styles.cardText}>Crie, edite e remova os materiais disponíveis para solicitação.</p>
+          <p className={styles.cardText}>Crie e edite os materiais disponíveis para solicitação.</p>
         </Link>
-
+        
         <Link to="/adm/combos" className={styles.card}>
           <FaFolderOpen className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Gerenciar Kits</h3>
-          <p className={styles.cardText}>Monte e organize os kits de solicitação para os professores.</p>
+          <p className={styles.cardText}>Monte os kits de solicitação e adicione itens a eles.</p>
         </Link>
-
+        
         <Link to="/adm/estruturas" className={styles.card}>
           <FaBuilding className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Gerenciar Estruturas</h3>
-          <p className={styles.cardText}>Configure setores, salas e unidades da escola.</p>
+          <p className={styles.cardText}>Configure as escolas, prédios e setores da instituição.</p>
         </Link>
+
       </div>
     </div>
   );

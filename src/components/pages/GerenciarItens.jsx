@@ -28,7 +28,7 @@ function GerenciarItens() {
     try {
       const [resItens, resClassificacoes] = await Promise.all([
         axios.get('http://localhost:8081/adm/itens', makeConfig()),
-        axios.get('http://localhost:8081/adm/classificacoes', makeConfig()) // IMPORTANTE: Você precisará criar este endpoint!
+        axios.get('http://localhost:8081/adm/classificacoes', makeConfig()) 
       ]);
       setItens(resItens.data);
       setClassificacoes(resClassificacoes.data);

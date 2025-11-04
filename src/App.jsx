@@ -8,8 +8,9 @@ import SolicitacaoDeAcesso from './components/pages/SolicitacaoDeAcesso';
 import GerenciarItens from './components/pages/GerenciarItens';
 import GerenciarCombos from './components/pages/GerenciarCombos'; 
 import DetalhesCombo from './components/pages/DetalhesCombo';
-import GerenciarEstruturas from './components/pages/GerenciarEstruturas'; // 🔹 NOVO
+import GerenciarEstruturas from './components/pages/GerenciarEstruturas'; 
 import PreencherCombosSetor from './components/pages/PreencherCombosSetor';
+import GerenciarClassificacoes from './components/pages/GerenciarClassificacoes';
 
 function App() {
     return (
@@ -23,7 +24,8 @@ function App() {
                 <Route path="/adm/combos" element={<GerenciarCombos />} />
                 <Route path="/adm/combos/:comboId" element={<DetalhesCombo />} />
                 <Route path="/adm/estruturas" element={<GerenciarEstruturas />} />
-                <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor/>}/> 
+                <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor/>}/>
+                <Route path="/adm/classificacoes" element={<GerenciarClassificacoes />} /> 
             </Routes>
         </Router>
     );
