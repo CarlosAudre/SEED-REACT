@@ -1,0 +1,101 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 32px 12px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.formWrapper {
+  width: 100%;
+  max-width: 600px; /* Limita a largura do formulário */
+  padding: 30px 40px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  color: white;
+}
+
+.titulo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 2rem;
+}
+
+.icone {
+  color: #66a3ff;
+}
+
+.descricao {
+  font-size: 1rem;
+  color: #b8c6db;
+  margin-bottom: 30px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  color: #b8c6db;
+  font-weight: 600;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #4a5568;
+  background-color: #2d3748;
+  color: white;
+  font-size: 1rem;
+  box-sizing: border-box; /* Garante que o padding não estoure */
+}
+
+.formGroup select:disabled {
+  background-color: #4a5568;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.botaoEnviar {
+  background: linear-gradient(90deg, #007bff, #005fcc);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+}
+.botaoEnviar:hover {
+  background: linear-gradient(90deg, #3399ff, #007bff);
+}
+.botaoEnviar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

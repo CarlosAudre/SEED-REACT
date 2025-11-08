@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
 import styles from "./Home.module.css";
-import { FaUserCheck, FaBoxOpen, FaFolderOpen, FaBuilding, FaClipboardList, FaTags, FaUsersCog } from "react-icons/fa";
+
+import { FaUserCheck, FaBoxOpen, FaFolderOpen, FaBuilding, FaClipboardList, FaTags, FaUsersCog, FaUserPlus, FaUserTag } from "react-icons/fa";
 
 function Home() {
   const [userRole, setUserRole] = React.useState(null);
@@ -21,7 +22,7 @@ function Home() {
         }
 
         if (role === "ADM") setUserRole("ADM");
-        else if (role === "RESPONSAVEL_SETOR") setUserRole("RESPONSAVEL_SETOR");
+        else if (role ==="RESPONSAVEL_SETOR") setUserRole("RESPONSAVEL_SETOR");
         else setUserRole("USER");
 
       } catch (error) {
@@ -44,6 +45,13 @@ function Home() {
           <FaUserCheck className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Aprovar Acessos</h3>
           <p className={styles.cardText}>Gerencie as solicitações de acesso de novos usuários.</p>
+        </Link>
+        
+        
+        <Link to="/adm/solicitacoes-setor" className={styles.card}>
+          <FaUserTag className={styles.cardIcon} />
+          <h3 className={styles.cardTitle}>Aprovar Setores</h3>
+          <p className={styles.cardText}>Gerencie os pedidos de alocação de usuários em setores.</p>
         </Link>
         
         <Link to="/adm/usuarios" className={styles.card}>
@@ -83,12 +91,18 @@ function Home() {
   const renderResponsavelSetor = () => (
     <div className={styles.container}>
       <h1 className={styles.title}>Painel - Responsável de Setor</h1>
-      <p className={styles.subtitle}>Aqui você preenche os combos enviados para o seu setor.</p>
+      <p className={styles.subtitle}>Aqui você pode gerenciar seus kits e solicitações.</p>
       <div className={styles.dashboardGrid}>
         <Link to="/responsavel-setor/preenchimento" className={styles.card}>
           <FaClipboardList className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Preencher Combos do Setor</h3>
           <p className={styles.cardText}>Abra a página para preencher os itens dos combos alocados no seu setor.</p>
+        </Link>
+
+        <Link to="/solicitar-setor" className={styles.card}>
+          <FaUserPlus className={styles.cardIcon} />
+          <h3 className={styles.cardTitle}>Solicitar Acesso a Setores</h3>
+          <p className={styles.cardText}>Peça ao administrador para vincular você a um novo setor ou escola.</p>
         </Link>
       </div>
     </div>
@@ -97,7 +111,7 @@ function Home() {
   const renderDefaultHome = () => (
     <div className={styles.container}>
       <h1 className={styles.title}>Bem-vindo(a) ao Portal da Escola</h1>
-      <p className={styles.subtitle}>Aqui você poderá solicitar materiais e acompanhar seus pedidos.</p>
+      <p className={styles.subtitle}>Faça login ou registre-se para continuar.</p>
     </div>
   );
 

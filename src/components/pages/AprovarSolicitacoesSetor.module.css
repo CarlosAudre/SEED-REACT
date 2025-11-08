@@ -1,0 +1,88 @@
+.container {
+  max-width: 1200px;
+  padding: 30px 40px;
+  overflow-x: auto; 
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  color: white;
+  margin: 32px auto;
+}
+.titulo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+.icone {
+  color: #66a3ff;
+}
+.tabela {
+  width: 100%;
+  border-collapse: separate;
+  table-layout: fixed;
+}
+.tabela th, .tabela td {
+  padding: 12px 15px;
+  text-align: left;
+  vertical-align: middle;
+}
+.tabela th {
+  color: #b8c6db;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.tabela td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  word-wrap: break-word;
+  white-space: normal;
+}
+.tabela tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.justificativa {
+  font-size: 0.9rem;
+  color: #b8c6db;
+}
+.acoes {
+  text-align: right;
+  white-space: nowrap;
+}
+.colunaAcoes {
+  text-align: right;
+  width: 200px;
+}
+.botaoAprovar, .botaoReprovar {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 10px;
+}
+.botaoAprovar {
+  background-color: #28a745;
+  color: white;
+}
+.botaoAprovar:hover {
+  background-color: #218838;
+}
+.botaoReprovar {
+  background-color: #dc3545;
+  color: white;
+}
+.botaoReprovar:hover {
+  background-color: #c82333;
+}
+.mensagemVazia {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  text-align: center;
+}
