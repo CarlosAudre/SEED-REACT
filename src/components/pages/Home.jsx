@@ -1,10 +1,8 @@
-// src/components/pages/Home.js
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
 import styles from "./Home.module.css";
-import { FaUserCheck, FaBoxOpen, FaFolderOpen, FaBuilding, FaClipboardList, FaTags } from "react-icons/fa";
+import { FaUserCheck, FaBoxOpen, FaFolderOpen, FaBuilding, FaClipboardList, FaTags, FaUsersCog } from "react-icons/fa";
 
 function Home() {
   const [userRole, setUserRole] = React.useState(null);
@@ -14,21 +12,18 @@ function Home() {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-
-        // aceita tanto string quanto array (só por segurança)
         let role = decoded.role ?? decoded.roles ?? decoded.Roles ?? null;
-
+        
         if (Array.isArray(role)) {
-          // caso o claim venha como array, pega prioridade ADM > RESPONSAVEL_SETOR > USER
           if (role.includes("ADM")) role = "ADM";
           else if (role.includes("RESPONSAVEL_SETOR")) role = "RESPONSAVEL_SETOR";
           else role = role[0] || "USER";
         }
 
-        // normaliza pra tipos que a gente usa
         if (role === "ADM") setUserRole("ADM");
         else if (role === "RESPONSAVEL_SETOR") setUserRole("RESPONSAVEL_SETOR");
         else setUserRole("USER");
+
       } catch (error) {
         console.error("Token inválido:", error);
         setUserRole("GUEST");
@@ -51,7 +46,12 @@ function Home() {
           <p className={styles.cardText}>Gerencie as solicitações de acesso de novos usuários.</p>
         </Link>
         
-        {/* --- NOVO CARD --- */}
+        <Link to="/adm/usuarios" className={styles.card}>
+          <FaUsersCog className={styles.cardIcon} />
+          <h3 className={styles.cardTitle}>Gerenciar Usuários</h3>
+          <p className={styles.cardText}>Atribua cargos (perfis) e setores aos usuários aprovados.</p>
+        </Link>
+        
         <Link to="/adm/classificacoes" className={styles.card}>
           <FaTags className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Gerenciar Classificações</h3>
@@ -84,15 +84,12 @@ function Home() {
     <div className={styles.container}>
       <h1 className={styles.title}>Painel - Responsável de Setor</h1>
       <p className={styles.subtitle}>Aqui você preenche os combos enviados para o seu setor.</p>
-
       <div className={styles.dashboardGrid}>
         <Link to="/responsavel-setor/preenchimento" className={styles.card}>
           <FaClipboardList className={styles.cardIcon} />
           <h3 className={styles.cardTitle}>Preencher Combos do Setor</h3>
           <p className={styles.cardText}>Abra a página para preencher os itens dos combos alocados no seu setor.</p>
         </Link>
-
-        {/* Se quiser, pode repetir cards úteis pro responsavel aqui */}
       </div>
     </div>
   );
@@ -105,7 +102,7 @@ function Home() {
   );
 
   if (userRole === null) return <div className={styles.container}>Carregando...</div>;
-
+  
   if (userRole === "ADM") return renderAdminDashboard();
   if (userRole === "RESPONSAVEL_SETOR") return renderResponsavelSetor();
   return renderDefaultHome();

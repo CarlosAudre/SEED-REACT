@@ -11,6 +11,7 @@ import DetalhesCombo from './components/pages/DetalhesCombo';
 import GerenciarEstruturas from './components/pages/GerenciarEstruturas'; 
 import PreencherCombosSetor from './components/pages/PreencherCombosSetor';
 import GerenciarClassificacoes from './components/pages/GerenciarClassificacoes';
+import GerenciarUsuarios from './components/pages/GerenciarUsuarios';
 
 function App() {
     return (
@@ -25,7 +26,9 @@ function App() {
                 <Route path="/adm/combos/:comboId" element={<DetalhesCombo />} />
                 <Route path="/adm/estruturas" element={<GerenciarEstruturas />} />
                 <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor/>}/>
-                <Route path="/adm/classificacoes" element={<GerenciarClassificacoes />} /> 
+                <Route path="/adm/classificacoes" element={<GerenciarClassificacoes />} />
+                <Route path="/adm/usuarios" element={<GerenciarUsuarios />} />
+                <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor />} /> 
             </Routes>
         </Router>
     );

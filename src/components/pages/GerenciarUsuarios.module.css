@@ -1,0 +1,187 @@
+.container {
+  max-width: 1200px;
+  padding: 30px 40px;
+  overflow-x: auto; 
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  color: white;
+  margin: 32px auto;
+}
+.titulo {
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  gap: 10px; 
+  margin-bottom: 30px; 
+  font-size: 2rem;
+}
+.icone { 
+  color: #66a3ff; 
+}
+.tabela {
+  width: 100%; 
+  border-collapse: separate; 
+  table-layout: fixed;
+}
+.tabela th, .tabela td {
+  padding: 12px; 
+  text-align: left; 
+  vertical-align: middle;
+}
+.tabela th {
+  color: #b8c6db; 
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.tabela td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  word-wrap: break-word; 
+  white-space: normal;
+}
+.tabela tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.acoes { 
+  text-align: right; 
+}
+.colunaAcoes { 
+  text-align: right; 
+  width: 80px; 
+}
+.botaoAcao {
+  background: none; 
+  border: none; 
+  color: #b8c6db; 
+  cursor: pointer;
+  font-size: 1.2rem; 
+  margin-left: 15px; 
+  transition: color 0.2s;
+}
+.botaoAcao:hover { 
+  color: #66a3ff; 
+}
+.statusAtivo {
+  color: #4ade80;
+  font-weight: 600;
+}
+.statusPendente {
+  color: #facc15;
+  font-weight: 600;
+}
+.modalOverlay {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); 
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  z-index: 1000;
+}
+.modalContent {
+  width: 600px;
+  padding: 20px;
+  background: rgba(30, 41, 59, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.modalTitulo { 
+  text-align: center; 
+  font-size: 1.5rem; 
+  margin-bottom: 10px; 
+}
+.subtituloModal {
+  text-align: center; 
+  font-size: 1.2rem; 
+  margin-bottom: 20px;
+  color: #b8c6db;
+}
+.divider {
+  border: none; 
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 20px 0;
+}
+.formGroup { 
+  margin-bottom: 15px; 
+  text-align: left; 
+}
+.formGroup label { 
+  display: block; 
+  margin-bottom: 5px; 
+  color: #b8c6db; 
+}
+.formGroup input, .formGroup select {
+  width: 100%; 
+  padding: 10px; 
+  border-radius: 8px;
+  border: 1px solid #4a5568; 
+  background-color: #2d3748;
+  color: white; 
+  font-size: 1rem;
+}
+.modalFooter {
+  display: flex; 
+  justify-content: flex-end;
+  gap: 10px; 
+  margin-top: 20px;
+}
+.botaoCancelar, .botaoSalvar {
+  padding: 10px 20px; 
+  border-radius: 8px; 
+  border: none;
+  cursor: pointer; 
+  font-weight: 600;
+}
+.botaoCancelar { 
+  background-color: #4a5568; 
+  color: white; 
+}
+.botaoSalvar { 
+  background-color: #007bff; 
+  color: white; 
+}
+.checkboxContainer {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #4a5568;
+  border-radius: 8px;
+  background-color: #2d3748;
+  padding: 10px;
+}
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px 4px;
+  transition: background 0.2s;
+}
+.checkboxLabel:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+.checkboxLabel input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+.checkboxLabel span {
+  font-weight: 500;
+  font-size: 1rem;
+}
+.mensagemVaziaCheck {
+  color: #9ca3af;
+  text-align: center;
+  padding: 10px;
+}
