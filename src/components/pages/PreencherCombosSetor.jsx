@@ -1,4 +1,4 @@
-import { useEffect, useState, useEffect as useEff } from "react";
+import { useEffect, useState } from "react";
 import styles from "./PreencherCombosSetor.module.css";
 
 export default function PreencherCombosSetor() {
@@ -11,23 +11,71 @@ export default function PreencherCombosSetor() {
   const [enviando, setEnviando] = useState(false);
   const [modoEdicao, setModoEdicao] = useState(false);
   const [carregandoItens, setCarregandoItens] = useState(false);
+  const [setores, setSetores] = useState([]);
+  const [setorSelecionado, setSetorSelecionado] = useState(null);
 
   const token = localStorage.getItem("token");
+  const baseUrl = "http://localhost:8081/responsavel-setor/combos";
+
+  useEffect(() => {
+    async function carregarSetores() {
+      try {
+        const response = await fetch(`${baseUrl}/setores`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!response.ok) throw new Error("Erro ao carregar setores");
+        const data = await response.json();
+        console.log("Setores -> ", data);
+        setSetores(data || []);
+      } catch (err) {
+        console.error("Erro ao carregar setores:", err);
+        setSetores([]);
+      }
+    }
+    carregarSetores();
+  }, [token]);
+
+  async function filtrarPorSetor(idParam) {
+    // idParam pode vir como string (from <select>) ou null/undefined
+    const id = idParam ? Number(idParam) : null;
+    setSetorSelecionado(id);
+
+    try {
+      const url = id ? `${baseUrl}/setor/${id}` : `${baseUrl}`;
+
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) throw new Error("Erro ao filtrar combos");
+      const data = await response.json();
+
+      const sorted = data.sort((a, b) => {
+        const aKey = a.dataFim || a.dataEnvio || 0;
+        const bKey = b.dataFim || b.dataEnvio || 0;
+        return new Date(aKey) - new Date(bKey);
+      });
+
+      setCombos(sorted);
+    } catch (e) {
+      console.error(e);
+      alert("Erro ao filtrar combos");
+    }
+  }
 
   useEffect(() => {
     async function carregarCombos() {
       try {
-        const response = await fetch("http://localhost:8081/responsavel-setor/combos", {
+        const response = await fetch(baseUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error("Erro ao carregar combos");
         const data = await response.json();
 
-        // ordena usando dataFim quando disponível, senão dataEnvio
         const sorted = data.sort((a, b) => {
           const aKey = a.dataFim || a.dataEnvio || 0;
           const bKey = b.dataFim || b.dataEnvio || 0;
-          return new Date(aKey) - new Date(bKey); // mais próximo/prazo primeiro
+          return new Date(aKey) - new Date(bKey);
         });
 
         setCombos(sorted);
@@ -110,7 +158,6 @@ export default function PreencherCombosSetor() {
           setObservacoes(novasObs);
           setModoEdicao(true);
         } else {
-          // garante limpar caso não tenha preenchimento
           setValores({});
           setObservacoes({});
           setModoEdicao(false);
@@ -181,6 +228,28 @@ export default function PreencherCombosSetor() {
       <div className={styles.hdr}>
         <div className={styles.hdrLeft}>
           <h2 className={styles.title}>Combos destinados ao seu setor</h2>
+
+          {/* Mostrar select quando houver ao menos 1 setor; se 0, exibe select desabilitado */}
+          {setores.length > 0 ? (
+            <select
+              className={styles.selectSetor}
+              value={setorSelecionado ?? ""}
+              onChange={(e) => filtrarPorSetor(e.target.value || null)}
+              style={{ marginTop: 10, padding: "6px 10px", borderRadius: 8 }}
+            >
+              <option value="">Todos os setores</option>
+              {setores.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.nome}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <select disabled style={{ marginTop: 10, padding: "6px 10px", borderRadius: 8 }}>
+              <option>Nenhum setor disponível</option>
+            </select>
+          )}
+
           <div className={styles.subtitle}>Prazo destacado — escolha o combo e preencha os itens</div>
         </div>
       </div>
@@ -190,7 +259,6 @@ export default function PreencherCombosSetor() {
       ) : (
         <div className={styles.listaCombos}>
           {combos.map((comboDestino) => {
-            // usar dataFim direto do DTO
             const prazoCompetencia = comboDestino.dataFim;
             const prazo = prazoStatus(prazoCompetencia);
 
@@ -201,7 +269,9 @@ export default function PreencherCombosSetor() {
                 onClick={() => abrirCombo(comboDestino)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => { if (e.key === 'Enter') abrirCombo(comboDestino); }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") abrirCombo(comboDestino);
+                }}
                 aria-label={`Abrir combo ${comboDestino.nomeCombo}`}
               >
                 <div className={styles.itemHeader}>
@@ -211,13 +281,17 @@ export default function PreencherCombosSetor() {
                     <p className={styles.comboDesc}>{comboDestino.nomeSetor || ""}</p>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <div style={{
-                      fontSize: 12,
-                      color: prazo.color === "danger" ? "#ffb4b4" : (prazo.color === "warning" ? "#ffd8a8" : "#b8d6ff"),
-                      fontWeight: 800
-                    }}>{prazo.label}</div>
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: prazo.color === "danger" ? "#ffb4b4" : prazo.color === "warning" ? "#ffd8a8" : "#b8d6ff",
+                        fontWeight: 800,
+                      }}
+                    >
+                      {prazo.label}
+                    </div>
                     <div style={{ fontSize: 11, color: "#9fb1d2" }}>
-                      {prazoCompetencia ? new Date(prazoCompetencia).toLocaleDateString('pt-BR') : 'Sem prazo'}
+                      {prazoCompetencia ? new Date(prazoCompetencia).toLocaleDateString("pt-BR") : "Sem prazo"}
                     </div>
                   </div>
                 </div>
@@ -226,8 +300,9 @@ export default function PreencherCombosSetor() {
                   <div className={styles.meta}>
                     {prazoCompetencia
                       ? `Prazo: ${diasRestantes(prazoCompetencia)}`
-                      : (comboDestino.dataEnvio ? `Enviado: ${new Date(comboDestino.dataEnvio).toLocaleDateString('pt-BR')}` : '')
-                    }
+                      : comboDestino.dataEnvio
+                      ? `Enviado: ${new Date(comboDestino.dataEnvio).toLocaleDateString("pt-BR")}`
+                      : ""}
                   </div>
                   <button className={styles.openBtn} onClick={(e) => { e.stopPropagation(); abrirCombo(comboDestino); }}>
                     Abrir
@@ -236,8 +311,6 @@ export default function PreencherCombosSetor() {
               </div>
             );
           })}
-
-
         </div>
       )}
 
@@ -249,12 +322,7 @@ export default function PreencherCombosSetor() {
                 <div>
                   <h3 className={styles.modalTitle}>{comboSelecionado.nomeCombo}</h3>
                   <div className={styles.modalSub}>
-                    {comboSelecionado.nomeSetor} •{" "}
-                    {comboSelecionado.dataFim
-                      ? `Prazo: ${new Date(comboSelecionado.dataFim).toLocaleDateString("pt-BR")}`
-                      : comboSelecionado.dataEnvio
-                        ? `Enviado: ${new Date(comboSelecionado.dataEnvio).toLocaleDateString("pt-BR")}`
-                        : ""}
+                    {comboSelecionado.nomeSetor} • {comboSelecionado.dataFim ? `Prazo: ${new Date(comboSelecionado.dataFim).toLocaleDateString("pt-BR")}` : comboSelecionado.dataEnvio ? `Enviado: ${new Date(comboSelecionado.dataEnvio).toLocaleDateString("pt-BR")}` : ""}
                     {comboSelecionado.dataFim && new Date(comboSelecionado.dataFim) < new Date() && (
                       <span style={{ color: "#ffb4b4", marginLeft: 8 }}>• Vencido</span>
                     )}
@@ -265,19 +333,12 @@ export default function PreencherCombosSetor() {
                   className={`${styles.btn} ${styles.btnSecondary}`}
                   onClick={fecharModal}
                   aria-label="Voltar"
-                  style={{
-                    padding: "6px 10px",
-                    minWidth: 48,
-                    fontSize: 18,
-                    fontWeight: 600,
-                    borderRadius: 10,
-                  }}
+                  style={{ padding: "6px 10px", minWidth: 48, fontSize: 18, fontWeight: 600, borderRadius: 10 }}
                 >
                   ←
                 </button>
               </div>
             </div>
-
 
             {carregandoItens ? (
               <div style={{ padding: 16, color: "#b8c6db" }}>Carregando itens...</div>
@@ -312,7 +373,6 @@ export default function PreencherCombosSetor() {
             <div className={styles.modalAcoes}>
               <div className={styles.auxInfo}>{itens.length} item(s) • {comboSelecionado.dataFim ? `Prazo: ${diasRestantes(comboSelecionado.dataFim)}` : 'Sem prazo'}</div>
               <div className={styles.actionGroup}>
-                {/* Limpar modo agora limpa os campos e desliga o modo de edição, sem fechar modal */}
                 <button
                   className={`${styles.btn} ${styles.btnSecondary}`}
                   onClick={() => {

@@ -26,6 +26,11 @@
   display:flex;
   flex-direction:column;
 }
+.hdrRight {
+  display:flex;
+  align-items:center;
+  gap: 12px;
+}
 .title {
   font-size: 1.7rem;
   font-weight: 800;
@@ -36,6 +41,32 @@
   color: #b8c6db;
   font-size: 0.95rem;
   margin-top: 6px;
+}
+
+/* select */
+.selectSetor {
+  background-color: #04549b;
+  color: #fff;
+  border: 1px solid #034685;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  appearance: none;
+}
+
+.selectSetor:focus {
+  outline: none;
+  border-color: rgba(59,130,246,0.95);
+  box-shadow: 0 8px 26px rgba(59,130,246,0.12);
+}
+
+.selectSetorDisabled {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(9, 54, 138, 0.288);
+  color: #9fb1d2;
+  border: 1px solid rgba(255,255,255,0.03);
 }
 
 /* Lista de combos: grid responsivo (cards maiores) */
