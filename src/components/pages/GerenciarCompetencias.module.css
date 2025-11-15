@@ -1,10 +1,8 @@
-/* src/components/pages/GerenciarItens.module.css */
-
 .container {
-  max-width: 1200px;
   height: 100vh;
+  max-width: 1200px;
   padding: 30px 40px;
-  overflow-x: auto; 
+  overflow-x: auto;
   background: rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
@@ -20,10 +18,6 @@
   gap: 10px;
   margin-bottom: 30px;
   font-size: 2rem;
-}
-
-.icone {
-  color: #66a3ff;
 }
 
 .containerBotaoTopo {
@@ -46,6 +40,7 @@
   align-items: center;
   gap: 8px;
 }
+
 .botaoNovo:hover {
   background: linear-gradient(90deg, #3399ff, #007bff);
 }
@@ -55,26 +50,39 @@
   border-collapse: separate;
   table-layout: fixed;
 }
-.tabela th, .tabela td {
+
+.tabela th,
+.tabela td {
   padding: 12px;
   text-align: left;
   vertical-align: middle;
 }
+
 .tabela th {
   color: #b8c6db;
   font-weight: 600;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 .tabela td {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   word-wrap: break-word;
 }
+
 .tabela tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.08);
 }
+
 .acoes {
   text-align: right;
+  white-space: nowrap;
 }
+
+.colunaAcoes {
+  text-align: right;
+  width: 180px;
+}
+
 .botaoAcao {
   background: none;
   border: none;
@@ -83,12 +91,13 @@
   font-size: 1.2rem;
   margin-left: 15px;
   transition: color 0.2s;
+  padding: 5px;
 }
+
 .botaoAcao:hover {
   color: #66a3ff;
 }
 
-/* --- Estilos do Modal --- */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -101,6 +110,7 @@
   justify-content: center;
   z-index: 1000;
 }
+
 .modalContent {
   width: 500px;
   padding: 20px;
@@ -110,21 +120,26 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 .modalTitulo {
   text-align: center;
   font-size: 1.5rem;
   margin-bottom: 20px;
 }
+
 .formGroup {
   margin-bottom: 15px;
   text-align: left;
 }
+
 .formGroup label {
   display: block;
   margin-bottom: 5px;
   color: #b8c6db;
 }
-.formGroup input, .formGroup select {
+
+.formGroup input,
+.formGroup select {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
@@ -133,29 +148,28 @@
   color: white;
   font-size: 1rem;
 }
-.formGroupCheck {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-align: left;
-}
+
 .modalFooter {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
 }
-.botaoCancelar, .botaoSalvar {
+
+.botaoCancelar,
+.botaoSalvar {
   padding: 10px 20px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   font-weight: 600;
 }
+
 .botaoCancelar {
   background-color: #4a5568;
   color: white;
 }
+
 .botaoSalvar {
   background-color: #007bff;
   color: white;

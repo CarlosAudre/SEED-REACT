@@ -190,7 +190,10 @@ export default function PreencherCombosSetor() {
       ) : (
         <div className={styles.listaCombos}>
           {combos.map((comboDestino) => {
-            const prazo = prazoStatus(comboDestino.dataFim);
+            // usar dataFim direto do DTO
+            const prazoCompetencia = comboDestino.dataFim;
+            const prazo = prazoStatus(prazoCompetencia);
+
             return (
               <div
                 key={`${comboDestino.id}-${comboDestino.comboId}`}
@@ -205,7 +208,7 @@ export default function PreencherCombosSetor() {
                   <div className={styles.badge}>{(comboDestino.nomeCombo || "").slice(0, 2).toUpperCase()}</div>
                   <div style={{ flex: 1 }}>
                     <h3 className={styles.comboTitle}>{comboDestino.nomeCombo || "Sem nome"}</h3>
-                    <p className={styles.comboDesc}>{comboDestino.nomeSetor ? `${comboDestino.nomeSetor}` : ""}</p>
+                    <p className={styles.comboDesc}>{comboDestino.nomeSetor || ""}</p>
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <div style={{
@@ -213,12 +216,19 @@ export default function PreencherCombosSetor() {
                       color: prazo.color === "danger" ? "#ffb4b4" : (prazo.color === "warning" ? "#ffd8a8" : "#b8d6ff"),
                       fontWeight: 800
                     }}>{prazo.label}</div>
-                    <div style={{ fontSize: 11, color: "#9fb1d2" }}>{comboDestino.dataFim ? new Date(comboDestino.dataFim).toLocaleDateString('pt-BR') : new Date(comboDestino.dataEnvio).toLocaleDateString('pt-BR')}</div>
+                    <div style={{ fontSize: 11, color: "#9fb1d2" }}>
+                      {prazoCompetencia ? new Date(prazoCompetencia).toLocaleDateString('pt-BR') : 'Sem prazo'}
+                    </div>
                   </div>
                 </div>
 
                 <div className={styles.itemFooter}>
-                  <div className={styles.meta}>{comboDestino.dataFim ? `Prazo: ${diasRestantes(comboDestino.dataFim)}` : (comboDestino.dataEnvio ? `Enviado: ${new Date(comboDestino.dataEnvio).toLocaleDateString('pt-BR')}` : '')}</div>
+                  <div className={styles.meta}>
+                    {prazoCompetencia
+                      ? `Prazo: ${diasRestantes(prazoCompetencia)}`
+                      : (comboDestino.dataEnvio ? `Enviado: ${new Date(comboDestino.dataEnvio).toLocaleDateString('pt-BR')}` : '')
+                    }
+                  </div>
                   <button className={styles.openBtn} onClick={(e) => { e.stopPropagation(); abrirCombo(comboDestino); }}>
                     Abrir
                   </button>
@@ -226,6 +236,8 @@ export default function PreencherCombosSetor() {
               </div>
             );
           })}
+
+
         </div>
       )}
 
@@ -248,7 +260,7 @@ export default function PreencherCombosSetor() {
                     )}
                   </div>
                 </div>
-               
+
                 <button
                   className={`${styles.btn} ${styles.btnSecondary}`}
                   onClick={fecharModal}

@@ -13,6 +13,7 @@ import GerenciarClassificacoes from './components/pages/GerenciarClassificacoes'
 import GerenciarUsuarios from './components/pages/GerenciarUsuarios';
 import SolicitarSetor from './components/pages/SolicitarSetor';
 import AprovarSolicitacoesSetor from './components/pages/AprovarSolicitacoesSetor'; 
+import GerenciarCompetencias from './components/pages/GerenciarCompetencias';
 
 function App() {
     return (
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/adm/classificacoes" element={<GerenciarClassificacoes />} />
                 <Route path="/adm/usuarios" element={<GerenciarUsuarios />} />
                 <Route path="/adm/solicitacoes-setor" element={<AprovarSolicitacoesSetor />} /> 
+                <Route path="/adm/competencias" element={<GerenciarCompetencias/>} /> 
                 <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor />} />
                 <Route path="/solicitar-setor" element={<SolicitarSetor />} />
 

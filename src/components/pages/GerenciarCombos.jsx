@@ -11,6 +11,7 @@ import styles from './GerenciarCombos.module.css';
 
 function GerenciarCombos() {
   const [combos, setCombos] = useState([]);
+  const [competencias, setCompetencias] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalEnvioOpen, setIsModalEnvioOpen] = useState(false);
   const [comboEmEdicao, setComboEmEdicao] = useState(null);
@@ -33,6 +34,17 @@ function GerenciarCombos() {
       setCombos(response.data);
     } catch (error) {
       toast.error('Erro ao buscar os kits.');
+      console.error(error);
+    }
+  };
+
+  // --- Buscar competências ---
+  const buscarCompetencias = async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/adm/competencias', makeConfig());
+      setCompetencias(response.data);
+    } catch (error) {
+      toast.error('Erro ao buscar competências.');
       console.error(error);
     }
   };
@@ -63,6 +75,7 @@ function GerenciarCombos() {
   useEffect(() => {
     buscarCombos();
     buscarEstruturas();
+    buscarCompetencias();
   }, []);
 
   // --- Abrir modal criar/editar ---
@@ -72,6 +85,7 @@ function GerenciarCombos() {
       setComboEmEdicao(combo);
       setValue('nomeCombo', combo.nomeCombo);
       setValue('descricao', combo.descricao);
+      setValue('competenciaId', combo.competencia?.id || '');
     } else {
       setComboEmEdicao(null);
     }
@@ -103,7 +117,11 @@ function GerenciarCombos() {
 
   // --- Criar ou atualizar combo ---
   const onSubmit = async (data) => {
-    const dadosFormatados = { ...data, ativo: comboEmEdicao ? comboEmEdicao.ativo : true };
+    const dadosFormatados = {
+      ...data,
+      ativo: comboEmEdicao ? comboEmEdicao.ativo : true
+    };
+
     try {
       if (comboEmEdicao) {
         await axios.put(`http://localhost:8081/adm/combos/${comboEmEdicao.id}`, dadosFormatados, makeConfig());
@@ -139,6 +157,7 @@ function GerenciarCombos() {
     navigate(`/adm/combos/${comboId}`);
   };
 
+  // --- Enviar combo para setores ---
   const onSubmitEnvio = handleSubmitEnvio(async (formData) => {
     if (!comboParaEnvio) return;
 
@@ -149,26 +168,21 @@ function GerenciarCombos() {
     }
 
     try {
-      // Envia todos os setores de uma vez para a mesma estrutura
       await axios.post(
         `http://localhost:8081/adm/combos/${comboParaEnvio.id}/estrutura/${estruturaId}`,
         {
-          setoresId: setoresSelecionados,
-          dataInicio: formData.dataInicio,
-          dataFim: formData.dataFim
+          setoresId: setoresSelecionados
         },
         { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );
 
       toast.success('Combo enviado para os setores selecionados!');
-      fecharModalEnvio(); // fecha modal e reseta estados
+      fecharModalEnvio();
     } catch (error) {
       toast.error('Erro ao enviar o combo.');
       console.error(error);
     }
   });
-
-
 
   // --- Atualizar setores ao mudar estrutura ---
   const estruturaSelecionada = watchEnvio('estruturaId');
@@ -204,6 +218,7 @@ function GerenciarCombos() {
           <tr>
             <th>Nome do Kit</th>
             <th>Descrição</th>
+            <th>Competência</th>
             <th className={styles.colunaAcoes}>Ações</th>
           </tr>
         </thead>
@@ -212,6 +227,7 @@ function GerenciarCombos() {
             <tr key={combo.id}>
               <td>{combo.nomeCombo}</td>
               <td>{combo.descricao}</td>
+              <td>{combo.competencia?.nome}</td>
               <td className={styles.acoes}>
                 <button onClick={() => navegarParaDetalhes(combo.id)} className={styles.botaoGerenciar} title="Gerenciar Itens do Kit">
                   <FaTasks />
@@ -241,10 +257,22 @@ function GerenciarCombos() {
                 <label>Nome do Kit</label>
                 <input {...register('nomeCombo', { required: true })} />
               </div>
+
               <div className={styles.formGroup}>
                 <label>Descrição</label>
                 <input {...register('descricao', { required: true })} />
               </div>
+
+              <div className={styles.formGroup}>
+                <label>Competência</label>
+                <select {...register('competenciaId', { required: true })}>
+                  <option value="">Selecione</option>
+                  {competencias.map(c => (
+                    <option key={c.id} value={c.id}>{c.nome}</option>
+                  ))}
+                </select>
+              </div>
+
               <div className={styles.modalFooter}>
                 <button type="button" onClick={fecharModal} className={styles.botaoCancelar}>Cancelar</button>
                 <button type="submit" className={styles.botaoSalvar}>Salvar</button>
@@ -292,39 +320,18 @@ function GerenciarCombos() {
                 </div>
               </div>
 
-              {/* Data de início */}
-              <div className={styles.formGroup}>
-                <label>Data de Início</label>
-                <input
-                  type="date"
-                  {...registerEnvio('dataInicio', { required: true })}
-                />
-              </div>
-
-              {/* Data de fim */}
-              <div className={styles.formGroup}>
-                <label>Data de Fim</label>
-                <input
-                  type="date"
-                  {...registerEnvio('dataFim', { required: true })}
-                />
-              </div>
-
               <div className={styles.modalFooter}>
                 <button type="button" onClick={fecharModalEnvio} className={styles.botaoCancelar}>
                   Cancelar
                 </button>
                 <button type="submit" className={styles.botaoSalvar}>
-                  Enviar
+                  Enviar  
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-
-
-
 
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
