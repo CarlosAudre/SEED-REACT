@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
-import styles from "./GerenciarCompetencias.module.css";
+import styles from './Gerenciamento.module.css'; 
+import {FaEdit, FaTrash} from 'react-icons/fa';
 
 export default function GerenciarCompetencias() {
     const [competencias, setCompetencias] = useState([]);
@@ -132,8 +133,8 @@ export default function GerenciarCompetencias() {
                             <td>{c.dataFim.slice(0, 10)}</td>
                             <td>{c.competenciaStatus}</td>
                             <td className={styles.acoes}>
-                                <button onClick={() => abrirModal(c)} className={styles.botaoAcao}>✏️</button>
-                                <button onClick={() => deletar(c.id)} className={styles.botaoAcao}>🗑️</button>
+                                <button onClick={() => abrirModal(c)} className={styles.botaoAcao}><FaEdit/></button>
+                                <button onClick={() => deletar(c.id)} className={styles.botaoAcao}><FaTrash/></button>
                             </td>
                         </tr>
                     ))}

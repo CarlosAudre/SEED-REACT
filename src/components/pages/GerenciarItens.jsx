@@ -6,7 +6,7 @@ import axios from 'axios'; // Usando axios diretamente
 import { FaPlus, FaEdit, FaTrash, FaBoxOpen } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './GerenciarItens.module.css';
+import styles from './Gerenciamento.module.css'; 
 
 function GerenciarItens() {
   const [itens, setItens] = useState([]);

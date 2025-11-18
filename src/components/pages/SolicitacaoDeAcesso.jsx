@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FaTasks } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Mensagem ao enviar aplicar
-import styles from './SolicitacaoDeAcesso.module.css';
+import styles from './Aprovacao.module.css';
 
 function SolicitacaoDeAcesso() {
   const { control, setValue, handleSubmit, watch } = useForm({

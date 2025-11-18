@@ -53,3 +53,18 @@ select:-moz-autofill {
   box-shadow: 0 0 0px 1000px var(--glass-bg) inset !important;
   -moz-text-fill-color: var(--text-primary) !important;
 }
+
+
+select {
+  background-color: #0e2469 !important;
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  padding: 10px;
+  border-radius: 8px;
+  appearance: none;
+}
+
+select option {
+  background-color: #0e2469;
+  color: var(--text-primary);
+}

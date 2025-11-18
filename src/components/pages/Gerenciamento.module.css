@@ -14,9 +14,23 @@
   --radius-lg: 14px;
 }
 
+/* =========================
+   Autofill override (force background)
+   Put this early in the module to ensure autofill doesn't make inputs transparent
+   ========================= */
+.formGroup input:-webkit-autofill,
+.formGroup textarea:-webkit-autofill,
+.formGroup select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--glass) inset !important;
+  box-shadow: 0 0 0px 1000px var(--glass) inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
 /* Container principal - card clean */
 .container {
   max-width: 1200px;
+  min-height: 650px;
+  height: auto;
   margin: 36px auto;
   padding: 28px;
   color: var(--text);
@@ -155,6 +169,9 @@
   justify-content: center;
   z-index: 9999;
   padding: 20px;
+
+  /* permite scroll interno se modal for grande */
+  overflow-y: auto;
 }
 
 /* modal box */
@@ -167,6 +184,22 @@
   border: 1px solid rgba(255,255,255,0.04);
   box-shadow: 0 18px 50px rgba(2,6,23,0.8);
   box-sizing: border-box;
+}
+
+/* large modal for SetorManager */
+.modalContentLarge {
+  width: min(900px, 98%);
+  max-width: 1200px;
+  background: linear-gradient(180deg, rgba(18,24,40,0.92), rgba(10,14,30,0.88));
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 18px 50px rgba(2,6,23,0.8);
+  box-sizing: border-box;
+
+  /* FIX: evita o modal "empurrar" a página e mantém conteúdo rolando dentro */
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 /* modal title */
@@ -190,11 +223,17 @@
   outline: none;
   transition: box-shadow .12s ease, border-color .12s;
   font-size: 0.95rem;
+
+  /* Override para evitar o autofill criar backgrounds problemáticos */
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
 }
-.formGroup input:focus,
-.formGroup select:focus{
-  box-shadow: 0 8px 20px rgba(59,130,246,0.08);
-  border-color: var(--accent-1);
+
+/* ensure selects use the theme bg (fix browsers that force white) */
+.formGroup select {
+  background-color: #0e2469 !important;
+  color: var(--text) !important;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 /* Modal footer buttons */

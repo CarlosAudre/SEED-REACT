@@ -3,8 +3,9 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { FaEdit, FaUsers } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './GerenciarUsuarios.module.css';
+import styles from './GerenciarUsuario.module.css';
 
 function GerenciarUsuarios() {
   const [usuarios, setUsuarios] = useState([]);

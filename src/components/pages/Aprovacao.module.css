@@ -143,6 +143,26 @@
   transform: rotate(45deg);
 }
 
+/* AÇÕES DA TABELA */
+.acoes {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.botaoAcao {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 1.05rem;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background .12s ease, color .12s ease, transform .12s;
+}
+.botaoAcao:hover { background: rgba(255,255,255,0.03); color: var(--accent-1); transform: translateY(-2px); }
+
+
 /* RESPONSIVO */
 @media (max-width: 800px) {
   .titulo {

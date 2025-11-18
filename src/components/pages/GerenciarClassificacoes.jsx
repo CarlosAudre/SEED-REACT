@@ -6,7 +6,7 @@ import axios from 'axios';
 import { FaPlus, FaEdit, FaTrash, FaTags } from 'react-icons/fa'; // Ícone novo
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './GerenciarClassificacoes.module.css'; // Novo CSS
+import styles from './Gerenciamento.module.css'; // Novo CSS
 
 function GerenciarClassificacoes() {
   const [classificacoes, setClassificacoes] = useState([]);

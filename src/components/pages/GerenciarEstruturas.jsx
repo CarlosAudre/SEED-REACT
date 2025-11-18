@@ -4,7 +4,7 @@ import { FaPlus, FaEdit, FaTrash, FaBuilding, FaTasks } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './GerenciarEstruturas.module.css';
+import styles from './Gerenciamento.module.css'; 
 import SetorManager from './SetorManager';
 
 const API_BASE = 'http://localhost:8081';

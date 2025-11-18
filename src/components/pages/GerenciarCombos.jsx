@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaPlus, FaEdit, FaTrash, FaFolderOpen, FaTasks, FaShare } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './GerenciarCombos.module.css';
+import styles from './Gerenciamento.module.css'; 
 
 function GerenciarCombos() {
   const [combos, setCombos] = useState([]);
