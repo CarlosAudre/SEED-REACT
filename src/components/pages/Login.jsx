@@ -36,7 +36,6 @@ function Login() {
       localStorage.setItem("token", resData.token);
 
       // feedback mais bonito: toast/alert custom
-      alert("Login realizado com sucesso!");
       navigate("/");
     } catch (err) {
       alert("Erro de conexão com o servidor");
