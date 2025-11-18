@@ -1,329 +1,127 @@
-/* PreencherCombosSetor.module.css (versão maior e mais espaçada) */
+
 
 .container {
   max-width: 1200px;
-  width: 80vw;
-  height: 70vh;
-  margin: 28px auto;
-  padding: 32px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-  border-radius: 18px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  padding: 30px 40px;
+  overflow-x: auto; 
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(8px);
-  color: #E6EEF8;
-  font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+  text-align: center;
+  color: white;
+  margin: 32px auto;
 }
 
-/* Topo */
-.hdr {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 12px;
-  margin-bottom: 22px;
+.titulo {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin-bottom: 30px; font-size: 2rem;
 }
-.hdrLeft {
-  display:flex;
-  flex-direction:column;
-}
-.hdrRight {
-  display:flex;
-  align-items:center;
-  gap: 12px;
-}
-.title {
-  font-size: 1.7rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin: 0;
-}
-.subtitle {
-  color: #b8c6db;
-  font-size: 0.95rem;
-  margin-top: 6px;
-}
+.icone { color: #66a3ff; }
 
-/* select */
+/* Filtro */
+.filtroContainer {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin-bottom: 30px;
+}
 .selectSetor {
-  background-color: #04549b;
-  color: #fff;
-  border: 1px solid #034685;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 14px;
-  outline: none;
-  appearance: none;
+  padding: 10px; border-radius: 8px; border: 1px solid #4a5568;
+  background-color: #2d3748; color: white; font-size: 1rem; min-width: 250px;
 }
 
-.selectSetor:focus {
-  outline: none;
-  border-color: rgba(59,130,246,0.95);
-  box-shadow: 0 8px 26px rgba(59,130,246,0.12);
+/* Cards */
+.gridCombos {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
 }
-
-.selectSetorDisabled {
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: rgba(9, 54, 138, 0.288);
-  color: #9fb1d2;
-  border: 1px solid rgba(255,255,255,0.03);
+.card {
+  background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px; padding: 20px; cursor: pointer;
+  transition: transform 0.2s, background 0.2s; text-align: left;
 }
+.card:hover {
+  transform: translateY(-5px); background: rgba(0, 0, 0, 0.3); border-color: #66a3ff;
+}
+.cardHeader {
+  display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.85rem;
+}
+.badgeSetor {
+  background-color: #3b82f6; padding: 4px 8px; border-radius: 4px; font-weight: 600;
+}
+.badgePrazo {
+  color: #fbbf24; display: flex; align-items: center; gap: 5px;
+}
+.cardTitle { font-size: 1.3rem; margin: 0 0 10px 0; color: white; }
+.cardInfo { color: #b8c6db; font-size: 0.9rem; margin: 0; }
 
-/* Lista de combos: grid responsivo (cards maiores) */
-.listaCombos {
+/* Modal */
+.modalOverlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7); display: flex;
+  align-items: center; justify-content: center; z-index: 1000;
+}
+.modalContent {
+  width: 900px; /* Modal mais largo para caber os inputs */
+  max-height: 90vh; overflow-y: auto; padding: 30px;
+  background: rgba(30, 41, 59, 0.95); border-radius: 16px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: left;
+}
+.modalTitulo { font-size: 1.8rem; margin: 0 0 5px 0; color: white; }
+.modalSubtitulo { color: #66a3ff; font-size: 1.1rem; margin-bottom: 25px; }
+
+/* Lista de Itens */
+.listaItens { display: flex; flex-direction: column; gap: 15px; }
+.itemRow {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 18px;
-  align-items: start;
+  /* Grid: Informação (40%) | Inputs (60%) */
+  grid-template-columns: 4fr 6fr; 
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  align-items: center;
 }
+.itemInfo { display: flex; flex-direction: column; }
+.itemInfo strong { font-size: 1.1rem; }
+.itemInfo span { font-size: 0.9rem; color: #b8c6db; }
 
-/* Card do combo (ampliado) */
-.itemCombo {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 20px;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: transform .18s ease, box-shadow .18s ease;
+/* Área de Inputs */
+.itemInputs {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end; /* Alinha pela base dos inputs */
+}
+.inputWrapper {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  min-height: 150px;         /* aumentado */
-  justify-content: space-between;
+  gap: 4px;
 }
-.itemCombo:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 18px 44px rgba(28, 43, 77, 0.45);
-}
-.itemHeader {
-  display:flex;
-  align-items:center;
-  gap: 12px;
-}
-.badge {
-  background: linear-gradient(90deg,#66a3ff,#3b82f6);
-  padding: 10px 12px;       /* maior */
-  border-radius: 12px;
-  font-weight:800;
-  color: white;
-  font-size: 1rem;
-  box-shadow: 0 8px 20px rgba(59,130,246,0.18);
-  min-width:48px;
-  text-align:center;
-}
-.comboTitle {
-  font-weight:800;
-  font-size: 1.15rem;
-  color: #ffffff;
-  margin: 0;
-}
-.comboDesc {
+.inputWrapper label {
+  font-size: 0.75rem;
   color: #b8c6db;
-  font-size: 0.9rem;
-  line-height: 1.2;
-  margin: 0;
+  font-weight: 600;
 }
-
-/* Footer do card: meta e ação */
-.itemFooter {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap: 12px;
-}
-.meta {
-  font-size: 0.9rem;
-  color: #9fb1d2;
-}
-.openBtn {
-  background: transparent;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 800;
-  color: #dbefff;
-  transition: background .12s, transform .12s;
-  font-size: 0.95rem;
-}
-.openBtn:hover { background: rgba(59,130,246,0.12); transform: translateY(-2px); }
-
-/* Empty state */
-.empty {
-  color: #b8c6db;
-  padding: 34px;
-  text-align: center;
-}
-
-/* Modal overlay */
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(27, 46, 131, 0.6), rgba(2,6,23,0.85));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index: 1200;
-  padding: 20px;
-}
-
-/* Modal card (maior) */
-.modalPreenchimento {
-  width: min(1000px, 98%);
-  max-height: 94vh;
-  overflow-y: auto;
-  background: linear-gradient(180deg, rgba(30,41,59,0.98), rgba(37, 48, 77, 0.98));
-  padding: 28px;               /* mais espaçamento */
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 18px 60px rgba(2,6,23,0.8);
-}
-
-/* Modal header */
-.modalHeader {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-.modalTitle {
-  font-size: 1.35rem;
-  color: #fff;
-  margin: 0;
-}
-.modalSub {
-  color: #9fb1d2;
-  font-size: 0.95rem;
-}
-
-/* Itens layout (linha maior) */
-.tabelaItens {
-  display:flex;
-  flex-direction:column;
-  gap: 14px;
-  margin-top: 16px;
-}
-
-/* Linha do item com visual card (maior inputs) */
-.itemLinha {
-  display:grid;
-  grid-template-columns: 1fr 180px 300px; /* inputs maiores */
-  gap: 14px;
-  align-items:center;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.03);
-}
-.itemInfo {
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.itemNome {
-  font-weight:700;
-  color: #eaf6ff;
-}
-.itemTipo {
-  font-size: 0.9rem;
-  color: #9fb1d2;
-}
-
-/* Inputs maiores */
-.itemLinha input[type="number"],
-.itemLinha input[type="text"] {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(255,255,255,0.02);
-  color: #eaf6ff;
-  font-size: 1rem;
-  outline: none;
-  transition: box-shadow .12s, border-color .12s;
-}
-.itemLinha input:focus {
-  border-color: rgba(59,130,246,0.95);
-  box-shadow: 0 8px 26px rgba(59,130,246,0.16);
-}
-
-
-
-/* Modal actions (footer) */
-.modalAcoes {
-  display:flex;
-  justify-content:space-between;
-  gap: 14px;
-  margin-top: 20px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-.auxInfo {
-  color: #9fb1d2;
-  font-size: 0.95rem;
-}
-.actionGroup {
-  display:flex;
-  gap: 12px;
-}
-.btn {
-  padding: 12px 18px;
-  border-radius: 12px;
-  border: none;
-  cursor:pointer;
-  font-weight:800;
-  min-width: 140px;
-  font-size: 0.98rem;
-}
-.btnSecondary {
-  background: transparent;
-  color: #dbefff;
-  border: 1px solid rgba(255,255,255,0.06);
-}
-.btnPrimary {
-  background: #0642A1;
+.inputWrapper input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #4a5568;
+  background-color: #1a202c;
   color: white;
-  box-shadow: 0 14px 40px rgba(59,130,246,0.18);
 }
+.inputSmall { width: 70px; text-align: center; }
+.inputMedium { width: 100px; text-align: right; }
+.inputObs { width: 100%; } /* Ocupa o resto */
+.obsWrapper { flex-grow: 1; } /* Faz o wrapper da obs crescer */
 
-/* sobrescreve com maior especificidade para inputs dentro de itemLinha */
-.itemLinha .inputCampo,
-.itemLinha input.inputCampo {
-  width: 100%;
-  max-width: none;
-  padding: 12px 14px; 
-  background: #242327; /* fundo claro pra destacar na modal escura */
-  color: #ffffff;
-  font-size: 1rem;
-  outline: none;
-  transition: box-shadow .12s, border-color .12s, transform .12s;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+.modalFooter {
+  display: flex; justify-content: flex-end; gap: 10px;
+  margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);
 }
-
-/* foco */
-.itemLinha .inputCampo:focus,
-.itemLinha input.inputCampo:focus {
-  border-color: #06047c;
-  box-shadow: 0 10px 30px rgba(38, 17, 131, 0.18);
+.botaoCancelar, .botaoSalvar {
+  padding: 12px 24px; border-radius: 8px; border: none;
+  cursor: pointer; font-weight: 600; font-size: 1rem;
 }
-
-/* remove spinner em number (opcional) */
-.itemLinha .inputCampo[type="number"]::-webkit-outer-spin-button,
-.itemLinha .inputCampo[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.itemLinha .inputCampo[type="number"] {
-  -moz-appearance: textfield;
-}
-
-
-/* Mobile tweaks */
-@media (max-width: 800px) {
-  .itemLinha { grid-template-columns: 1fr; }
-  .itemLinha input[type="number"], .itemLinha input[type="text"] { margin-top: 8px; }
-  .listaCombos { grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); }
-  .btn { min-width: 110px; padding: 10px 12px; }
-  .modalPreenchimento { padding: 18px; width: 96%; }
-}
+.botaoCancelar { background-color: #4a5568; color: white; }
+.botaoSalvar { background-color: #007bff; color: white; }
+.botaoSalvar:hover { background-color: #0069d9; }
+.mensagemVazia { color: #b8c6db; font-size: 1.1rem; }

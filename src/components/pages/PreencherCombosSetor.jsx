@@ -1,398 +1,269 @@
-import { useEffect, useState } from "react";
-import styles from "./PreencherCombosSetor.module.css";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { FaClipboardList, FaClock } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import styles from './PreencherCombosSetor.module.css';
 
-export default function PreencherCombosSetor() {
+function PreencherCombosSetor() {
   const [combos, setCombos] = useState([]);
-  const [itens, setItens] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [comboSelecionado, setComboSelecionado] = useState(null);
-  const [valores, setValores] = useState({});
-  const [observacoes, setObservacoes] = useState({});
-  const [enviando, setEnviando] = useState(false);
-  const [modoEdicao, setModoEdicao] = useState(false);
-  const [carregandoItens, setCarregandoItens] = useState(false);
   const [setores, setSetores] = useState([]);
-  const [setorSelecionado, setSetorSelecionado] = useState(null);
+  const [setorSelecionado, setSetorSelecionado] = useState('');
+  
+  // States do Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [comboSelecionado, setComboSelecionado] = useState(null);
+  const [itens, setItens] = useState([]);
+  
+  // Dados do formulário
+  const [valores, setValores] = useState({}); // Dinheiro (R$)
+  const [qtds, setQtds] = useState({});       // Quantidade (Unidades)
+  const [observacoes, setObservacoes] = useState({});
+  
+  const [enviando, setEnviando] = useState(false);
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
+  const makeConfig = () => ({ headers: { Authorization: `Bearer ${token}` } });
   const baseUrl = "http://localhost:8081/responsavel-setor/combos";
 
   useEffect(() => {
-    async function carregarSetores() {
+    async function carregarDados() {
       try {
-        const response = await fetch(`${baseUrl}/setores`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!response.ok) throw new Error("Erro ao carregar setores");
-        const data = await response.json();
-        console.log("Setores -> ", data);
-        setSetores(data || []);
-      } catch (err) {
-        console.error("Erro ao carregar setores:", err);
-        setSetores([]);
+        const resSetores = await axios.get(`${baseUrl}/setores`, makeConfig());
+        setSetores(resSetores.data);
+        
+        const resCombos = await axios.get(baseUrl, makeConfig());
+        setCombos(ordenarCombos(resCombos.data));
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+        toast.error("Erro ao carregar lista de combos.");
       }
     }
-    carregarSetores();
-  }, [token]);
+    carregarDados();
+  }, []);
 
-  async function filtrarPorSetor(idParam) {
-    // idParam pode vir como string (from <select>) ou null/undefined
-    const id = idParam ? Number(idParam) : null;
-    setSetorSelecionado(id);
+  const ordenarCombos = (lista) => {
+    return lista.sort((a, b) => {
+      const dateA = new Date(a.dataFim || a.dataEnvio);
+      const dateB = new Date(b.dataFim || b.dataEnvio);
+      return dateA - dateB;
+    });
+  };
 
+  const filtrarPorSetor = async (idSetor) => {
+    setSetorSelecionado(idSetor);
     try {
-      const url = id ? `${baseUrl}/setor/${id}` : `${baseUrl}`;
-
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!response.ok) throw new Error("Erro ao filtrar combos");
-      const data = await response.json();
-
-      const sorted = data.sort((a, b) => {
-        const aKey = a.dataFim || a.dataEnvio || 0;
-        const bKey = b.dataFim || b.dataEnvio || 0;
-        return new Date(aKey) - new Date(bKey);
-      });
-
-      setCombos(sorted);
-    } catch (e) {
-      console.error(e);
-      alert("Erro ao filtrar combos");
+      let url = baseUrl;
+      if (idSetor) url = `${baseUrl}/setor/${idSetor}`;
+      
+      const res = await axios.get(url, makeConfig());
+      setCombos(ordenarCombos(res.data));
+    } catch (error) {
+      toast.error("Erro ao filtrar combos.");
     }
-  }
+  };
 
-  useEffect(() => {
-    async function carregarCombos() {
-      try {
-        const response = await fetch(baseUrl, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!response.ok) throw new Error("Erro ao carregar combos");
-        const data = await response.json();
-
-        const sorted = data.sort((a, b) => {
-          const aKey = a.dataFim || a.dataEnvio || 0;
-          const bKey = b.dataFim || b.dataEnvio || 0;
-          return new Date(aKey) - new Date(bKey);
-        });
-
-        setCombos(sorted);
-      } catch (e) {
-        console.error("Erro ao buscar combos:", e);
-      } finally {
-        setLoading(false);
-      }
-    }
-    carregarCombos();
-  }, [token]);
-
-  // fecha modal ao apertar ESC
-  useEffect(() => {
-    function onKey(e) {
-      if (e.key === "Escape") fecharModal();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [comboSelecionado]);
-
-  function diasRestantes(isoDate) {
-    if (!isoDate) return null;
-    const fim = new Date(isoDate);
-    const now = new Date();
-    const diff = fim - now;
-    const dias = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    if (dias > 1) return `${dias} dias`;
-    if (dias === 1) return "1 dia";
-    if (dias === 0) return "Hoje";
-    return `${Math.abs(dias)}d atrasado`;
-  }
-
-  function prazoStatus(isoDate) {
-    if (!isoDate) return { label: "Sem prazo", color: "neutral" };
-    const fim = new Date(isoDate);
-    const now = new Date();
-    if (fim < now) return { label: "Vencido", color: "danger" };
-    const dias = Math.ceil((fim - now) / (1000 * 60 * 60 * 24));
-    if (dias <= 3) return { label: `${dias}d`, color: "warning" };
-    return { label: dias <= 14 ? `${dias}d` : "OK", color: "ok" };
-  }
-
-  async function abrirCombo(comboDestino) {
+  const abrirModal = async (combo) => {
+    setComboSelecionado(combo);
+    setIsModalOpen(true);
+    setItens([]);
+    
     try {
-      setComboSelecionado(comboDestino);
-      const comboId = comboDestino.comboId;
-      const comboDestinoId = comboDestino.id;
+      // A. Busca Itens
+      const resItens = await axios.get(`${baseUrl}/${combo.comboId}/itens`, makeConfig());
+      setItens(resItens.data);
 
-      if (!comboId) {
-        alert("Combo inválido.");
-        return;
-      }
-
-      setCarregandoItens(true);
-      const responseItens = await fetch(
-        `http://localhost:8081/responsavel-setor/combos/${comboId}/itens`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      if (!responseItens.ok) throw new Error("Erro ao buscar itens");
-      const dataItens = await responseItens.json();
-      setItens(dataItens);
-      setCarregandoItens(false);
-
-      const responsePreench = await fetch(
-        `http://localhost:8081/responsavel-setor/preenchimentos/${comboDestinoId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (responsePreench.ok) {
-        const preenchidos = await responsePreench.json();
-        if (preenchidos.length > 0) {
-          const novosValores = {};
-          const novasObs = {};
-          preenchidos.forEach((p) => {
+      // B. Busca Preenchimentos
+      const resPreench = await axios.get(`http://localhost:8081/responsavel-setor/preenchimentos/${combo.id}`, makeConfig());
+      
+      // C. Popula formulário
+      const novosValores = {};
+      const novasQtds = {}; 
+      const novasObs = {};
+      
+      if (resPreench.data && resPreench.data.length > 0) {
+        resPreench.data.forEach(p => {
             novosValores[p.itemId] = p.valor;
+            novasQtds[p.itemId] = p.quantidade; 
             novasObs[p.itemId] = p.observacao || "";
-          });
-          setValores(novosValores);
-          setObservacoes(novasObs);
-          setModoEdicao(true);
-        } else {
-          setValores({});
-          setObservacoes({});
-          setModoEdicao(false);
-        }
+        });
       }
-    } catch (e) {
-      setCarregandoItens(false);
-      console.error("Erro ao buscar dados do combo:", e);
-      alert("Erro ao carregar o combo.");
+      setValores(novosValores);
+      setQtds(novasQtds); 
+      setObservacoes(novasObs);
+
+    } catch (error) {
+      toast.error("Erro ao carregar detalhes.");
+      console.error(error);
     }
-  }
+  };
 
-  function handleChangeValor(itemId, valor) {
-    setValores((prev) => ({ ...prev, [itemId]: valor }));
-  }
+  const fecharModal = () => {
+    setIsModalOpen(false);
+    setComboSelecionado(null);
+    setValores({});
+    setQtds({});
+    setObservacoes({});
+  };
 
-  function handleChangeObs(itemId, obs) {
-    setObservacoes((prev) => ({ ...prev, [itemId]: obs }));
-  }
-
-  async function enviarPreenchimento() {
-    if (!comboSelecionado) return;
-    const comboDestinoId = comboSelecionado.id;
-    const preenchimentos = itens.map((item) => ({
-      itemId: item.id,
-      valor: parseFloat(valores[item.id] || 0),
-      observacao: observacoes[item.id] || "",
+  const enviarPreenchimento = async () => {
+    setEnviando(true);
+    const payload = itens.map(item => ({
+        itemId: item.id,
+        valor: valores[item.id] ? parseFloat(valores[item.id]) : 0, 
+        quantidade: qtds[item.id] ? parseInt(qtds[item.id]) : 0, 
+        observacao: observacoes[item.id] || ""
     }));
 
     try {
-      setEnviando(true);
-      const metodo = modoEdicao ? "PUT" : "POST";
-      const response = await fetch(
-        `http://localhost:8081/responsavel-setor/preenchimentos/${comboDestinoId}`,
-        {
-          method: metodo,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(preenchimentos),
-        }
-      );
-
-      if (!response.ok) throw new Error("Erro ao enviar preenchimentos");
-      alert(modoEdicao ? "Preenchimento atualizado!" : "Preenchimento enviado com sucesso!");
+      await axios.put(`http://localhost:8081/responsavel-setor/preenchimentos/${comboSelecionado.id}`, payload, makeConfig());
+      toast.success("Preenchimento salvo com sucesso!");
       fecharModal();
-    } catch (e) {
-      console.error("Erro ao enviar:", e);
-      alert("Erro ao enviar os dados.");
+    } catch (error) {
+      toast.error("Erro ao salvar preenchimento.");
+      console.error(error);
     } finally {
       setEnviando(false);
     }
-  }
+  };
 
-  function fecharModal() {
-    setComboSelecionado(null);
-    setItens([]);
-    setModoEdicao(false);
-    setValores({});
-    setObservacoes({});
-  }
+  const getPrazoTexto = (dataFim) => {
+    if (!dataFim) return "Sem prazo";
+    const hoje = new Date();
+    const fim = new Date(dataFim);
+    const diffDias = Math.ceil((fim - hoje) / (1000 * 60 * 60 * 24));
+    
+    if (diffDias < 0) return "Vencido";
+    if (diffDias === 0) return "Vence hoje";
+    return `Vence em ${diffDias} dias`;
+  };
 
-  if (loading) return <p className={styles.empty}>Carregando combos...</p>;
+  // --- NOVAS FUNÇÕES DE VALIDAÇÃO ---
+  const handleQtdChange = (itemId, inputValue) => {
+    // Impede números negativos
+    if (inputValue < 0) return;
+    setQtds({...qtds, [itemId]: inputValue});
+  };
+
+  const handleValorChange = (itemId, inputValue) => {
+    // Impede números negativos
+    if (inputValue < 0) return;
+    setValores({...valores, [itemId]: inputValue});
+  };
+  // ----------------------------------
 
   return (
     <div className={styles.container}>
-      <div className={styles.hdr}>
-        <div className={styles.hdrLeft}>
-          <h2 className={styles.title}>Combos destinados ao seu setor</h2>
+      <h3 className={styles.titulo}>
+        <FaClipboardList className={styles.icone} /> Preencher Combos
+      </h3>
 
-          {/* Mostrar select quando houver ao menos 1 setor; se 0, exibe select desabilitado */}
-          {setores.length > 0 ? (
-            <select
-              className={styles.selectSetor}
-              value={setorSelecionado ?? ""}
-              onChange={(e) => filtrarPorSetor(e.target.value || null)}
-              style={{ marginTop: 10, padding: "6px 10px", borderRadius: 8 }}
-            >
-              <option value="">Todos os setores</option>
-              {setores.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.nome}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <select disabled style={{ marginTop: 10, padding: "6px 10px", borderRadius: 8 }}>
-              <option>Nenhum setor disponível</option>
-            </select>
-          )}
-
-          <div className={styles.subtitle}>Prazo destacado — escolha o combo e preencha os itens</div>
-        </div>
+      <div className={styles.filtroContainer}>
+        <label>Filtrar por Setor:</label>
+        <select 
+            value={setorSelecionado} 
+            onChange={(e) => filtrarPorSetor(e.target.value)}
+            className={styles.selectSetor}
+        >
+            <option value="">Todos os meus setores</option>
+            {setores.map(s => (
+                <option key={s.id} value={s.id}>{s.nome}</option>
+            ))}
+        </select>
       </div>
 
-      {combos.length === 0 ? (
-        <div className={styles.empty}>Nenhum combo encontrado.</div>
-      ) : (
-        <div className={styles.listaCombos}>
-          {combos.map((comboDestino) => {
-            const prazoCompetencia = comboDestino.dataFim;
-            const prazo = prazoStatus(prazoCompetencia);
-
-            return (
-              <div
-                key={`${comboDestino.id}-${comboDestino.comboId}`}
-                className={styles.itemCombo}
-                onClick={() => abrirCombo(comboDestino)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") abrirCombo(comboDestino);
-                }}
-                aria-label={`Abrir combo ${comboDestino.nomeCombo}`}
-              >
-                <div className={styles.itemHeader}>
-                  <div className={styles.badge}>{(comboDestino.nomeCombo || "").slice(0, 2).toUpperCase()}</div>
-                  <div style={{ flex: 1 }}>
-                    <h3 className={styles.comboTitle}>{comboDestino.nomeCombo || "Sem nome"}</h3>
-                    <p className={styles.comboDesc}>{comboDestino.nomeSetor || ""}</p>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: prazo.color === "danger" ? "#ffb4b4" : prazo.color === "warning" ? "#ffd8a8" : "#b8d6ff",
-                        fontWeight: 800,
-                      }}
-                    >
-                      {prazo.label}
+      <div className={styles.gridCombos}>
+        {combos.length > 0 ? (
+            combos.map(c => (
+                <div key={c.id} className={styles.card} onClick={() => abrirModal(c)}>
+                    <div className={styles.cardHeader}>
+                        <span className={styles.badgeSetor}>{c.nomeSetor}</span>
+                        <span className={styles.badgePrazo}>
+                            <FaClock /> {getPrazoTexto(c.dataFim)}
+                        </span>
                     </div>
-                    <div style={{ fontSize: 11, color: "#9fb1d2" }}>
-                      {prazoCompetencia ? new Date(prazoCompetencia).toLocaleDateString("pt-BR") : "Sem prazo"}
+                    <h4 className={styles.cardTitle}>{c.nomeCombo}</h4>
+                    <p className={styles.cardInfo}>Clique para preencher</p>
+                </div>
+            ))
+        ) : (
+            <p className={styles.mensagemVazia}>Nenhum combo disponível para preenchimento.</p>
+        )}
+      </div>
+
+      {isModalOpen && comboSelecionado && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h4 className={styles.modalTitulo}>{comboSelecionado.nomeCombo}</h4>
+            <p className={styles.modalSubtitulo}>{comboSelecionado.nomeSetor}</p>
+
+            <div className={styles.listaItens}>
+                {itens.map(item => (
+                    <div key={item.id} className={styles.itemRow}>
+                        <div className={styles.itemInfo}>
+                            <strong>{item.nomeItem}</strong>
+                            <span>{item.descricao}</span>
+                        </div>
+                        <div className={styles.itemInputs}>
+                            {/* CAMPO QUANTIDADE (VALIDADO) */}
+                            <div className={styles.inputWrapper}>
+                                <label>Qtd.</label>
+                                <input 
+                                    type="number" 
+                                    min="0" // Proteção HTML
+                                    placeholder="0"
+                                    value={qtds[item.id] || ''}
+                                    onChange={(e) => handleQtdChange(item.id, e.target.value)} // Proteção JS
+                                    className={styles.inputSmall}
+                                    onKeyDown={(e) => ["-", "e", "+"].includes(e.key) && e.preventDefault()} // Impede digitar sinais
+                                />
+                            </div>
+
+                            {/* CAMPO VALOR (VALIDADO) */}
+                            <div className={styles.inputWrapper}>
+                                <label>Valor R$</label>
+                                <input 
+                                    type="number" 
+                                    min="0" // Proteção HTML
+                                    step="0.01"
+                                    placeholder="0.00"
+                                    value={valores[item.id] || ''}
+                                    onChange={(e) => handleValorChange(item.id, e.target.value)} // Proteção JS
+                                    className={styles.inputMedium}
+                                    onKeyDown={(e) => ["-", "e", "+"].includes(e.key) && e.preventDefault()} // Impede digitar sinais
+                                />
+                            </div>
+                            
+                            {/* CAMPO OBSERVAÇÃO */}
+                            <div className={`${styles.inputWrapper} ${styles.obsWrapper}`}>
+                                <label>Observação</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Opcional"
+                                    value={observacoes[item.id] || ''}
+                                    onChange={(e) => setObservacoes({...observacoes, [item.id]: e.target.value})}
+                                    className={styles.inputObs}
+                                />
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </div>
-
-                <div className={styles.itemFooter}>
-                  <div className={styles.meta}>
-                    {prazoCompetencia
-                      ? `Prazo: ${diasRestantes(prazoCompetencia)}`
-                      : comboDestino.dataEnvio
-                      ? `Enviado: ${new Date(comboDestino.dataEnvio).toLocaleDateString("pt-BR")}`
-                      : ""}
-                  </div>
-                  <button className={styles.openBtn} onClick={(e) => { e.stopPropagation(); abrirCombo(comboDestino); }}>
-                    Abrir
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {comboSelecionado && (
-        <div className={styles.modalOverlay} onClick={fecharModal}>
-          <div className={styles.modalPreenchimento} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-                <div>
-                  <h3 className={styles.modalTitle}>{comboSelecionado.nomeCombo}</h3>
-                  <div className={styles.modalSub}>
-                    {comboSelecionado.nomeSetor} • {comboSelecionado.dataFim ? `Prazo: ${new Date(comboSelecionado.dataFim).toLocaleDateString("pt-BR")}` : comboSelecionado.dataEnvio ? `Enviado: ${new Date(comboSelecionado.dataEnvio).toLocaleDateString("pt-BR")}` : ""}
-                    {comboSelecionado.dataFim && new Date(comboSelecionado.dataFim) < new Date() && (
-                      <span style={{ color: "#ffb4b4", marginLeft: 8 }}>• Vencido</span>
-                    )}
-                  </div>
-                </div>
-
-                <button
-                  className={`${styles.btn} ${styles.btnSecondary}`}
-                  onClick={fecharModal}
-                  aria-label="Voltar"
-                  style={{ padding: "6px 10px", minWidth: 48, fontSize: 18, fontWeight: 600, borderRadius: 10 }}
-                >
-                  ←
-                </button>
-              </div>
+                ))}
+                {itens.length === 0 && <p>Carregando itens...</p>}
             </div>
 
-            {carregandoItens ? (
-              <div style={{ padding: 16, color: "#b8c6db" }}>Carregando itens...</div>
-            ) : (
-              <div className={styles.tabelaItens}>
-                {itens.map((item) => (
-                  <div key={item.id} className={styles.itemLinha}>
-                    <div className={styles.itemInfo}>
-                      <div className={styles.itemNome}>{item.nomeItem}</div>
-                      <div className={styles.itemTipo}>{item.tipoDado ? item.tipoDado : ""}</div>
-                    </div>
-
-                    <input
-                      type="number"
-                      className={styles.inputCampo}
-                      placeholder="Valor"
-                      value={valores[item.id] || ""}
-                      onChange={(e) => handleChangeValor(item.id, e.target.value)}
-                    />
-                    <input
-                      type="text"
-                      className={styles.inputCampo}
-                      placeholder="Observação (opcional)"
-                      value={observacoes[item.id] || ""}
-                      onChange={(e) => handleChangeObs(item.id, e.target.value)}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className={styles.modalAcoes}>
-              <div className={styles.auxInfo}>{itens.length} item(s) • {comboSelecionado.dataFim ? `Prazo: ${diasRestantes(comboSelecionado.dataFim)}` : 'Sem prazo'}</div>
-              <div className={styles.actionGroup}>
-                <button
-                  className={`${styles.btn} ${styles.btnSecondary}`}
-                  onClick={() => {
-                    setModoEdicao(false);
-                    setValores({});
-                    setObservacoes({});
-                  }}
-                  disabled={enviando}
-                >
-                  Limpar campos
-                </button>
-
-                <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={enviarPreenchimento} disabled={enviando}>
-                  {enviando ? "Enviando..." : (modoEdicao ? "Editar Preenchimento" : "Enviar Preenchimento")}
-                </button>
-              </div>
+            <div className={styles.modalFooter}>
+              <button onClick={fecharModal} className={styles.botaoCancelar}>Cancelar</button>
+              <button onClick={enviarPreenchimento} className={styles.botaoSalvar} disabled={enviando}>
+                {enviando ? 'Salvando...' : 'Salvar Preenchimento'}
+              </button>
             </div>
           </div>
         </div>
       )}
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }
+
+export default PreencherCombosSetor;
