@@ -1,4 +1,4 @@
-/* src/components/pages/DetalhesCombo.module.css */
+
 
 .container {
   max-width: 1400px;
@@ -8,6 +8,7 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(8px);
   color: white;
+  margin: 32px auto;
 }
 
 .linkVoltar {
@@ -62,13 +63,13 @@
   margin-bottom: 20px;
   text-align: center;
   color: #fff;
-  display: flex; /* Para alinhar o botão + */
+  display: flex; 
   align-items: center;
   justify-content: center;
   gap: 10px;
 }
 
-/* Botão de Criação Rápida (+) */
+/* Botão de Criação Rápida (+) MANTIDO */
 .botaoCriacaoRapida {
   background: none;
   border: none;
@@ -94,7 +95,7 @@
 }
 .tabelaItens th { color: #b8c6db; }
 
-/* Alinhamento das colunas da tabela */
+/* Alinhamento das colunas da tabela (agora 4 colunas) */
 .tabelaItens th:nth-child(2), .tabelaItens td:nth-child(2) { /* Ordem */
   text-align: center;
   width: 80px;
@@ -103,11 +104,8 @@
   text-align: center;
   width: 100px;
 }
-.tabelaItens th:nth-child(4), .tabelaItens td:nth-child(4) { /* Valor */
-  text-align: center;
-  width: 80px;
-}
-.tabelaItens th:nth-child(5), .tabelaItens td:nth-child(5) { /* Ação */
+/* Coluna 'Valor' REMOVIDA */
+.tabelaItens th:nth-child(4), .tabelaItens td:nth-child(4) { /* Ação (agora é a 4ª) */
   text-align: center;
   width: 80px;
 }
@@ -128,7 +126,7 @@
   padding: 20px;
 }
 
-
+/* Formulário da Coluna Direita */
 .formulario {
   display: flex;
   flex-direction: column;
@@ -171,7 +169,7 @@
   background: linear-gradient(90deg, #3399ff, #007bff);
 }
 
-
+/* Estilos do Modal (MANTIDOS) */
 .modalOverlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
