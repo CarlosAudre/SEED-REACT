@@ -1,15 +1,6 @@
-
+/* App.css — zerado */
 html, body {
+  margin: 0;
+  padding: 0;
   height: 100%;
-  margin: 0;
-}
-
-body {
-  margin: 0;
-  font-family: "Inter", sans-serif;
-  background: linear-gradient(135deg, #002b5b, #004b8d, #0074d9);        
-  display: flex;
-  justify-content: center;   
-  align-items: flex-start;   
-  padding: 32px 12px;        
 }

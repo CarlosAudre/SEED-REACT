@@ -1,123 +1,138 @@
+:root {
+  --bg-card: rgba(255,255,255,0.04);
+  --card-border: rgba(255,255,255,0.06);
+  --muted: #b8c6db;
+  --text: #e8eef8;
+  --accent-1: #5b8bff;
+  --accent-2: #7c6cff;
+  --accent-3: #3b82f6;
+  --danger: #ff6b6b;
+  --success: #4ade80;
+  --shadow: 0 10px 30px rgba(2,6,23,0.5);
+}
+
+/* CONTAINER */
 .containerSolicitacao {
   max-width: 1200px;
-  padding: 30px 40px;
-  overflow-x: auto; 
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
-  text-align: center;
-  color: white;
+  margin: 32px auto;
+  padding: 32px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border-radius: 18px;
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(10px) saturate(150%);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
-/* Título */
+/* TÍTULO */
 .titulo {
+  font-size: 1.8rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
+  gap: 12px;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 30px;
-  font-size: 2rem;
-  color: #fff;
 }
 
-/* Ícone */
 .icone {
-  color: #66a3ff;
+  color: var(--accent-1);
+  font-size: 1.4rem;
 }
 
-/* Tabela */
+/* TABELA */
 .tabela {
   width: 100%;
-  border-collapse: separate;;
-  table-layout: fixed;
-  text-align: center;
-}
-
-.tabela th,
-.tabela td {
-  padding: 12px;
-  text-align: center; /* Garante alinhamento central em cada célula */
-  vertical-align: middle; /* Centraliza verticalmente */
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
 }
 
 .tabela th {
-  color: #b8c6db;
-  font-weight: 600;
+  padding: 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--muted);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
 .tabela td {
-  color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  word-wrap: break-word;
-  white-space: normal;
+  padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text);
 }
 
-.tabela td:nth-child(6),
-.tabela td:nth-child(7) {
-  text-align: center;
+.tabela tbody tr {
+  transition: background .12s ease, transform .1s;
 }
 
 .tabela tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-2px);
 }
 
-/* Mensagem quando não há solicitações */
+/* MENSAGEM VAZIA */
 .mensagemVazia {
-  margin-top: 30px;
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
   text-align: center;
+  background: rgba(255,255,255,0.04);
+  padding: 22px;
+  border-radius: 10px;
+  color: var(--muted);
 }
 
-/* Botão */
+/* BOTÃO */
 .containerBotao {
-  margin-top: 30px;
   display: flex;
   justify-content: center;
 }
 
 .containerBotao button {
-  background: linear-gradient(90deg, #007bff, #005fcc);
-  color: white;
-  border: none;
-  border-radius: 10px;
   padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  color: #fff;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
+  border: none;
   cursor: pointer;
-  transition: background 0.3s;
+  box-shadow: 0 8px 20px rgba(59,130,246,0.15);
+  transition: transform .15s ease, box-shadow .15s ease;
 }
 
 .containerBotao button:hover {
-  background: linear-gradient(90deg, #3399ff, #007bff);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 30px rgba(59,130,246,0.2);
 }
 
-/* Checkbox */
+/* CHECKBOX PREMIUM */
 .checkboxPersonalizado {
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: transparent;
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--muted);
+  border-radius: 6px;
   cursor: pointer;
+  background: transparent;
   position: relative;
-  display: inline-block;
-  vertical-align: middle;
+  transition: all 0.18s ease;
+}
+
+.checkboxPersonalizado:hover {
+  border-color: var(--accent-1);
 }
 
 .checkboxPersonalizado:checked {
-  background-color: #66a3ff;
-  border-color: #88baff;
+  background: var(--accent-1);
+  border-color: var(--accent-1);
+  box-shadow: 0 0 10px rgba(91,139,255,0.4);
 }
 
 .checkboxPersonalizado:checked::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 6px;
   top: 2px;
@@ -128,15 +143,16 @@
   transform: rotate(45deg);
 }
 
-.checkboxPersonalizado {
-  appearance: none;            /* remove o estilo padrão */
-  width: 20px;
-  height: 20px;
-  border: 2px solid #fff;      /* borda branca */
-  border-radius: 5px;          /* cantos arredondados */
-  background-color: transparent;
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* RESPONSIVO */
+@media (max-width: 800px) {
+  .titulo {
+    font-size: 1.4rem;
+  }
+
+  .tabela th:nth-child(3),
+  .tabela td:nth-child(3),
+  .tabela th:nth-child(5),
+  .tabela td:nth-child(5) {
+    display: none; /* Esconde CPF e telefone no mobile */
+  }
 }
-
-

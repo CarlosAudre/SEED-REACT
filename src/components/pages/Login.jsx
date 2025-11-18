@@ -1,10 +1,10 @@
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaLock } from "react-icons/fa";
 import Input from "../form/Input";
 import Submit from "../form/Submit";
 import styles from "./Login.module.css";
-
 
 function Login() {
   const {
@@ -13,10 +13,12 @@ function Login() {
     formState: { errors },
   } = useForm();
 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const response = await fetch("http://localhost:8081/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -24,65 +26,85 @@ function Login() {
       });
 
       if (!response.ok) {
+        // aqui tu pode mapear status pra mensagens melhores
         alert("Credenciais inválidas");
+        setLoading(false);
         return;
       }
 
       const resData = await response.json();
       localStorage.setItem("token", resData.token);
 
+      // feedback mais bonito: toast/alert custom
       alert("Login realizado com sucesso!");
       navigate("/");
-    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       alert("Erro de conexão com o servidor");
+    } finally {
+      setLoading(false);
     }
   };
 
-    return (
-    <div className={styles.login_container}>
-      <h3 className={styles.title}>Login</h3>
-
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.login_form}>
-        <div className={styles.input_group}>
-          <FaUser className={styles.icon} />
-          <Input
-            label="Email"
-            name="email"
-            type="email"
-            register={register}
-            options={{ required: "O email é obrigatório" }}
-            error={errors.email}
-          />
+  return (
+    <div className={styles.page}>
+      <div className={styles.centerCard}>
+        <div className={styles.brand}>
+          <div className={styles.logo}>SGGE</div>
+          <h3 className={styles.title}>Entrar na sua conta</h3>
+          <p className={styles.subtitle}>Bem-vindo de volta — continue de onde parou</p>
         </div>
 
-        <div className={styles.input_group}>
-          <FaLock className={styles.icon} />
-          <Input
-            label="Senha"
-            name="senha"
-            type="password"
-            register={register}
-            options={{ required: "A senha é obrigatória" }}
-            error={errors.senha}
-          />
-        </div>
-
-        <div className={styles.recall_forget}>
-          <label>
-            <input type="checkbox" />
-            Lembre de mim
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.login_form}>
+          <label className={styles.label}>
+            <div className={styles.input_group}>
+              <FaUser className={styles.icon} />
+              <Input
+                placeholder="seu@email.com"
+                label="Email"
+                name="email"
+                type="email"
+                register={register}
+                options={{ required: "O email é obrigatório" }}
+                error={errors.email}
+              />
+            </div>
+            {errors.email && <span className={styles.error}>{errors.email.message}</span>}
           </label>
-          <a href="#">Esqueceu a senha?</a>
-        </div>
 
-        <Submit label="Entrar" className={styles.submit_button} />
+          <label className={styles.label}>
+            <div className={styles.input_group}>
+              <FaLock className={styles.icon} />
+              <Input
+                placeholder="••••••••"
+                label="Senha"
+                name="senha"
+                type="password"
+                register={register}
+                options={{ required: "A senha é obrigatória" }}
+                error={errors.senha}
+              />
+            </div>
+            {errors.senha && <span className={styles.error}>{errors.senha.message}</span>}
+          </label>
 
-        <div className={styles.register_link}>
-          <p>Não possui uma conta?</p>
-          <a href="http://localhost:5173/register">Registrar</a>
-        </div>
-      </form>
+          <div className={styles.recall_forget}>
+            <label className={styles.remember}>
+              <input type="checkbox" />
+              <span>Lembre de mim</span>
+            </label>
+            <a className={styles.forgot} href="#">Esqueceu a senha?</a>
+          </div>
+
+          <div className={styles.submitWrap}>
+            <Submit label={loading ? "Entrando..." : "Entrar"} className={styles.submit_button} />
+          </div>
+
+          <div className={styles.register_link}>
+            <p>Não possui uma conta?</p>
+            <a href="http://localhost:5173/register">Criar conta</a>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

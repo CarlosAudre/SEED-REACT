@@ -1,111 +1,163 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center; /* centraliza X e Y */
+  padding: 24px;
+  background: linear-gradient(180deg, #071024 0%, #0b1630 100%);
+  /* opcional: pattern sutil — remove se não quiser */
+  background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
+  font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+  color: #eef2ff;
+}
 
-.login_container {
-  width: 340px;           /* menor pra caber melhor */
-  max-width: 95%;
-  padding: 18px 18px;     /* padding reduzido */
-  background: rgba(255, 255, 255, 0.10);
-  border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(6px);
+/* card central (igual ao Login) */
+.centerCard {
+  width: 380px;
+  max-width: 96%;
+  border-radius: 14px;
+  padding: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  box-shadow: 0 8px 40px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  backdrop-filter: blur(8px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* brand */
+.brand {
   text-align: center;
+  margin-bottom: 12px;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg,#2b6ef6,#4fa3ff);
+  font-weight: 800;
   color: white;
-
-  /* REMOVIDO max-height e overflow para tirar o scroll interno */
-  /* max-height: 86vh; */
-  /* overflow-y: auto; */
+  margin: 0 auto 8px;
+  box-shadow: 0 6px 18px rgba(76,126,255,0.22);
 }
-
 .title {
-  font-size: 1.25rem;
-  margin: 6px 0 12px;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: #fff;
-  line-height: 1.05;
+}
+.subtitle {
+  margin: 6px 0 0;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.7);
 }
 
-/* formulário */
+/* form */
 .login_form {
   display: flex;
   flex-direction: column;
-  gap: 15px;    
+  gap: 12px;
+  margin-top: 6px;
 }
 
-/* grupo input + ícone: ainda compacto */
+/* full-width input group */
 .input_group {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.08);
+  gap: 10px;
+  background: rgba(255,255,255,0.03);
   border-radius: 10px;
-  padding: 6px 10px;   /* reduzido */
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: all 0.14s ease;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: box-shadow 0.16s ease, transform 0.12s ease, border-color 0.14s ease;
 }
-
-.input_group:hover {
-  border-color: #66a3ff;
+.input_group:focus-within {
+  box-shadow: 0 8px 24px rgba(51,153,255,0.10);
+  transform: translateY(-2px);
+  border-color: rgba(102,163,255,0.95);
 }
+.icon { color: rgba(102,163,255,0.95); font-size: 0.98rem; flex-shrink: 0; }
 
-.icon {
-  color: #66a3ff;
-  font-size: 0.98rem;
-  margin-right: 8px;
-  flex-shrink: 0;
+
+.twoColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
-
-/* select */
-.select_container {
+.input_group_small {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.icon_small { color: rgba(102,163,255,0.95); font-size: 0.9rem; }
+
+/* inputs fallback */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #eef2ff;
+  font-size: 0.95rem;
   width: 100%;
 }
 
+
+.select_container { width: 100%; }
 .select_field {
-  padding: 6px 8px;
+  width: 100%;
+  padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(0,0,0,0.06);
-  color: white;
-  font-size: 0.9rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.05);
+  color: #eef2ff;
+  font-size: 0.95rem;
   outline: none;
 }
 
-/* botão submit compacto */
-.submit_button {
-  background: linear-gradient(90deg, #007bff, #005fcc);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 8px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.18s;
-}
 
-.submit_button:hover {
-  background: linear-gradient(90deg, #3399ff, #007bff);
+.error {
+  color: #ffb4b4;
+  font-size: 0.80rem;
+  margin-top: -6px;
+  padding-left: 6px;
 }
-
-/* link de registro/entrar: simples e inline */
-.register_link {
-  font-size: 0.88rem;
-  color: rgba(255,255,255,0.9);
-  margin-top: 6px;
-  background: transparent;
-}
-
-.register_link a {
-  color: #66a3ff;
-  text-decoration: none;
-}
-
-/* feedback message compacto */
 .feedback_message {
-  margin-top: 8px;
-  color: #fff;
+  margin-top: 10px;
+  color: #d6ffd6;
   font-weight: 600;
   text-align: center;
-  background: transparent;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
 }
 
+/* submit */
+.submitWrap { margin-top: 6px; }
+.submit_button {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(90deg,#2b6ef6,#1e67d9);
+  color: white;
+  transition: transform 0.12s ease, filter 0.12s;
+  box-shadow: 0 8px 20px rgba(32,84,255,0.12);
+}
+.submit_button[disabled] { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+/* bottom link */
+.register_link { text-align: center; margin-top: 8px; color: rgba(255,255,255,0.9); }
+.register_link a { color: #9fd0ff; font-weight: 700; text-decoration: none; }
+
+/* responsive */
+@media (max-width: 640px) {
+  .centerCard { width: 92%; padding: 16px; }
+  .twoColumns { grid-template-columns: 1fr; }
+}

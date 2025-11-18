@@ -1,0 +1,104 @@
+.dashboardContainer {
+  width: 100%;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  color: #eef2ff;
+  box-sizing: border-box;
+}
+
+/* header e filtros */
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtitle {
+  margin: 4px 0 0 0;
+  font-size: 0.95rem;
+  opacity: 0.85;
+  color: rgba(255,255,255,0.9);
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.select {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #eef2ff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+/* KPIs */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.kpiCard {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform .12s ease, border-color .12s ease;
+}
+.kpiCard:hover { transform: translateY(-4px); }
+
+/* color variants */
+.kpiBlue { border-left: 4px solid #5b8bff; }
+.kpiPurple { border-left: 4px solid #7c6cff; }
+.kpiGreen { border-left: 4px solid #6fe7b3; }
+.kpiPink { border-left: 4px solid #ff6b8b; }
+
+.kpiLabel { font-size: 0.85rem; opacity: 0.8; }
+.kpiValue { font-size: 1.5rem; font-weight: 800; }
+.kpiHint { font-size: 0.82rem; opacity: 0.7; margin-top: 6px; }
+
+/* charts */
+.chartsSection {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.chartCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.chartTitle {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  opacity: 0.95;
+}
+
+/* responsive: side-by-side on wide screens */
+@media (min-width: 980px) {
+  .chartsSection {
+    grid-template-columns: 1fr 1fr;
+  }
+}

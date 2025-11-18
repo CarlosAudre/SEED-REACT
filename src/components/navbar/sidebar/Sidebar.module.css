@@ -1,0 +1,67 @@
+.sidebar {
+  background: #0f172a; /* azul escuro tipo dashboard pro */
+  color: white;
+  height: 100vh;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #1e293b;
+  position: sticky;
+  top: 0;
+}
+
+.open {
+  width: 240px;
+}
+
+.closed {
+  width: 70px;
+}
+
+.top {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+.menuList {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.menuItem:hover {
+  background: #1e293b;
+  color: white;
+}
+
+.active {
+  background: #1e293b;
+  color: white;
+  border-left: 3px solid #38bdf8;
+}
+
+.icon {
+  font-size: 20px;
+}

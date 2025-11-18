@@ -1,0 +1,76 @@
+.topbar {
+  width: 100%;
+  height: 70px;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.userArea {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.nome {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+}
+
+.perfil {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  color: #e0e0e0;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #007bff, #005fcc);
+  border-radius: 50%;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🔥 Botão de logout */
+.logoutBtn {
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.logoutBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.logoutBtn:active {
+  transform: scale(0.95);
+}
