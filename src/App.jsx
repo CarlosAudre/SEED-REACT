@@ -14,6 +14,8 @@ import GerenciarUsuarios from './components/pages/GerenciarUsuarios';
 import SolicitarSetor from './components/pages/SolicitarSetor';
 import AprovarSolicitacoesSetor from './components/pages/AprovarSolicitacoesSetor'; 
 import GerenciarCompetencias from './components/pages/GerenciarCompetencias';
+import InformarCenso from './components/pages/InformarCenso';
+import FolhaPagamentoRh from './components/pages/FolhaPagamentoRh';
 
 function App() {
     return (
@@ -34,6 +36,8 @@ function App() {
                 <Route path="/adm/competencias" element={<GerenciarCompetencias/>} /> 
                 <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor />} />
                 <Route path="/solicitar-setor" element={<SolicitarSetor />} />
+                <Route path="/censo" element={<InformarCenso />} />
+                <Route path="/rh/folha" element={<FolhaPagamentoRh />} />
 
             </Routes>
         </Router>

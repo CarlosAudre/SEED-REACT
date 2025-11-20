@@ -1,0 +1,159 @@
+/* src/components/pages/FolhaPagamentoRh.module.css */
+
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 30px 40px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  color: white;
+}
+
+.titulo {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin-bottom: 30px; font-size: 2rem;
+}
+.icone { color: #4ade80; }
+
+.filtroContainer {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.filtroContainer label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selectCargo {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #4a5568;
+  background-color: #2d3748;
+  color: white;
+  font-size: 1rem;
+  min-width: 300px;
+}
+
+/* Tabela / Lista */
+.areaPreenchimento {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.tabelaHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 10px 20px;
+  font-weight: bold;
+  color: #b8c6db;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 10px;
+}
+
+.listaEscolas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.linhaEscola {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px 20px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.linhaEscola:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nomeEscola {
+  text-align: left;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.inputWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.inputQtd, .inputValor {
+  width: 80%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #4a5568;
+  background-color: #1a202c;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+.inputValor {
+  border-color: #059669; /* Borda verde para dinheiro */
+}
+
+.inputQtd:focus, .inputValor:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #2d3748;
+}
+
+.footerAcoes {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.botaoSalvar {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s;
+}
+.botaoSalvar:hover {
+  background-color: #059669;
+}
+.botaoSalvar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mensagemVazia {
+  font-size: 1.2rem;
+  color: #b8c6db;
+  margin-top: 30px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
