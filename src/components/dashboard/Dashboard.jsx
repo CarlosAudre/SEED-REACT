@@ -1,173 +1,206 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
-    LineChart, Line, BarChart, Bar, Pie, PieChart,
-    Tooltip, XAxis, YAxis, Legend, ResponsiveContainer, Cell
+  LineChart, Line, BarChart, Bar,
+  Tooltip, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Cell
 } from "recharts";
-import { dashboardMock as mock } from "../service/dashboardMock";
 import styles from "./Dashboard.module.css";
 
-const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-const palette = ["#5b8bff", "#7c6cff", "#ff9b6b", "#6fe7b3", "#ff6b8b"];
-
-function sumArrays(arrays) {
-    if (!arrays || arrays.length === 0) return Array(12).fill(0);
-    return arrays.reduce((acc, cur) => acc.map((v, i) => v + (cur[i] || 0)), Array(12).fill(0));
-}
+// Cores do Mockup
+const palette = ["#3b82f6", "#8b5cf6", "#10b981", "#f43f5e"];
 
 export default function Dashboard() {
-    const [escola, setEscola] = React.useState("all");
-    const [ano, setAno] = React.useState(mock.anosDisponiveis[mock.anosDisponiveis.length - 1]);
+  // Filtros
+  const [estruturas, setEstruturas] = useState([]);
+  const [competencias, setCompetencias] = useState([]);
+  const [filtroEstrutura, setFiltroEstrutura] = useState("");
+  const [filtroCompetencia, setFiltroCompetencia] = useState("");
 
-    // cria lista de opções de escola
-    const escolas = mock.escolas;
+  // Dados Reais (KPIs)
+  const [dados, setDados] = useState({
+    totalAlunos: 0,
+    gastoMateriais: 0,
+    gastoPessoal: 0,
+    custoTotal: 0,
+    custoPorAluno: 0
+  });
 
-    // calcula dados agregados conforme seleção
-    const aggregated = React.useMemo(() => {
-        // se "all", soma todas as escolas
-        if (escola === "all") {
-            const schools = Object.keys(mock.dados);
-            const alunosArrays = [];
-            const gastosArrays = [];
-            const folhaArrays = [];
+  const token = localStorage.getItem("token");
+  const makeConfig = () => ({ headers: { Authorization: `Bearer ${token}` } });
 
-            schools.forEach(sid => {
-                const anos = mock.dados[sid];
-                if (anos && anos[ano]) {
-                    alunosArrays.push(anos[ano].alunos);
-                    gastosArrays.push(anos[ano].gastos);
-                    folhaArrays.push(anos[ano].folha);
-                }
-            });
+  // 1. Carregar Filtros
+  useEffect(() => {
+    async function carregarFiltros() {
+      try {
+        const [resEst, resComp] = await Promise.all([
+          axios.get('http://localhost:8081/api/estruturas', makeConfig()),
+          axios.get('http://localhost:8081/api/competencias', makeConfig())
+        ]);
+        setEstruturas(resEst.data);
+        setCompetencias(resComp.data);
+      } catch (error) {
+        console.error("Erro ao carregar filtros", error);
+      }
+    }
+    carregarFiltros();
+  }, []);
 
-            const alunos = sumArrays(alunosArrays);
-            const gastos = sumArrays(gastosArrays);
-            const folha = sumArrays(folhaArrays);
+  // 2. Buscar Dados Reais
+  useEffect(() => {
+    async function carregarDashboard() {
+      try {
+        const params = new URLSearchParams();
+        if (filtroEstrutura) params.append('estruturaId', filtroEstrutura);
+        if (filtroCompetencia) params.append('competenciaId', filtroCompetencia);
 
-            return { alunos, gastos, folha };
-        }
+        const res = await axios.get(`http://localhost:8081/api/dashboard?${params.toString()}`, makeConfig());
+        setDados(res.data);
+      } catch (error) {
+        console.error("Erro ao buscar dados", error);
+      }
+    }
+    carregarDashboard();
+  }, [filtroEstrutura, filtroCompetencia]);
 
-        // escola específica
-        const data = mock.dados[escola] && mock.dados[escola][ano];
-        if (!data) {
-            return { alunos: Array(12).fill(0), gastos: Array(12).fill(0), folha: Array(12).fill(0) };
-        }
+  const formatMoney = (val) => `R$ ${val?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
 
-        return { alunos: data.alunos.slice(), gastos: data.gastos.slice(), folha: data.folha.slice() };
-    }, [escola, ano]);
+  // --- Dados Simulados para os Gráficos (Baseados no Total Real) ---
+  // Como o back-end atual retorna um resumo total, distribuímos visualmente
+  // para manter o layout da imagem enquanto não temos histórico mensal no back.
+  const barData = [
+    { name: 'Materiais', valor: dados.gastoMateriais },
+    { name: 'Folha (RH)', valor: dados.gastoPessoal },
+    { name: 'Total', valor: dados.custoTotal },
+  ];
 
-    // dados para charts
-    const lineData = meses.map((m, i) => {
-        const alunos = aggregated.alunos[i] || 0;
-        const gasto = aggregated.gastos[i] || 0;
-        const folha = aggregated.folha[i] || 0;
-        return {
-            mes: m,
-            gasto,
-            alunos,
-            gastoPorAluno: alunos > 0 ? +(gasto / alunos).toFixed(2) : 0,
-            folha
-        };
-    });
+  const lineData = [
+    { mes: 'Jan', gasto: 0 }, { mes: 'Fev', gasto: 0 }, { mes: 'Mar', gasto: 0 },
+    { mes: 'Abr', gasto: 0 }, { mes: 'Mai', gasto: 0 }, { mes: 'Jun', gasto: 0 },
+    { mes: 'Jul', gasto: 0 }, { mes: 'Ago', gasto: 0 }, { mes: 'Set', gasto: 0 },
+    { mes: 'Out', gasto: 0 }, { mes: 'Nov', gasto: dados.custoTotal }, { mes: 'Dez', gasto: 0 }
+  ];
+  // ----------------------------------------------------------------
 
-    // KPIs (usamos o ano selecionado como base: soma dos 12 meses)
-    const totalAlunos = aggregated.alunos.reduce((a, b) => a + b, 0);
-    const gastoTotal = aggregated.gastos.reduce((a, b) => a + b, 0);
-    const folhaTotal = aggregated.folha.reduce((a, b) => a + b, 0);
-    const gastoPorAluno = totalAlunos > 0 ? gastoTotal / totalAlunos : 0;
+  return (
+    <div className={styles.dashboardContainer}>
+      
+      {/* Header */}
+      <div className={styles.header}>
+        <div className={styles.headerRow}>
+          <div>
+            <h1 className={styles.title}>Painel de Gestão Financeira</h1>
+            <p className={styles.subtitle}>Visão geral — filtre por escola e ano para analisar métricas</p>
+          </div>
 
-    // dados para pie: distribuição por categoria simulada (baseado em folhas + "outros")
-    // aqui a gente simula: folha vs funcionamento vs material (provisório)
-    const pieData = [
-        { name: "Folha", value: folhaTotal },
-        { name: "Funcionamento", value: gastoTotal * 0.45 },
-        { name: "Material", value: gastoTotal * 0.20 },
-        { name: "Outros", value: gastoTotal * 0.35 - folhaTotal * 0 } // só balancear visual
-    ];
+          <div className={styles.filters}>
+            <select 
+                className={styles.select}
+                value={filtroEstrutura}
+                onChange={e => setFiltroEstrutura(e.target.value)}
+            >
+                <option value="">Todas as escolas</option>
+                {estruturas.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+            </select>
 
-    // transform bar data (gasto por mês)
-    const barData = lineData.map(d => ({ mes: d.mes, gasto: d.gasto }));
-
-    return (
-        <div className={styles.dashboardContainer}>
-            <div className={styles.header}>
-                <div className={styles.headerRow}>
-                    <div>
-                        <h1 className={styles.title}>Painel de Gestão Financeira</h1>
-                        <p className={styles.subtitle}>Visão geral — filtra por escola e ano para analisar métricas</p>
-                    </div>
-
-                    <div className={styles.filters}>
-                        <select value={escola} onChange={e => setEscola(e.target.value)} className={styles.select}>
-                            {escolas.map(s => <option key={s.id} value={s.id}>{s.nome}</option>)}
-                        </select>
-
-                        <select value={ano} onChange={e => setAno(Number(e.target.value))} className={styles.select}>
-                            {mock.anosDisponiveis.map(a => <option key={a} value={a}>{a}</option>)}
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            {/* KPIs */}
-            <div className={styles.kpiGrid}>
-                <div className={`${styles.kpiCard} ${styles.kpiBlue}`}>
-                    <div className={styles.kpiLabel}>Total de alunos (ano)</div>
-                    <div className={styles.kpiValue}>{totalAlunos.toLocaleString()}</div>
-                    <div className={styles.kpiHint}>Soma dos alunos por mês no ano selecionado</div>
-                </div>
-
-                <div className={`${styles.kpiCard} ${styles.kpiPurple}`}>
-                    <div className={styles.kpiLabel}>Gasto total (ano)</div>
-                    <div className={styles.kpiValue}>R$ {gastoTotal.toLocaleString()}</div>
-                    <div className={styles.kpiHint}>Soma de todos os combos registrados no ano</div>
-                </div>
-
-                <div className={`${styles.kpiCard} ${styles.kpiGreen}`}>
-                    <div className={styles.kpiLabel}>Gasto por aluno</div>
-                    <div className={styles.kpiValue}>R$ {gastoPorAluno.toFixed(2)}</div>
-                    <div className={styles.kpiHint}>Gasto total / total de alunos (ano)</div>
-                </div>
-
-                <div className={`${styles.kpiCard} ${styles.kpiPink}`}>
-                    <div className={styles.kpiLabel}>Gasto com folha (ano)</div>
-                    <div className={styles.kpiValue}>R$ {folhaTotal.toLocaleString()}</div>
-                    <div className={styles.kpiHint}>Valor total da folha cadastrado no ano</div>
-                </div>
-            </div>
-
-            {/* Espaço entre KPIs e gráficos */}
-            <div style={{ height: 6 }} />
-
-            {/* Charts: Linha (esquerda) e Barra (direita) */}
-            <div className={styles.chartsSection}>
-                <div className={styles.chartCard}>
-                    <div className={styles.chartTitle}>Evolução de gastos por aluno ({ano})</div>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <LineChart data={lineData}>
-                            <XAxis dataKey="mes" />
-                            <YAxis />
-                            <Tooltip formatter={(v) => typeof v === "number" ? v.toLocaleString() : v} />
-                            <Legend />
-                            <Line type="monotone" dataKey="gastoPorAluno" name="Gasto por aluno" stroke={palette[0]} />
-                            <Line type="monotone" dataKey="gasto" name="Gasto total (R$)" stroke={palette[1]} />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </div>
-
-                <div className={styles.chartCard}>
-                    <div className={styles.chartTitle}>Gasto total por mês ({ano})</div>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={barData}>
-                            <XAxis dataKey="mes" />
-                            <YAxis />
-                            <Tooltip formatter={(v) => v.toLocaleString()} />
-                            <Bar dataKey="gasto" name="Gasto (R$)">
-                                {barData.map((_, idx) => <Cell key={idx} fill={palette[idx % palette.length]} />)}
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
-            </div>       
+            <select 
+                className={styles.select}
+                value={filtroCompetencia}
+                onChange={e => setFiltroCompetencia(e.target.value)}
+            >
+                <option value="">Todas as competências</option>
+                {competencias.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
+            </select>
+          </div>
         </div>
-    );
+      </div>
+
+      {/* KPIs - DADOS REAIS DO BANCO */}
+      <div className={styles.kpiGrid}>
+        
+        {/* Card 1: Total de Alunos */}
+        <div className={`${styles.kpiCard} ${styles.kpiBlue}`}>
+          <div>
+            <div className={styles.kpiLabel}>Total de alunos (Censo)</div>
+            <div className={styles.kpiValue}>{dados.totalAlunos?.toLocaleString()}</div>
+          </div>
+          <div className={styles.kpiHint}>Soma dos alunos no período selecionado</div>
+        </div>
+
+        {/* Card 2: Gasto Total */}
+        <div className={`${styles.kpiCard} ${styles.kpiPurple}`}>
+          <div>
+            <div className={styles.kpiLabel}>Gasto total</div>
+            <div className={styles.kpiValue}>{formatMoney(dados.custoTotal)}</div>
+          </div>
+          <div className={styles.kpiHint}>Soma de todos os materiais e folhas</div>
+        </div>
+
+        {/* Card 3: Gasto por Aluno */}
+        <div className={`${styles.kpiCard} ${styles.kpiGreen}`}>
+          <div>
+            <div className={styles.kpiLabel}>Gasto por aluno</div>
+            <div className={styles.kpiValue}>{formatMoney(dados.custoPorAluno)}</div>
+          </div>
+          <div className={styles.kpiHint}>Gasto total / total de alunos</div>
+        </div>
+
+        {/* Card 4: Gasto com Folha */}
+        <div className={`${styles.kpiCard} ${styles.kpiPink}`}>
+          <div>
+            <div className={styles.kpiLabel}>Gasto com folha</div>
+            <div className={styles.kpiValue}>{formatMoney(dados.gastoPessoal)}</div>
+          </div>
+          <div className={styles.kpiHint}>Valor total da folha de RH</div>
+        </div>
+      </div>
+
+      {/* Gráficos */}
+      <div className={styles.chartsSection}>
+        
+        {/* Gráfico de Linha */}
+        <div className={styles.chartCard}>
+          <div className={styles.chartTitle}>Evolução de gastos (Visualização)</div>
+          <div style={{ width: '100%', height: 300 }}>
+            <ResponsiveContainer>
+              <LineChart data={lineData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                <XAxis dataKey="mes" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} tickFormatter={(v) => `R$${v}`} />
+                <Tooltip 
+                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }}
+                    itemStyle={{ color: '#fff' }}
+                />
+                <Line type="monotone" dataKey="gasto" stroke="#8b5cf6" strokeWidth={3} dot={{r: 4}} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Gráfico de Barras */}
+        <div className={styles.chartCard}>
+          <div className={styles.chartTitle}>Comparativo de Categorias</div>
+          <div style={{ width: '100%', height: 300 }}>
+            <ResponsiveContainer>
+              <BarChart data={barData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                <XAxis dataKey="name" stroke="#94a3b8" tickLine={false} axisLine={false} />
+                <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} />
+                <Tooltip 
+                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }}
+                    itemStyle={{ color: '#fff' }}
+                    formatter={(value) => formatMoney(value)}
+                />
+                <Bar dataKey="valor" radius={[4, 4, 0, 0]}>
+                  {barData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={palette[index % palette.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
 }
