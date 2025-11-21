@@ -1,0 +1,141 @@
+.container {
+  max-width: 1100px;
+  margin: 32px auto;
+  padding: 36px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  color: #E6EEF8;
+  font-family: Inter, "Segoe UI", Roboto, system-ui;
+}
+
+/* Título */
+.titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.8rem;
+  color: #fff;
+  font-weight: 800;
+  margin-bottom: 28px;
+}
+
+.icone {
+  font-size: 1.6rem;
+  color: #66a3ff;
+}
+
+/* Select */
+.filtroContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.selectCargo {
+  background-color: #0f276f;
+  color: #fff;
+  border: 1px solid #253974;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 15px;
+}
+
+.selectCargo:focus {
+  border-color: rgba(59,130,246,0.95);
+  box-shadow: 0 8px 26px rgba(59,130,246,0.12);
+}
+
+/* Tabela */
+.areaPreenchimento {
+  margin-top: 20px;
+}
+
+.tabelaHeader {
+  display: grid;
+  grid-template-columns: 1fr 180px 200px;
+  padding: 12px;
+  font-weight: 700;
+  color: #b8c6db;
+}
+
+.listaEscolas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.linhaEscola {
+  display: grid;
+  grid-template-columns: 1fr 180px 200px;
+  align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 14px;
+  gap: 14px;
+}
+
+.nomeEscola {
+  color: #fff;
+  font-weight: 700;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.07);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.inputWrapper input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 8px 26px rgba(59,130,246,0.14);
+}
+
+/* Footer */
+.footerAcoes {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.botaoSalvar {
+  background: #0642A1;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 12px 30px rgba(59,130,246,0.2);
+}
+
+.botaoSalvar:hover {
+  background: #0a54c8;
+  transform: translateY(-2px);
+  transition: 0.2s;
+}
+
+/* Vazia */
+.mensagemVazia {
+  color: #9fb1d2;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Mobile */
+@media (max-width: 820px) {
+  .tabelaHeader,
+  .linhaEscola {
+    grid-template-columns: 1fr;
+  }
+}

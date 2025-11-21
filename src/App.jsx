@@ -15,6 +15,8 @@ import SolicitarSetor from './components/pages/SolicitarSetor';
 import AprovarSolicitacoesSetor from './components/pages/AprovarSolicitacoesSetor';
 import GerenciarCompetencias from './components/pages/GerenciarCompetencias';
 import MainLayout from './components/layout/MainLayout';
+import FolhaPagamentoRh from './components/pages/FolhaPagamentoRh';
+import InformarCenso from './components/pages/InformarCenso';
 
 function App() {
     return (
@@ -34,8 +36,11 @@ function App() {
                     <Route path="/adm/usuarios" element={<GerenciarUsuarios />} />
                     <Route path="/adm/solicitacoes-setor" element={<AprovarSolicitacoesSetor />} />
                     <Route path="/adm/competencias" element={<GerenciarCompetencias />} />
+
                     <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor />} />
-                    <Route path="/solicitar-setor" element={<SolicitarSetor />} />
+                    <Route path="/solicitar-setor" element={<SolicitarSetor />} /> 
+                    <Route path="/diretor/censo" element={<InformarCenso />} />
+                    <Route path="/rh/folha" element={<FolhaPagamentoRh/>} />
                 </Route>
 
 

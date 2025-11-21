@@ -1,6 +1,6 @@
 import { 
   FaUserCheck, FaTags, FaBoxOpen, FaFolderOpen, FaBuilding, 
-  FaClipboardList, FaUsersCog, FaUserTag, FaUserPlus 
+  FaClipboardList, FaUsersCog, FaUserTag, FaUserPlus, FaMoneyBillWave, FaUsers 
 } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 
@@ -17,9 +17,19 @@ export const menuADM = [
   { label: "Estruturas", icon: FaBuilding, path: "/adm/estruturas" },
 ];
 
-
 export const menuResponsavel = [
   { label: "Dashboard", icon: LuLayoutDashboard, path: "/" },
   { label: "Preencher Combos", icon: FaClipboardList, path: "/responsavel-setor/preenchimento" },
   { label: "Solicitar Setor", icon: FaUserPlus, path: "/solicitar-setor" },
+];
+
+
+export const menuRh = [
+  { label: "Dashboard", icon: LuLayoutDashboard, path: "/" },
+  { label: "Folha de Pagamento", icon: FaMoneyBillWave, path: "/rh/folha" }
+];
+
+export const menuDiretor = [
+  { label: "Dashboard", icon: LuLayoutDashboard, path: "/" },
+  { label: "Censo Escolar", icon: FaUsers, path: "/diretor/censo" }
 ];

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./Sidebar.module.css";
-import { menuADM, menuResponsavel } from "./MenuConfig";
+import { menuADM, menuResponsavel, menuRh, menuDiretor } from "./MenuConfig"; // <-- IMPORTADO
 import { FaBars } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 
@@ -19,9 +19,11 @@ export function Sidebar() {
             const decoded = jwtDecode(token);
             let role = decoded.role ?? decoded.roles ?? decoded.Roles ?? null;
 
+            // Se vier array
             if (Array.isArray(role)) {
                 if (role.includes("ADM")) role = "ADM";
                 else if (role.includes("RESPONSAVEL_SETOR")) role = "RESPONSAVEL_SETOR";
+                else if (role.includes("RH")) role = "RH";
                 else role = "USER";
             }
 
@@ -31,9 +33,11 @@ export function Sidebar() {
         }
     }, []);
 
-    const getMenu = () => {
+    const getMenu = () => { 
         if (userRole === "ADM") return menuADM;
         if (userRole === "RESPONSAVEL_SETOR") return menuResponsavel;
+        if (userRole === "RH") return menuRh;     
+        if (userRole === "DIRETOR") return menuDiretor;
         return [];
     };
 

@@ -1,0 +1,181 @@
+:root{
+  --bg-card: rgba(255,255,255,0.04);
+  --card-border: rgba(255,255,255,0.06);
+  --muted: #b8c6db;
+  --text: #e8eef8;
+  --text-soft: #cfd9ee;
+  --accent-1: #5b8bff;
+  --accent-2: #7c6cff;
+  --accent-3: #3b82f6;
+  --glass: rgba(255,255,255,0.03);
+  --glass-strong: rgba(255,255,255,0.06);
+  --danger: #ff6b6b;
+  --success: #4ade80;
+  --shadow: 0 10px 30px rgba(2,6,23,0.6);
+  --radius-lg: 14px;
+}
+
+/* --- Container / estrutura --- */
+.container {
+  padding: 20px;
+  animation: fadeIn .18s ease-in-out;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  box-sizing: border-box;
+}
+
+/* título principal (h2) */
+.container > h2,
+.titulo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* filtro (label + select) */
+label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-soft);
+  font-weight: 600;
+  margin-top: 8px;
+}
+label select {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.04);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  color: var(--text);
+  outline: none;
+  min-width: 160px;
+  transition: box-shadow .12s ease, transform .12s ease;
+}
+label select:focus {
+  box-shadow: 0 8px 20px rgba(91,139,255,0.08);
+  border-color: var(--accent-1);
+  transform: translateY(-2px);
+}
+
+/* mensagens de loading / vazio */
+.loading, .vazio {
+  color: var(--muted);
+  font-size: 0.98rem;
+  margin-top: 14px;
+}
+
+/* --- Grid de cards --- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* cartão individual (glass) */
+.card {
+  padding: 16px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.02));
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 6px 20px rgba(2,6,23,0.55);
+  transition: transform .12s ease, box-shadow .12s ease;
+  color: var(--text);
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(2,6,23,0.6); }
+
+/* topo do card (título + data) */
+.card h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.data {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* linhas de informação */
+.infoLinha {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.label {
+  font-weight: 700;
+  color: var(--text-soft);
+  width: 110px;
+  flex-shrink: 0;
+  font-size: 0.92rem;
+}
+.value {
+  color: var(--text);
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+/* pequenos badges inline para perfil/estrutura */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: rgba(255,255,255,0.02);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+/* destaque de valores */
+.valor {
+  font-weight: 800;
+  color: var(--accent-1);
+}
+
+/* se tiver combo vazio */
+.combo-empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* responsividade */
+@media (max-width: 980px) {
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .label { width: 100px; }
+}
+
+@media (max-width: 640px) {
+  .card-grid { grid-template-columns: 1fr; gap: 12px; }
+  .label { width: 100%; font-size: 0.9rem; }
+  .infoLinha { flex-direction: column; align-items: flex-start; gap: 4px; }
+}
+
+/* animações sutis */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* foco/accessibility */
+select:focus, .card:focus {
+  outline: 3px solid rgba(91,139,255,0.12);
+  outline-offset: 3px;
+}

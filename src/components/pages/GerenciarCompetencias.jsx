@@ -3,12 +3,16 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import styles from './Gerenciamento.module.css'; 
-import {FaEdit, FaTrash} from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import Mural from "./Mural";
 
 export default function GerenciarCompetencias() {
     const [competencias, setCompetencias] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [edicao, setEdicao] = useState(null);
+
+    // 👉 Agora salva o objeto inteiro
+    const [competenciaSelecionada, setCompetenciaSelecionada] = useState(null);
 
     const { register, handleSubmit, setValue, reset } = useForm();
 
@@ -35,7 +39,7 @@ export default function GerenciarCompetencias() {
         if (comp) {
             setValue("ano", comp.ano);
             setValue("mes", comp.mes);
-            setValue("dataInicio", comp.dataInicio.slice(0, 10)); // yyyy-MM-dd
+            setValue("dataInicio", comp.dataInicio.slice(0, 10));
             setValue("dataFim", comp.dataFim.slice(0, 10));
             setValue("competenciaStatus", comp.competenciaStatus);
         }
@@ -55,12 +59,12 @@ export default function GerenciarCompetencias() {
             const dataFim = new Date(dados.dataFim);
 
             const payload = {
-                nome: dados.nome, // pegando o nome do input
+                nome: dados.nome,
                 dataInicio: dataInicio.toISOString(),
                 dataFim: dataFim.toISOString(),
                 ano: dataInicio.getFullYear(),
                 mes: String(dataInicio.getMonth() + 1).padStart(2, "0"),
-                competenciaStatus: dados.competenciaStatus || "ABERTO" // caso não seja preenchido, default
+                competenciaStatus: dados.competenciaStatus || "ABERTO"
             };
 
             if (edicao) {
@@ -87,8 +91,6 @@ export default function GerenciarCompetencias() {
         }
     };
 
-
-
     const deletar = async (id) => {
         if (!window.confirm("Deseja excluir a competência?")) return;
 
@@ -104,12 +106,6 @@ export default function GerenciarCompetencias() {
     return (
         <div className={styles.container}>
             <h2 className={styles.titulo}>Gerenciar Competências</h2>
-
-            <div className={styles.containerBotaoTopo}>
-                <button className={styles.botaoNovo} onClick={() => abrirModal()}>
-                    + Nova Competência
-                </button>
-            </div>
 
             <table className={styles.tabela}>
                 <thead>
@@ -133,58 +129,40 @@ export default function GerenciarCompetencias() {
                             <td>{c.dataFim.slice(0, 10)}</td>
                             <td>{c.competenciaStatus}</td>
                             <td className={styles.acoes}>
-                                <button onClick={() => abrirModal(c)} className={styles.botaoAcao}><FaEdit/></button>
-                                <button onClick={() => deletar(c.id)} className={styles.botaoAcao}><FaTrash/></button>
+                                
+                                <button onClick={() => abrirModal(c)} className={styles.botaoAcao}>
+                                    <FaEdit/>
+                                </button>
+
+                                <button onClick={() => deletar(c.id)} className={styles.botaoAcao}>
+                                    <FaTrash/>
+                                </button>
+
+                                {/* BOTÃO PARA ABRIR O MURAL */}
+                                <button 
+                                    style={{ marginLeft: "5px" }}
+                                    className={styles.botaoAcao}
+                                    // 👉 Agora salva o objeto inteiro
+                                    onClick={() => setCompetenciaSelecionada(c)}
+                                >
+                                    Mural
+                                </button>
+
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            {isModalOpen && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <h3 className={styles.modalTitulo}>
-                            {edicao ? "Editar Competência" : "Nova Competência"}
-                        </h3>
+            {/* MOSTRAR O MURAL */}
+            {competenciaSelecionada && (
+                <div style={{ marginTop: "35px" }}>
+                    <h2>Mural da competência {competenciaSelecionada.nome}</h2>
 
-                        <form onSubmit={handleSubmit(salvar)}>
-                            <div className={styles.formGroup}>
-                                <label>Nome</label>
-                                <input {...register("nome", { required: true })} />
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label>Data de Início</label>
-                                <input
-                                    type="datetime-local"
-                                    {...register("dataInicio", { required: true })}
-                                    defaultValue={edicao?.dataInicio?.slice(0, 16)} // corta os segundos caso tenha
-                                />
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label>Data de Fim</label>
-                                <input
-                                    type="datetime-local"
-                                    {...register("dataFim", { required: true })}
-                                    defaultValue={edicao?.dataFim?.slice(0, 16)}
-                                />
-                            </div>
-
-                            <div className={styles.modalFooter}>
-                                <button type="button" className={styles.botaoCancelar} onClick={fecharModal}>
-                                    Cancelar
-                                </button>
-                                <button type="submit" className={styles.botaoSalvar}>
-                                    Salvar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                    {/* Passa só o id para o componente */}
+                    <Mural competenciaId={competenciaSelecionada.id} />
                 </div>
             )}
-
 
             <ToastContainer />
         </div>
