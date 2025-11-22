@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -5,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaPaperPlane, FaBuilding, FaBriefcase } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './SolicitarSetor.module.css'; // Novo CSS
+import styles from './SolicitarSetor.module.css';
 
 function SolicitarSetor() {
   const [estruturas, setEstruturas] = useState([]);
@@ -18,11 +20,12 @@ function SolicitarSetor() {
   const token = localStorage.getItem('token');
   const makeConfig = () => ({ headers: { Authorization: `Bearer ${token}` } });
 
-  // Busca as Estruturas (escolas) no carregamento
+  // 1. Busca TODAS as Estruturas (escolas) no carregamento
   useEffect(() => {
     const buscarEstruturas = async () => {
       try {
-        const res = await axios.get('http://localhost:8081/api/estruturas', makeConfig());
+       
+        const res = await axios.get('http://localhost:8081/api/estruturas?todas=true', makeConfig());
         setEstruturas(res.data);
       } catch (error) {
         toast.error('Erro ao carregar a lista de escolas.');
@@ -34,7 +37,7 @@ function SolicitarSetor() {
   // Observa a mudança no dropdown de Estrutura
   const estruturaIdSelecionada = watch("estruturaId");
 
-  // Busca os Setores (departamentos) quando a Estrutura muda
+  // 2. Busca os Setores (departamentos) quando a Estrutura muda
   useEffect(() => {
     if (!estruturaIdSelecionada) {
       setSetores([]);
@@ -51,7 +54,7 @@ function SolicitarSetor() {
     buscarSetores();
   }, [estruturaIdSelecionada, token]);
 
-  // Envia a solicitação para o ADM
+  // 3. Envia a solicitação para o ADM
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     const payload = {
@@ -63,7 +66,7 @@ function SolicitarSetor() {
       await axios.post('http://localhost:8081/api/solicitacoes-setor', payload, makeConfig());
       toast.success('Solicitação enviada com sucesso! Aguardando aprovação do ADM.');
       reset();
-      setTimeout(() => navigate('/'), 2000); // Volta para a Home
+      setTimeout(() => navigate('/'), 2500); // Volta para a Home
     } catch (error) {
       toast.error('Erro ao enviar sua solicitação.');
       setIsSubmitting(false);
