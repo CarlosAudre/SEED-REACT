@@ -4,27 +4,25 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import { FaPlus, FaTrash, FaClipboardList, FaArrowLeft, FaPlusCircle } from 'react-icons/fa'; 
+import { FaPlus, FaTrash, FaClipboardList, FaArrowLeft, FaPlusCircle, FaArrowUp, FaArrowDown } from 'react-icons/fa'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './DetalhesCombo.module.css';
 
 function DetalhesCombo() {
-  // Hooks de estado e formulário
   const { comboId } = useParams(); 
-  const { register, handleSubmit, reset } = useForm(); // Form principal (adicionar item existente)
-  const { register: registerItem, handleSubmit: handleSubmitItem, reset: resetItem } = useForm(); // Form do modal (criar novo item)
+  const { register, handleSubmit, reset } = useForm(); 
+  const { register: registerItem, handleSubmit: handleSubmitItem, reset: resetItem } = useForm();
 
   const [combo, setCombo] = useState(null);
   const [itensDoCombo, setItensDoCombo] = useState([]);
   const [todosOsItens, setTodosOsItens] = useState([]);
   const [classificacoes, setClassificacoes] = useState([]); 
-  const [isItemModalOpen, setIsItemModalOpen] = useState(false); // Estado do modal de criação
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
 
   const token = localStorage.getItem('token');
   const makeConfig = () => ({ headers: { Authorization: `Bearer ${token}` } });
 
-  // Função para buscar todos os dados iniciais
   const buscarDados = useCallback(async () => {
     try {
       const [resCombo, resItensCombo, resTodosItens, resClassificacoes] = await Promise.all([ 
@@ -34,12 +32,17 @@ function DetalhesCombo() {
         axios.get('http://localhost:8081/adm/classificacoes', makeConfig()) 
       ]);
       setCombo(resCombo.data);
-      setItensDoCombo(resItensCombo.data);
-      setTodosOsItens(resTodosItens.data);
-      setClassificacoes(resClassificacoes.data); 
+      
+      // Garante que a lista de itens não seja null e ordena
+      const lista = resItensCombo.data || [];
+      const itensOrdenados = lista.sort((a, b) => parseInt(a.ordem || 0) - parseInt(b.ordem || 0));
+      setItensDoCombo(itensOrdenados);
+      
+      setTodosOsItens(resTodosItens.data || []);
+      setClassificacoes(resClassificacoes.data || []); 
     } catch (error) { 
-        toast.error('Erro ao carregar dados do kit.');
-        console.error("Erro em buscarDados:", error);
+        console.error(error);
+        // Evita toast excessivo
     }
   }, [comboId, token]); 
 
@@ -47,14 +50,9 @@ function DetalhesCombo() {
     buscarDados();
   }, [buscarDados]);
   
-  // --- Funções para o Modal de Criação Rápida de Item ---
-  const abrirItemModal = () => {
-    resetItem();
-    setIsItemModalOpen(true);
-  };
-  const fecharItemModal = () => {
-    setIsItemModalOpen(false);
-  };
+  // --- Modal Criar Item ---
+  const abrirItemModal = () => { resetItem(); setIsItemModalOpen(true); };
+  const fecharItemModal = () => setIsItemModalOpen(false);
 
   const criarNovoItem = async (data) => {
     const dadosFormatados = {
@@ -63,57 +61,89 @@ function DetalhesCombo() {
         classificacaoDTO: { id: parseInt(data.classificacaoId) },
         tipo_dado: data.tipo_dado,
         obrigatorio: data.obrigatorio || false, 
-        valor: data.valor ? parseInt(data.valor) : null, // Usa 'valor'
         ativo: true
     };
     try {
         await axios.post('http://localhost:8081/adm/itens', dadosFormatados, makeConfig());
-        toast.success('Novo item criado com sucesso!');
+        toast.success('Novo item criado!');
         fecharItemModal();
-        // Atualiza a lista de itens disponíveis no dropdown
         const resTodosItens = await axios.get('http://localhost:8081/adm/itens', makeConfig());
         setTodosOsItens(resTodosItens.data); 
     } catch (error) {
-        toast.error('Erro ao criar o novo item.');
-        console.error("Erro em criarNovoItem:", error);
+        toast.error('Erro ao criar item.');
     }
   };
-  // --- Fim das Funções do Modal ---
 
-  // --- Funções para Adicionar/Remover Item Existente ---
+  // --- Adicionar Item ao Kit ---
   const adicionarItem = async (data) => {
+    const maiorOrdem = itensDoCombo.length > 0 
+        ? Math.max(...itensDoCombo.map(i => parseInt(i.ordem) || 0)) 
+        : 0;
+    const proximaOrdem = (maiorOrdem + 1).toString();
+
     const payload = {
       itemId: data.itemId,
-      ordem: data.ordem,
-      obrigatorio: data.obrigatorio || false, 
-      valor: data.valor ? parseInt(data.valor) : null // Envia o 'valor'
+      ordem: proximaOrdem,
+      obrigatorio: data.obrigatorio || false,
     };
+
     try {
       await axios.post(`http://localhost:8081/adm/combos/${comboId}/itens`, payload, makeConfig());
-      toast.success('Item adicionado ao kit com sucesso!');
+      toast.success('Item adicionado!');
       reset(); 
       buscarDados(); 
     } catch (error) {
-      const msg = error.response?.data?.message || 'Erro ao adicionar o item.';
-      toast.error(msg); // Exibe erros de validação do back-end (ex: ordem repetida)
-      console.error("Erro em adicionarItem:", error);
+      const msg = error.response?.data?.message || 'Erro ao adicionar.';
+      toast.error(msg);
+    }
+  };
+
+  // --- Reordenar Itens ---
+  const moverItem = async (index, direcao) => {
+    if (direcao === 'cima' && index === 0) return;
+    if (direcao === 'baixo' && index === itensDoCombo.length - 1) return;
+
+    const novoIndex = direcao === 'cima' ? index - 1 : index + 1;
+    const novaLista = [...itensDoCombo];
+    const itemMovido = novaLista[index];
+    const itemTrocado = novaLista[novoIndex];
+
+    const ordemTemp = itemMovido.ordem;
+    itemMovido.ordem = itemTrocado.ordem;
+    itemTrocado.ordem = ordemTemp;
+
+    novaLista[index] = itemTrocado;
+    novaLista[novoIndex] = itemMovido;
+    setItensDoCombo(novaLista);
+
+    try {
+        await Promise.all([
+            axios.patch(`http://localhost:8081/adm/combos/itens/${itemMovido.id}/ordem`, itemMovido.ordem, {
+                headers: { ...makeConfig().headers, 'Content-Type': 'text/plain' }
+            }),
+            axios.patch(`http://localhost:8081/adm/combos/itens/${itemTrocado.id}/ordem`, itemTrocado.ordem, {
+                headers: { ...makeConfig().headers, 'Content-Type': 'text/plain' }
+            })
+        ]);
+    } catch (error) {
+        toast.error("Erro ao salvar a nova ordem.");
+        buscarDados(); 
     }
   };
 
   const removerItem = async (comboItemId) => {
-    if (window.confirm('Tem certeza que deseja remover este item do kit?')) {
+    if (window.confirm('Remover este item do kit?')) {
       try {
         await axios.delete(`http://localhost:8081/adm/combos/itens/${comboItemId}`, makeConfig());
-        toast.success('Item removido do kit com sucesso!');
+        toast.success('Item removido!');
         buscarDados(); 
       } catch (error) {
-        toast.error('Erro ao remover o item.');
-        console.error("Erro em removerItem:", error);
+        toast.error('Erro ao remover.');
       }
     }
   };
-  // --- Fim das Funções Adicionar/Remover ---
 
+  // Loading state simples
   if (!combo) return <div style={{color: 'white', textAlign: 'center', padding: '50px'}}>Carregando...</div>;
 
   return (
@@ -126,31 +156,34 @@ function DetalhesCombo() {
       </div>
 
       <div className={styles.conteudo}>
-        {/* Lado Esquerdo: Itens já no Combo */}
+        {/* Lado Esquerdo */}
         <div className={styles.coluna}>
           <h4 className={styles.subtitulo}>Itens no Kit</h4>
           {itensDoCombo.length > 0 ? (
             <table className={styles.tabelaItens}>
               <thead>
                 <tr>
-                  <th>Item</th>
                   <th>Ordem</th>
+                  <th>Item</th>
                   <th>Obrigatório</th>
-                  <th>Valor</th>
+                  <th>Mover</th>
                   <th>Ação</th> 
                 </tr>
               </thead>
               <tbody>
-                {itensDoCombo.map(({ id, ordem, obrigatorio, valor, item }) => ( 
-                  <tr key={id}>
-                    <td>{item.nomeItem}</td>
-                    <td>{ordem}</td>
-                    <td>{obrigatorio ? 'Sim' : 'Não'}</td>
-                    <td>{valor !== null ? valor : '-'}</td> 
-                    <td>
-                      <button onClick={() => removerItem(id)} className={styles.botaoRemover} title="Remover Item">
-                        <FaTrash />
-                      </button>
+                {itensDoCombo.map((comboItem, index) => ( 
+                  <tr key={comboItem.id}>
+                    <td style={{fontWeight: 'bold', textAlign: 'center'}}>{comboItem.ordem}</td>
+                    <td>{comboItem.item ? comboItem.item.nomeItem : 'Item inválido'}</td>
+                    <td style={{textAlign: 'center'}}>{comboItem.obrigatorio ? 'Sim' : 'Não'}</td>
+                    
+                    <td className={styles.colunaMover}>
+                        <button onClick={() => moverItem(index, 'cima')} className={styles.botaoSeta} disabled={index === 0}><FaArrowUp /></button>
+                        <button onClick={() => moverItem(index, 'baixo')} className={styles.botaoSeta} disabled={index === itensDoCombo.length - 1}><FaArrowDown /></button>
+                    </td>
+
+                    <td style={{textAlign: 'center'}}>
+                      <button onClick={() => removerItem(comboItem.id)} className={styles.botaoRemover}><FaTrash /></button>
                     </td>
                   </tr>
                 ))}
@@ -161,11 +194,10 @@ function DetalhesCombo() {
           )}
         </div>
 
-        
+        {/* Lado Direito */}
         <div className={styles.coluna}>
            <h4 className={styles.subtitulo}>
-             Adicionar Item Existente
-             
+             Adicionar Item
              <button onClick={abrirItemModal} className={styles.botaoCriacaoRapida} title="Criar novo item rapidamente">
                  <FaPlusCircle />
              </button>
@@ -180,25 +212,7 @@ function DetalhesCombo() {
                 ))}
               </select>
             </div>
-            <div className={styles.formGroup}>
-              <label>Ordem</label>
-              <input 
-                type="text" 
-                {...register('ordem', { required: true })} 
-                placeholder="Ex: 1, 2, 3... (número único, >= 1)" 
-              />
-            </div>
             
-            <div className={styles.formGroup}>
-              <label>Valor (Opcional)</label>
-              <input 
-                type="number" 
-                min="0" 
-                {...register('valor', { valueAsNumber: true, min: 0 })} 
-                placeholder="Ex: 10, 50, 100" 
-              />
-            </div>
-
             <div className={styles.formGroupCheck}>
               <input type="checkbox" {...register('obrigatorio')} id="obrigatorio-add" /> 
               <label htmlFor="obrigatorio-add">É obrigatório?</label>
@@ -208,6 +222,7 @@ function DetalhesCombo() {
         </div>
       </div>
 
+      {/* Modal Criar Item */}
       {isItemModalOpen && (
           <div className={styles.modalOverlay}>
             <div className={styles.modalContent}> 
@@ -230,7 +245,10 @@ function DetalhesCombo() {
                     ))}
                   </select>
                 </div>
-                
+                <div className={styles.formGroup}>
+                   <label>Tipo de Dado</label>
+                   <input {...registerItem('tipo_dado')} placeholder="Ex: UNIDADE, QUANTIDADE" />
+                </div>
                 <div className={styles.modalFooter}>
                   <button type="button" onClick={fecharItemModal} className={styles.botaoCancelar}>Cancelar</button>
                   <button type="submit" className={styles.botaoSalvar}>Criar Item</button>
@@ -239,7 +257,7 @@ function DetalhesCombo() {
             </div>
           </div>
       )}
-     
+
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

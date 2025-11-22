@@ -8,6 +8,7 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(8px);
   color: white;
+  margin: 32px auto;
 }
 
 .linkVoltar {
@@ -19,9 +20,7 @@
   margin-bottom: 20px;
   transition: color 0.2s;
 }
-.linkVoltar:hover {
-  color: #fff;
-}
+.linkVoltar:hover { color: #fff; }
 
 .cabecalho {
   text-align: center;
@@ -30,179 +29,78 @@
   padding-bottom: 20px;
 }
 .titulo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  font-size: 2.2rem;
-  margin: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: 15px; font-size: 2.2rem; margin: 0;
 }
 .icone { color: #66a3ff; }
-.descricao {
-  font-size: 1.1rem;
-  color: #b8c6db;
-  margin-top: 10px;
-}
+.descricao { font-size: 1.1rem; color: #b8c6db; margin-top: 10px; }
 
-.conteudo {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 40px;
-}
-
-.coluna {
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-}
+.conteudo { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+.coluna { padding: 20px; background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
 
 .subtitulo {
-  font-size: 1.5rem;
-  margin-top: 0;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #fff;
-  display: flex; /* Para alinhar o botão + */
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+  font-size: 1.5rem; margin-top: 0; margin-bottom: 20px; text-align: center; color: #fff;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
 }
 
-/* Botão de Criação Rápida (+) */
 .botaoCriacaoRapida {
-  background: none;
-  border: none;
-  color: #66a3ff; 
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
+  background: none; border: none; color: #66a3ff; font-size: 1.2rem; cursor: pointer; padding: 0; line-height: 1;
 }
-.botaoCriacaoRapida:hover {
-  color: #88baff;
-}
+.botaoCriacaoRapida:hover { color: #88baff; }
 
-/* Tabela de Itens */
-.tabelaItens {
-  width: 100%;
-  border-collapse: separate;
-}
+/* Tabela */
+.tabelaItens { width: 100%; border-collapse: separate; }
 .tabelaItens th, .tabelaItens td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .tabelaItens th { color: #b8c6db; }
 
-/* Alinhamento das colunas da tabela */
-.tabelaItens th:nth-child(2), .tabelaItens td:nth-child(2) { /* Ordem */
-  text-align: center;
-  width: 80px;
+/* Colunas */
+.tabelaItens th:nth-child(1), .tabelaItens td:nth-child(1) { text-align: center; width: 60px; } /* Ordem */
+.tabelaItens th:nth-child(3), .tabelaItens td:nth-child(3) { text-align: center; width: 100px; } /* Obrigatório */
+.tabelaItens th:nth-child(4), .tabelaItens td:nth-child(4) { text-align: center; width: 100px; } /* Mover */
+.tabelaItens th:nth-child(5), .tabelaItens td:nth-child(5) { text-align: center; width: 80px; } /* Ação */
+
+.colunaMover { display: flex; justify-content: center; gap: 5px; }
+
+.botaoSeta {
+    background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #b8c6db; border-radius: 4px; width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
 }
-.tabelaItens th:nth-child(3), .tabelaItens td:nth-child(3) { /* Obrigatório */
-  text-align: center;
-  width: 100px;
-}
-.tabelaItens th:nth-child(4), .tabelaItens td:nth-child(4) { /* Valor */
-  text-align: center;
-  width: 80px;
-}
-.tabelaItens th:nth-child(5), .tabelaItens td:nth-child(5) { /* Ação */
-  text-align: center;
-  width: 80px;
-}
+.botaoSeta:hover:not(:disabled) { background: #3b82f6; color: white; border-color: #3b82f6; }
+.botaoSeta:disabled { opacity: 0.3; cursor: default; }
 
 .botaoRemover {
-  background: none;
-  border: none;
-  color: #ff6b6b;
-  cursor: pointer;
-  font-size: 1.1rem;
-  transition: color 0.2s;
+  background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 1.1rem; transition: color 0.2s;
 }
 .botaoRemover:hover { color: #ff3b3b; }
 
-.mensagemVazia {
-  text-align: center;
-  color: #b8c6db;
-  padding: 20px;
-}
+.mensagemVazia { text-align: center; color: #b8c6db; padding: 20px; }
 
-
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+/* Formulário */
+.formulario { display: flex; flex-direction: column; gap: 15px; }
 .formGroup { text-align: left; }
 .formGroup label { display: block; margin-bottom: 5px; color: #b8c6db; }
 .formGroup input, .formGroup select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #4a5568;
-  background-color: #2d3748;
-  color: white;
-  font-size: 1rem;
+  width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #4a5568; background-color: #2d3748; color: white; font-size: 1rem;
 }
-.formGroupCheck {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.formGroupCheck { display: flex; align-items: center; gap: 10px; }
 .formGroupCheck label { margin: 0; }
 .botaoAdicionar {
-  background: linear-gradient(90deg, #007bff, #005fcc);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 12px 20px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
+  background: linear-gradient(90deg, #007bff, #005fcc); color: white; border: none; border-radius: 10px; padding: 12px 20px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px;
 }
-.botaoAdicionar:hover {
-  background: linear-gradient(90deg, #3399ff, #007bff);
-}
+.botaoAdicionar:hover { background: linear-gradient(90deg, #3399ff, #007bff); }
 
-
+/* Modal */
 .modalOverlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7); display: flex; align-items: center; justify-content: center; z-index: 1000;
 }
 .modalContent {
-  width: 500px;
-  padding: 20px;
-  background: rgba(30, 41, 59, 0.8);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 500px; padding: 20px; background: rgba(30, 41, 59, 0.8); border-radius: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);
 }
 .modalTitulo { text-align: center; font-size: 1.5rem; margin-bottom: 20px; }
-.modalFooter {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-.botaoCancelar, .botaoSalvar {
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-.botaoCancelar { background-color: #4a5568; color: white; }
-.botaoSalvar { background-color: #007bff; color: white; }
+.modalFooter { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.botaoCancelar { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; background-color: #4a5568; color: white; }
+.botaoSalvar { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; background-color: #007bff; color: white; }
