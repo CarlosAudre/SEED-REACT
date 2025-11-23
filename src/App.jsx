@@ -17,6 +17,8 @@ import GerenciarCompetencias from './components/pages/GerenciarCompetencias';
 import MainLayout from './components/layout/MainLayout';
 import FolhaPagamentoRh from './components/pages/FolhaPagamentoRh';
 import InformarCenso from './components/pages/InformarCenso';
+import { UserSolicitacaoComboItem } from './components/pages/UserSolicitacaoComboItem';
+import { AdmSolicitacaoComboItem } from './components/pages/AdmSolicitacoesComboItem';
 
 function App() {
     return (
@@ -40,7 +42,14 @@ function App() {
                     <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor />} />
                     <Route path="/solicitar-setor" element={<SolicitarSetor />} /> 
                     <Route path="/diretor/censo" element={<InformarCenso />} />
+                    
                     <Route path="/rh/folha" element={<FolhaPagamentoRh/>} />
+
+                     
+                    <Route path="/solicitacoes-combos" element={<UserSolicitacaoComboItem />} />
+
+                    
+                    <Route path="/adm/solicitacoes-combos" element={<AdmSolicitacaoComboItem />} />
                 </Route>
 
 
