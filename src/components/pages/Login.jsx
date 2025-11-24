@@ -92,7 +92,6 @@ function Login() {
               <input type="checkbox" />
               <span>Lembre de mim</span>
             </label>
-            <a className={styles.forgot} href="#">Esqueceu a senha?</a>
           </div>
 
           <div className={styles.submitWrap}>
