@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 
 export function UserSolicitacaoComboItem() {
     const [solicitacoes, setSolicitacoes] = useState([]);
+    const [setoresUsuario, setSetoresUsuario] = useState([]);
     const [form, setForm] = useState({
         tipo: "",
         nome: "",
@@ -14,14 +15,11 @@ export function UserSolicitacaoComboItem() {
     });
 
     const token = localStorage.getItem("token");
-    const decoded = jwtDecode(token);
-    // const userId = decoded.id ?? decoded.userId ?? decoded.sub; // não precisamos mais
-
     const makeConfig = () => ({
         headers: { Authorization: `Bearer ${token}` }
     });
 
-    // BUSCA AS SOLICITAÇÕES DO RESPONSÁVEL DO SETOR
+    // BUSCA AS SOLICITAÇÕES DO USUÁRIO
     const carregarSolicitacoes = async () => {
         try {
             const resp = await axios.get(
@@ -34,8 +32,22 @@ export function UserSolicitacaoComboItem() {
         }
     };
 
+    // BUSCA OS SETORES DO USUÁRIO
+    const carregarSetoresUsuario = async () => {
+        try {
+            const resp = await axios.get(
+                "http://localhost:8081/solicitacoes/responsavel-setor/setores",
+                makeConfig()
+            );
+            setSetoresUsuario(resp.data);
+        } catch (err) {
+            console.error("Erro ao carregar setores do usuário", err);
+        }
+    };
+
     useEffect(() => {
         carregarSolicitacoes();
+        carregarSetoresUsuario();
     }, []);
 
     // CRIA UMA NOVA SOLICITAÇÃO
@@ -48,7 +60,6 @@ export function UserSolicitacaoComboItem() {
             descricao: form.descricao,
             setor: form.setor,
             estrutura: form.estrutura
-            // solicitanteId não precisa mais
         };
 
         try {
@@ -69,6 +80,17 @@ export function UserSolicitacaoComboItem() {
         } catch (err) {
             console.error("Erro ao criar solicitação", err);
         }
+    };
+
+    // QUANDO MUDAR O SETOR, PREENCHER A ESTRUTURA AUTOMATICAMENTE
+    const handleSetorChange = (e) => {
+        const setorId = e.target.value;
+        const setorSelecionado = setoresUsuario.find(s => s.id === parseInt(setorId));
+        setForm({
+            ...form,
+            setor: setorId,
+            estrutura: setorSelecionado ? setorSelecionado.estruturaId : ""
+        });
     };
 
     return (
@@ -99,17 +121,19 @@ export function UserSolicitacaoComboItem() {
                     onChange={(e) => setForm({ ...form, descricao: e.target.value })}
                 />
 
-                <input
-                    placeholder="Setor"
+                <select
                     value={form.setor}
-                    onChange={(e) => setForm({ ...form, setor: e.target.value })}
-                />
+                    onChange={handleSetorChange}
+                    className={styles.select}
+                >
+                    <option value="">Selecione o setor</option>
+                    {setoresUsuario.map(s => (
+                        <option key={s.id} value={s.id}>
+                            {s.nome}
+                        </option>
+                    ))}
+                </select>
 
-                <input
-                    placeholder="Estrutura"
-                    value={form.estrutura}
-                    onChange={(e) => setForm({ ...form, estrutura: e.target.value })}
-                />
 
                 <button type="submit" className={styles.botaoCriar}>
                     Criar Solicitação
@@ -136,7 +160,7 @@ export function UserSolicitacaoComboItem() {
                     <tbody>
                         {solicitacoes.length === 0 && (
                             <tr>
-                                <td colSpan={8} className={styles.mensagemVazia}>
+                                <td colSpan={9} className={styles.mensagemVazia}>
                                     Nenhuma solicitação encontrada
                                 </td>
                             </tr>
@@ -148,21 +172,19 @@ export function UserSolicitacaoComboItem() {
                                 <td>{s.nome}</td>
                                 <td>{s.tipo}</td>
                                 <td>{s.descricao ?? "-"}</td>
-
                                 <td
                                     className={
                                         s.status === "PENDENTE"
                                             ? styles.statusPendente
                                             : s.status === "APROVADA"
-                                                ? styles.statusAprovada
-                                                : styles.statusRejeitada
+                                            ? styles.statusAprovada
+                                            : styles.statusRejeitada
                                     }
                                 >
                                     {s.status}
                                 </td>
-
-                                <td>{s.setor ?? "-"}</td>
-                                <td>{s.estrutura ?? "-"}</td>
+                                <td>{s.setorNome ?? "-"}</td>
+                                <td>{s.estruturaNome ?? "-"}</td>
                                 <td>{new Date(s.dataCriacao).toLocaleDateString()}</td>
                                 <td>{s.feedbackAdm ?? "-"}</td>
                             </tr>

@@ -108,8 +108,8 @@ export function AdmSolicitacaoComboItem() {
                                 >
                                     {s.status}
                                 </td>
-                                <td>{s.setor ?? "-"}</td>
-                                <td>{s.estrutura ?? "-"}</td>
+                                <td>{s.setorNome ?? "-"}</td>
+                                <td>{s.estruturaNome ?? "-"}</td>
                                 <td>{s.solicitanteNome ?? "-"}</td>
                                 <td>
                                     {s.status === "PENDENTE" && (
