@@ -1,4 +1,4 @@
-// src/components/pages/DetalhesCombo.js
+
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,21 +10,20 @@ import 'react-toastify/dist/ReactToastify.css';
 import styles from './DetalhesCombo.module.css';
 
 function DetalhesCombo() {
-  // Hooks de estado e formulário
   const { comboId } = useParams(); 
-  const { register, handleSubmit, reset } = useForm(); // Form principal (adicionar item existente)
-  const { register: registerItem, handleSubmit: handleSubmitItem, reset: resetItem } = useForm(); // Form do modal (criar novo item)
+  const { register, handleSubmit, reset } = useForm(); // Form principal
+  const { register: registerItem, handleSubmit: handleSubmitItem, reset: resetItem } = useForm(); // Form do modal
 
   const [combo, setCombo] = useState(null);
   const [itensDoCombo, setItensDoCombo] = useState([]);
   const [todosOsItens, setTodosOsItens] = useState([]);
   const [classificacoes, setClassificacoes] = useState([]); 
-  const [isItemModalOpen, setIsItemModalOpen] = useState(false); // Estado do modal de criação
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false); // Estado do modal
 
   const token = localStorage.getItem('token');
   const makeConfig = () => ({ headers: { Authorization: `Bearer ${token}` } });
 
-  // Função para buscar todos os dados iniciais
+  // Busca todos os dados, incluindo classificações para o modal
   const buscarDados = useCallback(async () => {
     try {
       const [resCombo, resItensCombo, resTodosItens, resClassificacoes] = await Promise.all([ 
@@ -47,7 +46,7 @@ function DetalhesCombo() {
     buscarDados();
   }, [buscarDados]);
   
-  // --- Funções para o Modal de Criação Rápida de Item ---
+  // --- Funções do Modal "Criar Item" ---
   const abrirItemModal = () => {
     resetItem();
     setIsItemModalOpen(true);
@@ -57,14 +56,15 @@ function DetalhesCombo() {
   };
 
   const criarNovoItem = async (data) => {
+    // Payload sem 'valor', mas com o resto
     const dadosFormatados = {
         nomeItem: data.nomeItem,
         descricao: data.descricao,
         classificacaoDTO: { id: parseInt(data.classificacaoId) },
         tipo_dado: data.tipo_dado,
         obrigatorio: data.obrigatorio || false, 
-        valor: data.valor ? parseInt(data.valor) : null, // Usa 'valor'
         ativo: true
+        // 'valor' (ou 'quantidade') do item foi removido
     };
     try {
         await axios.post('http://localhost:8081/adm/itens', dadosFormatados, makeConfig());
@@ -80,13 +80,13 @@ function DetalhesCombo() {
   };
   // --- Fim das Funções do Modal ---
 
-  // --- Funções para Adicionar/Remover Item Existente ---
+  // Adiciona item existente ao combo
   const adicionarItem = async (data) => {
     const payload = {
       itemId: data.itemId,
       ordem: data.ordem,
-      obrigatorio: data.obrigatorio || false, 
-      valor: data.valor ? parseInt(data.valor) : null // Envia o 'valor'
+      obrigatorio: data.obrigatorio || false,
+      // 'valor' foi removido deste payload
     };
     try {
       await axios.post(`http://localhost:8081/adm/combos/${comboId}/itens`, payload, makeConfig());
@@ -95,7 +95,7 @@ function DetalhesCombo() {
       buscarDados(); 
     } catch (error) {
       const msg = error.response?.data?.message || 'Erro ao adicionar o item.';
-      toast.error(msg); // Exibe erros de validação do back-end (ex: ordem repetida)
+      toast.error(msg);
       console.error("Erro em adicionarItem:", error);
     }
   };
@@ -112,7 +112,6 @@ function DetalhesCombo() {
       }
     }
   };
-  // --- Fim das Funções Adicionar/Remover ---
 
   if (!combo) return <div style={{color: 'white', textAlign: 'center', padding: '50px'}}>Carregando...</div>;
 
@@ -135,18 +134,21 @@ function DetalhesCombo() {
                 <tr>
                   <th>Item</th>
                   <th>Ordem</th>
+                  <th>Tipo de Dado</th>
                   <th>Obrigatório</th>
-                  <th>Valor</th>
+                  
                   <th>Ação</th> 
                 </tr>
               </thead>
               <tbody>
-                {itensDoCombo.map(({ id, ordem, obrigatorio, valor, item }) => ( 
+                
+                {itensDoCombo.map(({ id, ordem, obrigatorio,tipo_dado, item }) => ( 
                   <tr key={id}>
                     <td>{item.nomeItem}</td>
                     <td>{ordem}</td>
+                    <td>{item.tipo_dado}</td>
                     <td>{obrigatorio ? 'Sim' : 'Não'}</td>
-                    <td>{valor !== null ? valor : '-'}</td> 
+        
                     <td>
                       <button onClick={() => removerItem(id)} className={styles.botaoRemover} title="Remover Item">
                         <FaTrash />
@@ -161,7 +163,7 @@ function DetalhesCombo() {
           )}
         </div>
 
-        
+        {/* Lado Direito: Formulário para Adicionar Itens */}
         <div className={styles.coluna}>
            <h4 className={styles.subtitulo}>
              Adicionar Item Existente
@@ -189,15 +191,7 @@ function DetalhesCombo() {
               />
             </div>
             
-            <div className={styles.formGroup}>
-              <label>Valor (Opcional)</label>
-              <input 
-                type="number" 
-                min="0" 
-                {...register('valor', { valueAsNumber: true, min: 0 })} 
-                placeholder="Ex: 10, 50, 100" 
-              />
-            </div>
+            
 
             <div className={styles.formGroupCheck}>
               <input type="checkbox" {...register('obrigatorio')} id="obrigatorio-add" /> 
@@ -208,6 +202,7 @@ function DetalhesCombo() {
         </div>
       </div>
 
+      
       {isItemModalOpen && (
           <div className={styles.modalOverlay}>
             <div className={styles.modalContent}> 
@@ -230,6 +225,10 @@ function DetalhesCombo() {
                     ))}
                   </select>
                 </div>
+                <div className={styles.formGroup}>
+                   <label>Tipo de Dado</label>
+                   <input {...registerItem('tipo_dado')} placeholder="Ex: UNIDADE, QUANTIDADE" />
+                </div>
                 
                 <div className={styles.modalFooter}>
                   <button type="button" onClick={fecharItemModal} className={styles.botaoCancelar}>Cancelar</button>
@@ -239,7 +238,8 @@ function DetalhesCombo() {
             </div>
           </div>
       )}
-     
+      
+
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
