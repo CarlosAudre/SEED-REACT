@@ -1,7 +1,9 @@
 // Mural.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import styles from "./Mural.module.css"; // <-- CSS Module
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable"; // IMPORT CORRETO
+import styles from "./Mural.module.css";
 
 export default function Mural({ competenciaId }) {
   const [perfil, setPerfil] = useState("");
@@ -35,9 +37,68 @@ export default function Mural({ competenciaId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [competenciaId, perfil]);
 
+  const gerarRelatorioPDF = () => {
+    if (cards.length === 0) {
+      alert("Não há dados para gerar relatório.");
+      return;
+    }
+
+    const doc = new jsPDF("landscape");
+
+    // 👉 Obtém o nome da competência a partir do primeiro card
+    const nomeCompetencia = cards[0]?.competenciaNome || "Relatorio";
+
+    // Título do PDF
+    doc.text(`Relatório de ${nomeCompetencia}`, 14, 15);
+
+    // Monta a tabela
+    const tabela = cards.map((card) => [
+      card.itemNome,
+      card.usuarioNome,
+      card.usuarioPerfil,
+      card.estruturaNome,
+      card.setorNome || "—",
+      card.comboNome || "—",
+      card.quantidade,
+      `R$ ${Number(card.valor || 0).toFixed(2)}`,
+      new Date(card.dataPreenchimento).toLocaleString("pt-BR"),
+    ]);
+
+    autoTable(doc, {
+      startY: 20,
+      head: [
+        [
+          "Item",
+          "Usuário",
+          "Perfil",
+          "Estrutura",
+          "Setor",
+          "Combo",
+          "Qtd",
+          "Valor",
+          "Data",
+        ],
+      ],
+      body: tabela,
+    });
+
+    // Nome do arquivo usando a competência
+    doc.save(`relatorio_${nomeCompetencia}.pdf`);
+  };
+
+
   return (
     <div className={styles.container} style={{ marginTop: 25 }}>
       <h2 className={styles.titulo}>Mural</h2>
+
+      {/* BOTÃO DE RELATÓRIO */}
+      <button
+        className={styles.botaoRelatorio}
+        onClick={gerarRelatorioPDF}
+        disabled={loading}
+      >
+        Baixar Relatório PDF
+      </button>
 
       <label className={styles.filtroLabel}>
         Filtrar por perfil:
