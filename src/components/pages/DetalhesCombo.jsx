@@ -1,4 +1,4 @@
-// src/components/pages/DetalhesCombo.js
+
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -55,6 +55,7 @@ function DetalhesCombo() {
   const fecharItemModal = () => setIsItemModalOpen(false);
 
   const criarNovoItem = async (data) => {
+    // Payload sem 'valor', mas com o resto
     const dadosFormatados = {
         nomeItem: data.nomeItem,
         descricao: data.descricao,
@@ -62,6 +63,7 @@ function DetalhesCombo() {
         tipo_dado: data.tipo_dado,
         obrigatorio: data.obrigatorio || false, 
         ativo: true
+        // 'valor' (ou 'quantidade') do item foi removido
     };
     try {
         await axios.post('http://localhost:8081/adm/itens', dadosFormatados, makeConfig());
@@ -165,6 +167,7 @@ function DetalhesCombo() {
                 <tr>
                   <th>Ordem</th>
                   <th>Item</th>
+                  <th>Tipo de Dado</th>
                   <th>Obrigatório</th>
                   <th>Mover</th>
                   <th>Ação</th> 
@@ -175,6 +178,7 @@ function DetalhesCombo() {
                   <tr key={comboItem.id}>
                     <td style={{fontWeight: 'bold', textAlign: 'center'}}>{comboItem.ordem}</td>
                     <td>{comboItem.item ? comboItem.item.nomeItem : 'Item inválido'}</td>
+                    <td>{comboItem.item ? comboItem.item.tipo_dado : 'Item inválido'}</td>
                     <td style={{textAlign: 'center'}}>{comboItem.obrigatorio ? 'Sim' : 'Não'}</td>
                     
                     <td className={styles.colunaMover}>

@@ -14,10 +14,6 @@
   --radius-lg: 14px;
 }
 
-/* =========================
-   Autofill override (force background)
-   Put this early in the module to ensure autofill doesn't make inputs transparent
-   ========================= */
 .formGroup input:-webkit-autofill,
 .formGroup textarea:-webkit-autofill,
 .formGroup select:-webkit-autofill {

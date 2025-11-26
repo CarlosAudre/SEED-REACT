@@ -1,0 +1,132 @@
+.container {
+  max-width: 1400px;
+  padding: 20px 30px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  color: white;
+  margin: 0 auto;
+}
+
+.titulo {
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* --------------------------- */
+/* FORMULÁRIO                  */
+/* --------------------------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.form input,
+.form textarea {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 12px;
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.form input:focus,
+.form textarea:focus {
+  border: 1px solid #4da3ff;
+}
+
+.form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.botaoCriar {
+  background: #28a745;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.botaoCriar:hover {
+  background: #34c759;
+}
+
+/* --------------------------- */
+/* TABELA                      */
+/* --------------------------- */
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: separate;
+}
+
+.tabela th,
+.tabela td {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+
+.tabela th {
+  color: #b8c6db;
+  font-weight: 600;
+}
+
+.tabela td {
+  color: #e8e8e8;
+}
+
+/* STATUS */
+.statusPendente {
+  color: #ffd966;
+  font-weight: bold;
+}
+
+.statusAprovada {
+  color: #8be68b;
+  font-weight: bold;
+}
+
+.statusRejeitada {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.mensagemVazia {
+  text-align: center;
+  padding: 20px;
+  color: #b8c6db;
+}
+
+.select {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 12px;
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.select:focus {
+  border: 1px solid #4da3ff;
+}
