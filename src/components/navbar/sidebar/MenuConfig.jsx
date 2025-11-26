@@ -31,7 +31,6 @@ export const menuRh = [
   { label: "Dashboard", icon: LuLayoutDashboard, path: "/" },
   { label: "Folha de Pagamento", icon: FaMoneyBillWave, path: "/rh/folha" },
 
-  { label: "Solicitações de Combos", icon: FaClipboardList, path: "/solicitacoes-combos" },
 ];
 
 export const menuDiretor = [

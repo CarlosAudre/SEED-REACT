@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable"; // IMPORT CORRETO
+import autoTable from "jspdf-autotable";
 import styles from "./Mural.module.css";
 
 export default function Mural({ competenciaId }) {
@@ -23,6 +23,7 @@ export default function Mural({ competenciaId }) {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       setCards(response.data);
     } catch (err) {
       console.error(err);
@@ -37,22 +38,23 @@ export default function Mural({ competenciaId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [competenciaId, perfil]);
 
+  // ---------------------------------------------------------------
+  // PDF — SOMENTE PREENCHIMENTOS
+  // ---------------------------------------------------------------
   const gerarRelatorioPDF = () => {
-    if (cards.length === 0) {
-      alert("Não há dados para gerar relatório.");
+    const preenchimentos = cards.filter(c => c.tipo === "PREENCHIMENTO");
+
+    if (preenchimentos.length === 0) {
+      alert("Não há preenchimentos para gerar relatório.");
       return;
     }
 
     const doc = new jsPDF("landscape");
+    const nomeCompetencia = preenchimentos[0]?.competenciaNome || "Relatorio";
 
-    // 👉 Obtém o nome da competência a partir do primeiro card
-    const nomeCompetencia = cards[0]?.competenciaNome || "Relatorio";
-
-    // Título do PDF
     doc.text(`Relatório de ${nomeCompetencia}`, 14, 15);
 
-    // Monta a tabela
-    const tabela = cards.map((card) => [
+    const tabela = preenchimentos.map((card) => [
       card.itemNome,
       card.usuarioNome,
       card.usuarioPerfil,
@@ -82,24 +84,79 @@ export default function Mural({ competenciaId }) {
       body: tabela,
     });
 
-    // Nome do arquivo usando a competência
     doc.save(`relatorio_${nomeCompetencia}.pdf`);
   };
 
+  // ---------------------------------------------------------------
+  // PDF — SOMENTE CENSO
+  // ---------------------------------------------------------------
+  const gerarRelatorioCensoPDF = () => {
+    const censos = cards.filter(c => c.tipo === "CENSO");
 
+    if (censos.length === 0) {
+      alert("Não há censos para gerar relatório.");
+      return;
+    }
+
+    const doc = new jsPDF("landscape");
+    const nomeCompetencia = censos[0]?.competenciaNome || "Relatorio_Censo";
+
+    doc.text(`Relatório de Censo — ${nomeCompetencia}`, 14, 15);
+
+    const tabela = censos.map((card) => [
+      card.usuarioNome,
+      card.usuarioPerfil,
+      card.estruturaNome,
+      card.quantidadeAlunos,
+    ]);
+
+    autoTable(doc, {
+      startY: 20,
+      head: [
+        [
+          "Usuário",
+          "Perfil",
+          "Estrutura",
+          "Qtd. Alunos"
+        ],
+      ],
+      body: tabela,
+    });
+
+    doc.save(`relatorio_censo_${nomeCompetencia}.pdf`);
+  };
+
+
+
+
+  // ---------------------------------------------------------------
+  // JSX
+  // ---------------------------------------------------------------
   return (
     <div className={styles.container} style={{ marginTop: 25 }}>
       <h2 className={styles.titulo}>Mural</h2>
 
       {/* BOTÃO DE RELATÓRIO */}
-      <button
-        className={styles.botaoRelatorio}
-        onClick={gerarRelatorioPDF}
-        disabled={loading}
-      >
-        Baixar Relatório PDF
-      </button>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <button
+          className={styles.botaoRelatorio}
+          onClick={gerarRelatorioPDF}
+          disabled={loading}
+        >
+          Relatório Preenchimentos
+        </button>
 
+        <button
+          className={styles.botaoRelatorio}
+          onClick={gerarRelatorioCensoPDF}
+          disabled={loading}
+        >
+          Relatório Censo
+        </button>
+      </div>
+
+
+      {/* FILTRO */}
       <label className={styles.filtroLabel}>
         Filtrar por perfil:
         <select
@@ -116,59 +173,107 @@ export default function Mural({ competenciaId }) {
       {loading && <p className={styles.loading}>Carregando mural...</p>}
 
       <div className={styles["card-grid"]} aria-live="polite">
-        {cards.map((card) => (
-          <article key={card.preenchimentoId} className={styles.card} tabIndex={0}>
-            <div className={styles.topo}>
-              <h3 className={styles.cardTitle}>{card.itemNome}</h3>
-              <div className={styles.data}>
-                {new Date(card.dataPreenchimento).toLocaleString("pt-BR")}
+        {cards.map((card) => {
+
+          // ---------------------------------------------------------
+          // CARD DE CENSO
+          // ---------------------------------------------------------
+          if (card.tipo === "CENSO") {
+            return (
+              <article key={`censo-${card.id}`} className={styles.card}>
+                <div className={styles.topo}>
+                  <h3 className={styles.cardTitle}>Censo</h3>
+                </div>
+
+                <div className={styles.infoLinha}>
+                  <div className={styles.label}>Usuário:</div>
+                  <div className={styles.value}>{card.usuarioNome}</div>
+                </div>
+
+                <div className={styles.infoLinha}>
+                  <div className={styles.label}>Perfil:</div>
+                  <div className={styles.value}>{card.usuarioPerfil}</div>
+                </div>
+
+                <div className={styles.infoLinha}>
+                  <div className={styles.label}>Estrutura:</div>
+                  <div className={styles.value}>{card.estruturaNome}</div>
+                </div>
+
+                <div className={styles.infoLinha}>
+                  <div className={styles.label}>Quantidade de alunos:</div>
+                  <div className={styles.valor}>{card.quantidadeAlunos}</div>
+                </div>
+
+
+              </article>
+            );
+          }
+
+
+          // ---------------------------------------------------------
+          // CARD DE PREENCHIMENTO
+          // ---------------------------------------------------------
+          return (
+            <article
+              key={`pre-${card.preenchimentoId}`}
+              className={styles.card}
+              tabIndex={0}
+            >
+              <div className={styles.topo}>
+                <h3 className={styles.cardTitle}>{card.itemNome}</h3>
+                <div className={styles.data}>
+                  {new Date(card.dataPreenchimento).toLocaleString("pt-BR")}
+                </div>
               </div>
-            </div>
 
-            <div className={styles.infoLinha}>
-              <div className={styles.label}>Usuário:</div>
-              <div className={styles.value}>{card.usuarioNome}</div>
-            </div>
-
-            <div className={styles.infoLinha}>
-              <div className={styles.label}>Perfil:</div>
-              <div className={styles.value}>
-                <span className={styles.badge}>{card.usuarioPerfil}</span>
-              </div>
-            </div>
-
-            <div className={styles.infoLinha}>
-              <div className={styles.label}>Estrutura:</div>
-              <div className={styles.value}>{card.estruturaNome}</div>
-            </div>
-
-            {card.setorNome && (
               <div className={styles.infoLinha}>
-                <div className={styles.label}>Setor:</div>
-                <div className={styles.value}>{card.setorNome}</div>
+                <div className={styles.label}>Usuário:</div>
+                <div className={styles.value}>{card.usuarioNome}</div>
               </div>
-            )}
 
-            <div className={styles.infoLinha}>
-              <div className={styles.label}>Combo:</div>
-              <div className={styles.value}>
-                {card.comboNome ?? <span className={styles["combo-empty"]}>—</span>}
+              <div className={styles.infoLinha}>
+                <div className={styles.label}>Perfil:</div>
+                <div className={styles.value}>
+                  <span className={styles.badge}>{card.usuarioPerfil}</span>
+                </div>
               </div>
-            </div>
 
-            <div className={styles.infoLinha}>
-              <div className={styles.label}>Quantidade:</div>
-              <div className={styles.value}>{card.quantidade}</div>
-            </div>
-
-            <div className={styles.infoLinha}>
-              <div className={styles.label}>Valor:</div>
-              <div className={`${styles.value} ${styles.valor}`}>
-                R$ {Number(card.valor ?? 0).toFixed(2)}
+              <div className={styles.infoLinha}>
+                <div className={styles.label}>Estrutura:</div>
+                <div className={styles.value}>{card.estruturaNome}</div>
               </div>
-            </div>
-          </article>
-        ))}
+
+              {card.setorNome && (
+                <div className={styles.infoLinha}>
+                  <div className={styles.label}>Setor:</div>
+                  <div className={styles.value}>{card.setorNome}</div>
+                </div>
+              )}
+
+              <div className={styles.infoLinha}>
+                <div className={styles.label}>Combo:</div>
+                <div className={styles.value}>
+                  {card.comboNome ?? (
+                    <span className={styles["combo-empty"]}>—</span>
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.infoLinha}>
+                <div className={styles.label}>Quantidade:</div>
+                <div className={styles.value}>{card.quantidade}</div>
+              </div>
+
+              <div className={styles.infoLinha}>
+                <div className={styles.label}>Valor:</div>
+                <div className={`${styles.value} ${styles.valor}`}>
+                  R$ {Number(card.valor ?? 0).toFixed(2)}
+                </div>
+              </div>
+            </article>
+          );
+        })}
       </div>
 
       {!loading && cards.length === 0 && (
