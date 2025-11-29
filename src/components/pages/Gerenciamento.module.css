@@ -63,6 +63,7 @@
   gap: 12px;
 }
 
+
 /* Primary button (Adicionar) */
 .botaoNovo {
   display: inline-flex;
@@ -321,6 +322,8 @@
   .acoes { justify-content: flex-start; gap: 8px; margin-top: 8px; }
   .colunaAcoes { width: auto; text-align: left; }
 }
+
+
 
 /* small accessibility / focus outlines */
 .botaoAcao:focus, .botaoNovo:focus, .botaoGerenciar:focus, .botaoSalvar:focus, .botaoCancelar:focus, .checkboxLabel input:focus {

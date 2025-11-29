@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
-import styles from './Gerenciamento.module.css'; 
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import styles from './Gerenciamento.module.css';
+import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import Mural from "./Mural";
 
 export default function GerenciarCompetencias() {
     const [competencias, setCompetencias] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [edicao, setEdicao] = useState(null);
-
-    // Salva o objeto inteiro
     const [competenciaSelecionada, setCompetenciaSelecionada] = useState(null);
 
     const { register, handleSubmit, setValue, reset } = useForm();
@@ -37,7 +35,6 @@ export default function GerenciarCompetencias() {
         setEdicao(comp);
 
         if (comp) {
-            // ✅ setando todos os campos do formulário
             setValue("nome", comp.nome);
             setValue("ano", comp.ano);
             setValue("mes", comp.mes);
@@ -109,6 +106,16 @@ export default function GerenciarCompetencias() {
         <div className={styles.container}>
             <h2 className={styles.titulo}>Gerenciar Competências</h2>
 
+            {/* ✅ BOTÃO DE CRIAR COMPETÊNCIA */}
+            <div className={styles.containerBotaoTopo}>
+                <button
+                    className={styles.botaoNovo}
+                    onClick={() => abrirModal()}
+                >
+                    <FaPlus /> Nova Competência
+                </button>
+            </div>
+
             <table className={styles.tabela}>
                 <thead>
                     <tr>
@@ -132,14 +139,14 @@ export default function GerenciarCompetencias() {
                             <td>{c.competenciaStatus}</td>
                             <td className={styles.acoes}>
                                 <button onClick={() => abrirModal(c)} className={styles.botaoAcao}>
-                                    <FaEdit/>
+                                    <FaEdit />
                                 </button>
 
                                 <button onClick={() => deletar(c.id)} className={styles.botaoAcao}>
-                                    <FaTrash/>
+                                    <FaTrash />
                                 </button>
 
-                                <button 
+                                <button
                                     style={{ marginLeft: "5px" }}
                                     className={styles.botaoAcao}
                                     onClick={() => setCompetenciaSelecionada(c)}
@@ -152,7 +159,7 @@ export default function GerenciarCompetencias() {
                 </tbody>
             </table>
 
-            {/* Modal Criar / Editar Competência */}
+            {/* Modal Criar / Editar */}
             {isModalOpen && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
@@ -170,7 +177,7 @@ export default function GerenciarCompetencias() {
 
                             <div className={styles.formGroup}>
                                 <label>Mês</label>
-                                <input type="number" {...register("mes", { required: true, min:1, max:12 })} />
+                                <input type="number" {...register("mes", { required: true, min: 1, max: 12 })} />
                             </div>
 
                             <div className={styles.formGroup}>
@@ -204,7 +211,6 @@ export default function GerenciarCompetencias() {
                 </div>
             )}
 
-            {/* Mostrar Mural */}
             {competenciaSelecionada && (
                 <div style={{ marginTop: "35px" }}>
                     <h2>Mural da competência {competenciaSelecionada.nome}</h2>
