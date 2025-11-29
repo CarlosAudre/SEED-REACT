@@ -24,7 +24,18 @@ export default function Mural({ competenciaId }) {
         }
       );
 
-      setCards(response.data);
+      let lista = response.data;
+
+      if (perfil === "DIRETOR") {
+        lista = lista.filter(c => c.tipo === "CENSO");
+      }
+
+      if (perfil === "RESPONSAVEL_SETOR" || perfil === "RH") {
+        lista = lista.filter(c => c.tipo === "PREENCHIMENTO");
+      }
+
+      setCards(lista);
+
     } catch (err) {
       console.error(err);
       alert("Erro ao carregar mural.");
@@ -167,6 +178,7 @@ export default function Mural({ competenciaId }) {
           <option value="">Todos</option>
           <option value="RESPONSAVEL_SETOR">Gestor</option>
           <option value="RH">Recursos humanos</option>
+          <option value="DIRETOR">Diretor</option>
         </select>
       </label>
 
@@ -204,7 +216,6 @@ export default function Mural({ competenciaId }) {
                   <div className={styles.label}>Quantidade de alunos:</div>
                   <div className={styles.valor}>{card.quantidadeAlunos}</div>
                 </div>
-
 
               </article>
             );

@@ -1,6 +1,7 @@
 /* src/components/pages/GerenciarUsuarios.module.css */
 .container {
   max-width: 1200px;
+  min-height: 700px;
   padding: 30px 40px;
   overflow-x: auto; 
   background: rgba(255, 255, 255, 0.12);
