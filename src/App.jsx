@@ -19,43 +19,46 @@ import FolhaPagamentoRh from './components/pages/FolhaPagamentoRh';
 import InformarCenso from './components/pages/InformarCenso';
 import { UserSolicitacaoComboItem } from './components/pages/UserSolicitacaoComboItem';
 import { AdmSolicitacaoComboItem } from './components/pages/AdmSolicitacoesComboItem';
+import RequireAuth from "./components/auth/RequireAuth";
 
 function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+  return (
+    <Router>
+      <Routes>
+        {/* Rotas livres */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-                <Route element={<MainLayout />}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/solicitacoes-acesso" element={<SolicitacaoDeAcesso />} />
-                    <Route path="/adm/itens" element={<GerenciarItens />} />
-                    <Route path="/adm/combos" element={<GerenciarCombos />} />
-                    <Route path="/adm/combos/:comboId" element={<DetalhesCombo />} />
-                    <Route path="/adm/estruturas" element={<GerenciarEstruturas />} />
-                    <Route path="/adm/classificacoes" element={<GerenciarClassificacoes />} />
-                    <Route path="/adm/usuarios" element={<GerenciarUsuarios />} />
-                    <Route path="/adm/solicitacoes-setor" element={<AprovarSolicitacoesSetor />} />
-                    <Route path="/adm/competencias" element={<GerenciarCompetencias />} />
+        {/* Rotas protegidas */}
+        <Route 
+          element={
+            <RequireAuth>
+              <MainLayout />
+            </RequireAuth>
+          }
+        >
+          <Route path="/" element={<Home />} />
+          <Route path="/solicitacoes-acesso" element={<SolicitacaoDeAcesso />} />
+          <Route path="/adm/itens" element={<GerenciarItens />} />
+          <Route path="/adm/combos" element={<GerenciarCombos />} />
+          <Route path="/adm/combos/:comboId" element={<DetalhesCombo />} />
+          <Route path="/adm/estruturas" element={<GerenciarEstruturas />} />
+          <Route path="/adm/classificacoes" element={<GerenciarClassificacoes />} />
+          <Route path="/adm/usuarios" element={<GerenciarUsuarios />} />
+          <Route path="/adm/solicitacoes-setor" element={<AprovarSolicitacoesSetor />} />
+          <Route path="/adm/competencias" element={<GerenciarCompetencias />} />
 
-                    <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor />} />
-                    <Route path="/solicitar-setor" element={<SolicitarSetor />} /> 
-                    <Route path="/diretor/censo" element={<InformarCenso />} />
-                    
-                    <Route path="/rh/folha" element={<FolhaPagamentoRh/>} />
+          <Route path="/responsavel-setor/preenchimento" element={<PreencherCombosSetor />} />
+          <Route path="/solicitar-setor" element={<SolicitarSetor />} /> 
+          <Route path="/diretor/censo" element={<InformarCenso />} />
+          <Route path="/rh/folha" element={<FolhaPagamentoRh />} />
 
-                     
-                    <Route path="/solicitacoes-combos" element={<UserSolicitacaoComboItem />} />
-
-                    
-                    <Route path="/adm/solicitacoes-combos" element={<AdmSolicitacaoComboItem />} />
-                </Route>
-
-
-            </Routes>
-        </Router>
-    );
+          <Route path="/solicitacoes-combos" element={<UserSolicitacaoComboItem />} />
+          <Route path="/adm/solicitacoes-combos" element={<AdmSolicitacaoComboItem />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
