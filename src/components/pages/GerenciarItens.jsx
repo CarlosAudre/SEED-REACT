@@ -27,8 +27,8 @@ function GerenciarItens() {
   const buscarDados = async () => {
     try {
       const [resItens, resClassificacoes] = await Promise.all([
-        axios.get('http://localhost:8081/adm/itens', makeConfig()),
-        axios.get('http://localhost:8081/adm/classificacoes', makeConfig()) 
+        axios.get('https://ssge.onrender.com/adm/itens', makeConfig()),
+        axios.get('https://ssge.onrender.com/adm/classificacoes', makeConfig()) 
       ]);
       setItens(resItens.data);
       setClassificacoes(resClassificacoes.data);
@@ -71,10 +71,10 @@ function GerenciarItens() {
 
     try {
       if (itemEmEdicao) {
-        await axios.put(`http://localhost:8081/adm/itens/${itemEmEdicao.id}`, dadosFormatados, makeConfig());
+        await axios.put(`https://ssge.onrender.com/adm/itens/${itemEmEdicao.id}`, dadosFormatados, makeConfig());
         toast.success('Item atualizado com sucesso!');
       } else {
-        await axios.post('http://localhost:8081/adm/itens', dadosFormatados, makeConfig());
+        await axios.post('https://ssge.onrender.com/adm/itens', dadosFormatados, makeConfig());
         toast.success('Item criado com sucesso!');
       }
       fecharModal();
@@ -88,7 +88,7 @@ function GerenciarItens() {
   const deletarItem = async (id) => {
     if (window.confirm('Tem certeza que deseja deletar este item?')) {
       try {
-        await axios.delete(`http://localhost:8081/adm/itens/${id}`, makeConfig());
+        await axios.delete(`https://ssge.onrender.com/adm/itens/${id}`, makeConfig());
         toast.success('Item deletado com sucesso!');
         buscarDados();
       } catch (error) {

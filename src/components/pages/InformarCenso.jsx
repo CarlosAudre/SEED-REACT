@@ -22,8 +22,8 @@ function InformarCenso() {
     const carregarListas = async () => {
       try {
         const [resEstruturas, resCompetencias] = await Promise.all([
-          axios.get('http://localhost:8081/api/estruturas', makeConfig()),
-          axios.get('http://localhost:8081/api/competencias', makeConfig())
+          axios.get('https://ssge.onrender.com/api/estruturas', makeConfig()),
+          axios.get('https://ssge.onrender.com/api/competencias', makeConfig())
         ]);
         setEstruturas(resEstruturas.data);
         setCompetencias(resCompetencias.data);
@@ -45,7 +45,7 @@ function InformarCenso() {
         setLoadingData(true);
         try {
           const res = await axios.get(
-            `http://localhost:8081/api/censo/${estruturaId}/${competenciaId}`, 
+            `https://ssge.onrender.com/api/censo/${estruturaId}/${competenciaId}`, 
             makeConfig()
           );
           // Se retornar número, preenche. Se null, limpa.
@@ -69,7 +69,7 @@ function InformarCenso() {
     };
 
     try {
-        await axios.post('http://localhost:8081/api/censo', payload, makeConfig());
+        await axios.post('https://ssge.onrender.com/api/censo', payload, makeConfig());
         toast.success('Censo salvo com sucesso!');
     } catch (error) {
         toast.error('Erro ao salvar o censo.');

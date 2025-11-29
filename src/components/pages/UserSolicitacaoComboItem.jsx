@@ -23,7 +23,7 @@ export function UserSolicitacaoComboItem() {
     const carregarSolicitacoes = async () => {
         try {
             const resp = await axios.get(
-                "http://localhost:8081/solicitacoes/responsavel-setor/me",
+                "https://ssge.onrender.com/solicitacoes/responsavel-setor/me",
                 makeConfig()
             );
             setSolicitacoes(resp.data);
@@ -36,7 +36,7 @@ export function UserSolicitacaoComboItem() {
     const carregarSetoresUsuario = async () => {
         try {
             const resp = await axios.get(
-                "http://localhost:8081/solicitacoes/responsavel-setor/setores",
+                "https://ssge.onrender.com/solicitacoes/responsavel-setor/setores",
                 makeConfig()
             );
             setSetoresUsuario(resp.data);
@@ -64,7 +64,7 @@ export function UserSolicitacaoComboItem() {
 
         try {
             await axios.post(
-                "http://localhost:8081/solicitacoes/responsavel-setor/criar",
+                "https://ssge.onrender.com/solicitacoes/responsavel-setor/criar",
                 dto,
                 makeConfig()
             );

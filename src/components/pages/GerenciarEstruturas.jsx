@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import styles from './Gerenciamento.module.css'; 
 import SetorManager from './SetorManager';
 
-const API_BASE = 'http://localhost:8081';
+const API_BASE = 'https://ssge.onrender.com';
 
 export default function GerenciarEstruturas() {
   const { register, handleSubmit, reset, setValue, watch } = useForm({

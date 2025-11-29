@@ -30,7 +30,7 @@ function GerenciarCombos() {
   // --- Buscar combos ---
   const buscarCombos = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/adm/combos', makeConfig());
+      const response = await axios.get('https://ssge.onrender.com/adm/combos', makeConfig());
       setCombos(response.data);
     } catch (error) {
       toast.error('Erro ao buscar os kits.');
@@ -41,7 +41,7 @@ function GerenciarCombos() {
   // --- Buscar competências ---
   const buscarCompetencias = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/adm/competencias', makeConfig());
+      const response = await axios.get('https://ssge.onrender.com/adm/competencias', makeConfig());
       setCompetencias(response.data);
     } catch (error) {
       toast.error('Erro ao buscar competências.');
@@ -52,7 +52,7 @@ function GerenciarCombos() {
   // --- Buscar estruturas ---
   const buscarEstruturas = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/adm/estruturas', makeConfig());
+      const response = await axios.get('https://ssge.onrender.com/adm/estruturas', makeConfig());
       setEstruturas(response.data);
     } catch (error) {
       toast.error('Erro ao buscar estruturas.');
@@ -64,7 +64,7 @@ function GerenciarCombos() {
   const buscarSetores = async (estruturaId) => {
     if (!estruturaId) return setSetores([]);
     try {
-      const response = await axios.get(`http://localhost:8081/adm/setores/estrutura/${estruturaId}`, makeConfig());
+      const response = await axios.get(`https://ssge.onrender.com/adm/setores/estrutura/${estruturaId}`, makeConfig());
       setSetores(response.data);
     } catch (error) {
       toast.error('Erro ao buscar setores.');
@@ -124,10 +124,10 @@ function GerenciarCombos() {
 
     try {
       if (comboEmEdicao) {
-        await axios.put(`http://localhost:8081/adm/combos/${comboEmEdicao.id}`, dadosFormatados, makeConfig());
+        await axios.put(`https://ssge.onrender.com/adm/combos/${comboEmEdicao.id}`, dadosFormatados, makeConfig());
         toast.success('Kit atualizado com sucesso!');
       } else {
-        await axios.post('http://localhost:8081/adm/combos', dadosFormatados, makeConfig());
+        await axios.post('https://ssge.onrender.com/adm/combos', dadosFormatados, makeConfig());
         toast.success('Kit criado com sucesso!');
       }
       fecharModal();
@@ -142,7 +142,7 @@ function GerenciarCombos() {
   const deletarCombo = async (id) => {
     if (window.confirm('Tem certeza que deseja deletar este kit?')) {
       try {
-        await axios.delete(`http://localhost:8081/adm/combos/${id}`, makeConfig());
+        await axios.delete(`https://ssge.onrender.com/adm/combos/${id}`, makeConfig());
         toast.success('Kit deletado com sucesso!');
         buscarCombos();
       } catch (error) {
@@ -169,7 +169,7 @@ function GerenciarCombos() {
 
     try {
       await axios.post(
-        `http://localhost:8081/adm/combos/${comboParaEnvio.id}/estrutura/${estruturaId}`,
+        `https://ssge.onrender.com/adm/combos/${comboParaEnvio.id}/estrutura/${estruturaId}`,
         {
           setoresId: setoresSelecionados
         },

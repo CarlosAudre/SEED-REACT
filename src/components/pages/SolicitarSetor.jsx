@@ -25,7 +25,7 @@ function SolicitarSetor() {
     const buscarEstruturas = async () => {
       try {
        
-        const res = await axios.get('http://localhost:8081/api/estruturas?todas=true', makeConfig());
+        const res = await axios.get('https://ssge.onrender.com/api/estruturas?todas=true', makeConfig());
         setEstruturas(res.data);
       } catch (error) {
         toast.error('Erro ao carregar a lista de escolas.');
@@ -45,7 +45,7 @@ function SolicitarSetor() {
     }
     const buscarSetores = async () => {
       try {
-        const res = await axios.get(`http://localhost:8081/api/setores/estrutura/${estruturaIdSelecionada}`, makeConfig());
+        const res = await axios.get(`https://ssge.onrender.com/api/setores/estrutura/${estruturaIdSelecionada}`, makeConfig());
         setSetores(res.data);
       } catch (error) {
         toast.error('Erro ao carregar os setores desta escola.');
@@ -63,7 +63,7 @@ function SolicitarSetor() {
     };
 
     try {
-      await axios.post('http://localhost:8081/api/solicitacoes-setor', payload, makeConfig());
+      await axios.post('https://ssge.onrender.com/api/solicitacoes-setor', payload, makeConfig());
       toast.success('Solicitação enviada com sucesso! Aguardando aprovação do ADM.');
       reset();
       setTimeout(() => navigate('/'), 2500); // Volta para a Home
