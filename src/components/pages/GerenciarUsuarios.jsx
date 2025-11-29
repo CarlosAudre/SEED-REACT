@@ -30,7 +30,7 @@ function GerenciarUsuarios() {
   // --- 1. Buscas Iniciais ---
   const buscarUsuarios = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/adm/usuarios', makeConfig());
+      const response = await axios.get('https://sua-api-no-render.onrender.com/adm/usuarios', makeConfig());
       setUsuarios(response.data);
     } catch (error) {
       toast.error('Erro ao buscar usuários.');
@@ -40,8 +40,8 @@ function GerenciarUsuarios() {
   const buscarDadosDoModal = async () => {
     try {
       const [resPerfis, resEstruturas] = await Promise.all([
-        axios.get('http://localhost:8081/adm/perfis', makeConfig()),
-        axios.get('http://localhost:8081/adm/estruturas', makeConfig())
+        axios.get('https://sua-api-no-render.onrender.com/adm/perfis', makeConfig()),
+        axios.get('https://sua-api-no-render.onrender.com/adm/estruturas', makeConfig())
       ]);
       setPerfis(resPerfis.data);
       setEstruturas(resEstruturas.data);
@@ -73,7 +73,7 @@ function GerenciarUsuarios() {
     if (isResponsavel && estruturaIdSelecionada) {
       const buscarSetores = async () => {
         try {
-          const res = await axios.get(`http://localhost:8081/adm/setores/estrutura/${estruturaIdSelecionada}`, makeConfig());
+          const res = await axios.get(`https://sua-api-no-render.onrender.com/adm/setores/estrutura/${estruturaIdSelecionada}`, makeConfig());
           setSetoresDaEstrutura(res.data);
         } catch (error) {
           console.error(error);
@@ -135,7 +135,7 @@ function GerenciarUsuarios() {
     };
 
     try {
-      await axios.put(`http://localhost:8081/adm/usuarios/${usuarioEmEdicao.id}`, payload, makeConfig());
+      await axios.put(`https://sua-api-no-render.onrender.com/adm/usuarios/${usuarioEmEdicao.id}`, payload, makeConfig());
       toast.success('Usuário atualizado com sucesso!');
       fecharModal();
       buscarUsuarios(); 

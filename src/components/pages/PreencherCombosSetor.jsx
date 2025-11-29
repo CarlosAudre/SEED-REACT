@@ -24,7 +24,7 @@ function PreencherCombosSetor() {
 
   const token = localStorage.getItem('token');
   const makeConfig = () => ({ headers: { Authorization: `Bearer ${token}` } });
-  const baseUrl = "http://localhost:8081/responsavel-setor/combos";
+  const baseUrl = "https://sua-api-no-render.onrender.com/responsavel-setor/combos";
 
   // 1. Ao abrir, carrega APENAS os setores do usuário
   useEffect(() => {
@@ -78,7 +78,7 @@ function PreencherCombosSetor() {
     try {
       const resItens = await axios.get(`${baseUrl}/${combo.comboId}/itens`, makeConfig());
       setItens(resItens.data);
-      const resPreench = await axios.get(`http://localhost:8081/responsavel-setor/preenchimentos/${combo.id}`, makeConfig());
+      const resPreench = await axios.get(`https://sua-api-no-render.onrender.com/responsavel-setor/preenchimentos/${combo.id}`, makeConfig());
       
       const novosValores = {}; const novasQtds = {}; const novasObs = {};
       if (resPreench.data && resPreench.data.length > 0) {
@@ -105,7 +105,7 @@ function PreencherCombosSetor() {
         observacao: observacoes[item.id] || ""
     }));
     try {
-      await axios.put(`http://localhost:8081/responsavel-setor/preenchimentos/${comboSelecionado.id}`, payload, makeConfig());
+      await axios.put(`https://sua-api-no-render.onrender.com/responsavel-setor/preenchimentos/${comboSelecionado.id}`, payload, makeConfig());
       toast.success("Salvo com sucesso!");
       fecharModal();
     } catch (error) { toast.error("Erro ao salvar."); } finally { setEnviando(false); }

@@ -27,7 +27,7 @@ function FolhaPagamentoRh() {
   useEffect(() => {
     async function carregarItens() {
       try {
-        const res = await axios.get('http://localhost:8081/api/rh/itens-disponiveis', makeConfig());
+        const res = await axios.get('https://sua-api-no-render.onrender.com/api/rh/itens-disponiveis', makeConfig());
         setItensDisponiveis(res.data);
       } catch (error) {
         toast.error("Erro ao carregar lista de cargos.");
@@ -47,7 +47,7 @@ function FolhaPagamentoRh() {
 
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:8081/api/rh/itens/${itemId}/escolas`, makeConfig());
+      const res = await axios.get(`https://sua-api-no-render.onrender.com/api/rh/itens/${itemId}/escolas`, makeConfig());
       const dadosEscolas = res.data;
       setEscolas(dadosEscolas);
 
@@ -95,7 +95,7 @@ function FolhaPagamentoRh() {
 
     try {
       await axios.post(
-        `http://localhost:8081/api/rh/itens/${itemSelecionado}/salvar-lote`, 
+        `https://sua-api-no-render.onrender.com/api/rh/itens/${itemSelecionado}/salvar-lote`, 
         payload, 
         makeConfig()
       );

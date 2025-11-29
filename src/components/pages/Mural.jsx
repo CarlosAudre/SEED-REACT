@@ -17,7 +17,7 @@ export default function Mural({ competenciaId }) {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:8081/adm/mural/${competenciaId}`,
+        `https://sua-api-no-render.onrender.com/adm/mural/${competenciaId}`,
         {
           params: { perfil: perfil || undefined },
           headers: { Authorization: `Bearer ${token}` },

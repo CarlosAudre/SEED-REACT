@@ -19,7 +19,7 @@ export default function GerenciarCompetencias() {
 
     const buscarCompetencias = async () => {
         try {
-            const r = await axios.get("http://localhost:8081/adm/competencias", config);
+            const r = await axios.get("https://sua-api-no-render.onrender.com/adm/competencias", config);
             setCompetencias(r.data);
         } catch (err) {
             toast.error("Erro ao buscar competências.");
@@ -68,14 +68,14 @@ export default function GerenciarCompetencias() {
 
             if (edicao) {
                 await axios.put(
-                    `http://localhost:8081/adm/competencias/${edicao.id}`,
+                    `https://sua-api-no-render.onrender.com/adm/competencias/${edicao.id}`,
                     payload,
                     config
                 );
                 toast.success("Competência atualizada!");
             } else {
                 await axios.post(
-                    "http://localhost:8081/adm/competencias",
+                    "https://sua-api-no-render.onrender.com/adm/competencias",
                     payload,
                     config
                 );
@@ -94,7 +94,7 @@ export default function GerenciarCompetencias() {
         if (!window.confirm("Deseja excluir a competência?")) return;
 
         try {
-            await axios.delete(`http://localhost:8081/adm/competencias/${id}`, config);
+            await axios.delete(`https://sua-api-no-render.onrender.com/adm/competencias/${id}`, config);
             toast.success("Competência deletada!");
             buscarCompetencias();
         } catch {

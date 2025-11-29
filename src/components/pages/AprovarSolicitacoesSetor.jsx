@@ -13,7 +13,7 @@ function AprovarSolicitacoesSetor() {
 
   const buscarSolicitacoes = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/adm/solicitacoes-setor/pendentes', makeConfig());
+      const response = await axios.get('https://sua-api-no-render.onrender.com/adm/solicitacoes-setor/pendentes', makeConfig());
       setSolicitacoes(response.data);
     } catch (error) {
       toast.error('Erro ao buscar solicitações pendentes.');
@@ -27,7 +27,7 @@ function AprovarSolicitacoesSetor() {
 
   const handleAprovar = async (id) => {
     try {
-      await axios.put(`http://localhost:8081/adm/solicitacoes-setor/${id}/aprovar`, null, makeConfig());
+      await axios.put(`https://sua-api-no-render.onrender.com/adm/solicitacoes-setor/${id}/aprovar`, null, makeConfig());
       toast.success('Solicitação APROVADA! O usuário foi vinculado ao setor.');
       buscarSolicitacoes(); // Atualiza a lista
     } catch (error) {
@@ -39,7 +39,7 @@ function AprovarSolicitacoesSetor() {
   const handleReprovar = async (id) => {
     if (window.confirm('Tem certeza que deseja REPROVAR esta solicitação?')) {
       try {
-        await axios.put(`http://localhost:8081/adm/solicitacoes-setor/${id}/reprovar`, null, makeConfig());
+        await axios.put(`https://sua-api-no-render.onrender.com/adm/solicitacoes-setor/${id}/reprovar`, null, makeConfig());
         toast.info('Solicitação REPROVADA.');
         buscarSolicitacoes(); // Atualiza a lista
       } catch (error) {

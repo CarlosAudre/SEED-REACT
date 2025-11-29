@@ -22,7 +22,7 @@ function GerenciarClassificacoes() {
 
   const buscarDados = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/adm/classificacoes', makeConfig());
+      const response = await axios.get('https://sua-api-no-render.onrender.com/adm/classificacoes', makeConfig());
       setClassificacoes(response.data);
     } catch (error) {
       toast.error('Erro ao buscar as classificações.');
@@ -61,10 +61,10 @@ function GerenciarClassificacoes() {
 
     try {
       if (emEdicao) {
-        await axios.put(`http://localhost:8081/adm/classificacoes/${emEdicao.id}`, payload, makeConfig());
+        await axios.put(`https://sua-api-no-render.onrender.com/adm/classificacoes/${emEdicao.id}`, payload, makeConfig());
         toast.success('Classificação atualizada com sucesso!');
       } else {
-        await axios.post('http://localhost:8081/adm/classificacoes', payload, makeConfig());
+        await axios.post('https://sua-api-no-render.onrender.com/adm/classificacoes', payload, makeConfig());
         toast.success('Classificação criada com sucesso!');
       }
       fecharModal();
@@ -78,7 +78,7 @@ function GerenciarClassificacoes() {
   const deletarItem = async (id) => {
     if (window.confirm('Tem certeza que deseja deletar esta classificação?')) {
       try {
-        await axios.delete(`http://localhost:8081/adm/classificacoes/${id}`, makeConfig());
+        await axios.delete(`https://sua-api-no-render.onrender.com/adm/classificacoes/${id}`, makeConfig());
         toast.success('Classificação deletada com sucesso!');
         buscarDados();
       } catch (error) {

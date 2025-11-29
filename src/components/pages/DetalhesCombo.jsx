@@ -26,10 +26,10 @@ function DetalhesCombo() {
   const buscarDados = useCallback(async () => {
     try {
       const [resCombo, resItensCombo, resTodosItens, resClassificacoes] = await Promise.all([ 
-        axios.get(`http://localhost:8081/adm/combos/${comboId}`, makeConfig()),
-        axios.get(`http://localhost:8081/adm/combos/${comboId}/itens`, makeConfig()),
-        axios.get('http://localhost:8081/adm/itens', makeConfig()),
-        axios.get('http://localhost:8081/adm/classificacoes', makeConfig()) 
+        axios.get(`https://sua-api-no-render.onrender.com/adm/combos/${comboId}`, makeConfig()),
+        axios.get(`https://sua-api-no-render.onrender.com/adm/combos/${comboId}/itens`, makeConfig()),
+        axios.get('https://sua-api-no-render.onrender.com/adm/itens', makeConfig()),
+        axios.get('https://sua-api-no-render.onrender.com/adm/classificacoes', makeConfig()) 
       ]);
       setCombo(resCombo.data);
       
@@ -66,10 +66,10 @@ function DetalhesCombo() {
         // 'valor' (ou 'quantidade') do item foi removido
     };
     try {
-        await axios.post('http://localhost:8081/adm/itens', dadosFormatados, makeConfig());
+        await axios.post('https://sua-api-no-render.onrender.com/adm/itens', dadosFormatados, makeConfig());
         toast.success('Novo item criado!');
         fecharItemModal();
-        const resTodosItens = await axios.get('http://localhost:8081/adm/itens', makeConfig());
+        const resTodosItens = await axios.get('https://sua-api-no-render.onrender.com/adm/itens', makeConfig());
         setTodosOsItens(resTodosItens.data); 
     } catch (error) {
         toast.error('Erro ao criar item.');
@@ -90,7 +90,7 @@ function DetalhesCombo() {
     };
 
     try {
-      await axios.post(`http://localhost:8081/adm/combos/${comboId}/itens`, payload, makeConfig());
+      await axios.post(`https://sua-api-no-render.onrender.com/adm/combos/${comboId}/itens`, payload, makeConfig());
       toast.success('Item adicionado!');
       reset(); 
       buscarDados(); 
@@ -120,10 +120,10 @@ function DetalhesCombo() {
 
     try {
         await Promise.all([
-            axios.patch(`http://localhost:8081/adm/combos/itens/${itemMovido.id}/ordem`, itemMovido.ordem, {
+            axios.patch(`https://sua-api-no-render.onrender.com/adm/combos/itens/${itemMovido.id}/ordem`, itemMovido.ordem, {
                 headers: { ...makeConfig().headers, 'Content-Type': 'text/plain' }
             }),
-            axios.patch(`http://localhost:8081/adm/combos/itens/${itemTrocado.id}/ordem`, itemTrocado.ordem, {
+            axios.patch(`https://sua-api-no-render.onrender.com/adm/combos/itens/${itemTrocado.id}/ordem`, itemTrocado.ordem, {
                 headers: { ...makeConfig().headers, 'Content-Type': 'text/plain' }
             })
         ]);
@@ -136,7 +136,7 @@ function DetalhesCombo() {
   const removerItem = async (comboItemId) => {
     if (window.confirm('Remover este item do kit?')) {
       try {
-        await axios.delete(`http://localhost:8081/adm/combos/itens/${comboItemId}`, makeConfig());
+        await axios.delete(`https://sua-api-no-render.onrender.com/adm/combos/itens/${comboItemId}`, makeConfig());
         toast.success('Item removido!');
         buscarDados(); 
       } catch (error) {

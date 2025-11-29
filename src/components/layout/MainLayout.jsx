@@ -20,7 +20,7 @@ export default function MainLayout() {
           return;
         }
 
-        const resposta = await fetch("http://localhost:8081/auth/me", {
+        const resposta = await fetch("https://sua-api-no-render.onrender.com/auth/me", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

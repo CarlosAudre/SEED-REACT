@@ -23,7 +23,7 @@ function SolicitacaoDeAcesso() {
   };
 
   const buscarUsuarios = () => {
-    axios.get('http://localhost:8081/adm/usuarios-pendentes', makeConfig())
+    axios.get('https://sua-api-no-render.onrender.com/adm/usuarios-pendentes', makeConfig())
       .then(response => {
         const users = (response.data || []).map(u => ({
           ...u,
@@ -43,9 +43,9 @@ function SolicitacaoDeAcesso() {
     for (let u of data.usuarios) {
       try {
         if (u.aprovado) {
-          await axios.put(`http://localhost:8081/adm/aprovar/${u.id}`, null, makeConfig());
+          await axios.put(`https://sua-api-no-render.onrender.com/adm/aprovar/${u.id}`, null, makeConfig());
         } else if (u.reprovar) {
-          await axios.delete(`http://localhost:8081/adm/reprovar/${u.id}`, makeConfig());
+          await axios.delete(`https://sua-api-no-render.onrender.com/adm/reprovar/${u.id}`, makeConfig());
         }
       } catch (err) {
         console.error(`Erro ao processar usuário ${u.id}:`, err);

@@ -18,7 +18,7 @@ export function AdmSolicitacaoComboItem() {
     const carregarSolicitacoes = async () => {
         try {
             const resp = await axios.get(
-                "http://localhost:8081/solicitacoes/adm",
+                "https://sua-api-no-render.onrender.com/solicitacoes/adm",
                 makeConfig()
             );
             setSolicitacoes(resp.data);
@@ -36,7 +36,7 @@ export function AdmSolicitacaoComboItem() {
 
         try {
             await axios.put(
-                `http://localhost:8081/solicitacoes/adm/${modalAction}/${currentId}`,
+                `https://sua-api-no-render.onrender.com/solicitacoes/adm/${modalAction}/${currentId}`,
                 { feedbackAdm: feedback },
                 makeConfig()
             );

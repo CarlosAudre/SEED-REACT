@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './SetorManager.module.css';
 
-const API_BASE = 'http://localhost:8081';
+const API_BASE = 'https://sua-api-no-render.onrender.com';
 
 export default function SetorManager({ estrutura, onClose }) {
   const { register, handleSubmit, reset, setValue, watch } = useForm();
