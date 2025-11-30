@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { FaUser, FaLock } from "react-icons/fa";
 import Input from "../form/Input";
 import Submit from "../form/Submit";
@@ -100,7 +100,7 @@ function Login() {
 
           <div className={styles.register_link}>
             <p>Não possui uma conta?</p>
-            <a href="http://localhost:5173/register">Criar conta</a>
+            <Link to="/register">Criar conta</Link>
           </div>
         </form>
       </div>
