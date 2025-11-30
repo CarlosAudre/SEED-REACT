@@ -33,8 +33,8 @@ export default function Dashboard() {
     async function carregarFiltros() {
       try {
         const [resEst, resComp] = await Promise.all([
-          axios.get('https://ssge.onrender.com/api/estruturas', makeConfig()),
-          axios.get('https://ssge.onrender.com/api/competencias', makeConfig())
+          axios.get('http://localhost:8081/api/estruturas', makeConfig()),
+          axios.get('http://localhost:8081/api/competencias', makeConfig())
         ]);
         setEstruturas(resEst.data);
         setCompetencias(resComp.data);
@@ -53,7 +53,7 @@ export default function Dashboard() {
         if (filtroEstrutura) params.append('estruturaId', filtroEstrutura);
         if (filtroCompetencia) params.append('competenciaId', filtroCompetencia);
 
-        const res = await axios.get(`https://ssge.onrender.com/api/dashboard?${params.toString()}`, makeConfig());
+        const res = await axios.get(`http://localhost:8081/api/dashboard?${params.toString()}`, makeConfig());
         setDados(res.data);
       } catch (error) {
         console.error("Erro ao buscar dados", error);
@@ -64,9 +64,7 @@ export default function Dashboard() {
 
   const formatMoney = (val) => `R$ ${val?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
 
-  // --- Dados Simulados para os Gráficos (Baseados no Total Real) ---
-  // Como o back-end atual retorna um resumo total, distribuímos visualmente
-  // para manter o layout da imagem enquanto não temos histórico mensal no back.
+ 
   const barData = [
     { name: 'Materiais', valor: dados.gastoMateriais },
     { name: 'Folha (RH)', valor: dados.gastoPessoal },
