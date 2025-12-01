@@ -36,8 +36,8 @@ export default function Dashboard() {
         async function carregarFiltros() {
             try {
                 const [resComp, resEst] = await Promise.all([
-                    axios.get('http://localhost:8081/api/competencias', makeConfig()),
-                    axios.get('http://localhost:8081/api/estruturas?todas=true', makeConfig())
+                    axios.get('https://ssge.onrender.com/api/competencias', makeConfig()),
+                    axios.get('https://ssge.onrender.com/api/estruturas?todas=true', makeConfig())
                 ]);
                 
                 // Ordena competências por data
@@ -62,7 +62,7 @@ export default function Dashboard() {
                 if (filtroCompetencia) params.append('competenciaId', filtroCompetencia);
                 if (filtroEstrutura) params.append('estruturaId', filtroEstrutura);
 
-                const res = await axios.get(`http://localhost:8081/api/dashboard?${params.toString()}`, makeConfig());
+                const res = await axios.get(`https://ssge.onrender.com/api/dashboard?${params.toString()}`, makeConfig());
                 setDadosResumo(res.data);
             } catch (error) {
                 console.error("Erro resumo:", error);
@@ -92,7 +92,7 @@ export default function Dashboard() {
                 params.append('competenciaId', comp.id);
                 if (idEscola) params.append('estruturaId', idEscola);
                 
-                return axios.get(`http://localhost:8081/api/dashboard?${params.toString()}`, makeConfig())
+                return axios.get(`https://ssge.onrender.com/api/dashboard?${params.toString()}`, makeConfig())
                     .then(res => ({
                         mes: comp.nome.split('/')[0], // Pega só "January" de "January/2025"
                         gasto: res.data.custoTotal,
